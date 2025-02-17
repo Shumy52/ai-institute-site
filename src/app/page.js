@@ -16,9 +16,13 @@ export default function Home() {
 
       {/* Content Section */}
       <section className="container mx-auto p-8">
-        <h2 className="text-3xl font-bold text-gray-800">Latest News</h2>
-        <p className="text-gray-600 mt-2">Stay up to date with the latest AI research and developments.</p>
+        <h2 className="text-3xl font-bold text-[#e6e6fa]">About us</h2>
+        <p className="text-[#e6e6fa]-600 mt-2">Yo dudes, UTCN is pretty chill, maybe you should, like, join, or something...</p>
       </section>
     </main>
   );
 }
+
+export const metadata = {
+  title: "ICIA - Home",
+};
