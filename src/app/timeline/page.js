@@ -10,7 +10,7 @@ export default function TimelinePage() {
         {
             date: "2022",
             title: "This was all made statically",
-            description: "Let me know how we should we be able to add to this list",
+            description: "Let me know how we should we be able to add to this list. Maybe by email? We shall see.",
             icon: <FaBuilding />,
         },
         {
@@ -37,7 +37,7 @@ export default function TimelinePage() {
         <>
             <Head>
                 <title>ICIA - Timeline</title>
-                <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.2.0/css/solid.min.css" integrity="sha512-3Xlq6/m1pc+8T7pBp1bEiXqkePXleQYqwrOJYUd9QObFM2jktAZdjFAJZDNS13kG8j9/+u5PhEzhFREtTAcozg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+                
             </Head>
             <div className="p-10">
                 <h1 className="text-4xl font-bold text-center mb-8">Timeline</h1>
@@ -49,6 +49,7 @@ export default function TimelinePage() {
                             contentStyle={{ background: "#f3f4f6", color: "#000" }}
                             contentArrowStyle={{ borderRight: "7px solid #f3f4f6" }}
                             date={event.date}
+                            dateClassName="text-blue-600 font-semibold"
                             iconStyle={{ background: "#e63946", color: "#fff" }}
                             icon={event.icon}
                         >

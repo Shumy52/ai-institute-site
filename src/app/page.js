@@ -17,7 +17,7 @@ export default function Home() {
       {/* Content Section */}
       <section className="container mx-auto p-8">
         <h2 className="text-3xl font-bold text-[#e6e6fa]">About us</h2>
-        <p className="text-[#e6e6fa]-600 mt-2">Yo dudes, UTCN is pretty chill, maybe you should, like, join, or something...</p>
+        <p className="text-[#e6e6fa]-600 mt-2">*insert joke*</p>
       </section>
     </main>
   );
