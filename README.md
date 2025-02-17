@@ -1,5 +1,7 @@
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
+CD into the ai-institute-folder and run npm install. This will get for ya all the dependencies to run this.
+
 ## Getting Started
 
 First, run the development server:
