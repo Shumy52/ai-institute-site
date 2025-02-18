@@ -27,9 +27,9 @@ export default function MediaPage() {
       <Head>
         <title>ICIA - Media</title>
       </Head>
-      <main className="max-w-4xl mx-auto p-6 bg-gray-1000 text-white rounded-lg shadow-lg">
+      <main className="max-w-4xl mx-auto p-6 bg-white text-black rounded-lg shadow-lg">
         <motion.h1
-          className="text-4xl font-extrabold text-center mb-8 text-blue-400"
+          className="text-4xl font-extrabold text-center mb-8 text-blue-600"
           initial={{ opacity: 0, y: -50 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1 }}
@@ -59,7 +59,7 @@ export default function MediaPage() {
                   className="w-full h-full object-cover object-center rounded-lg"
                 />
               ) : (
-                <div className="relative w-full aspect-video bg-black flex items-center justify-center text-blue-300">
+                <div className="relative w-full aspect-video bg-gray-200 flex items-center justify-center text-blue-600">
                   🎥 Video: {item.title}
                 </div>
               )}
@@ -117,7 +117,7 @@ export default function MediaPage() {
             </motion.div>
           )}
         </AnimatePresence>
-        <p className="mt-6 text-center text-sm text-gray-400">
+        <p className="mt-6 text-center text-sm text-gray-500">
           Note: Videos from Youtube will not work here, security reasons
         </p>
       </main>

@@ -1,10 +1,16 @@
 import Link from "next/link";
+import Image from 'next/image';
+import Logo1 from '../../public/media/Logos/Logo1.png';
+
 
 export default function Navbar() {
   return (
-    <nav className="bg-black text-white p-4">
+    <nav className="bg-white text-black p-4 border-b-2 border-gray-300">
       <div className="container mx-auto flex justify-between items-center">
-        <Link href="/" className="text-2xl font-bold tracking-wide">AI Institute</Link>
+        <div className="flex items-center space-x-4">
+          <Image src={Logo1} alt="AI Institute Logo" width={125} height={125} />
+          <Link href="/" className="text-2xl font-bold tracking-wide">AI Institute</Link>
+        </div>
         <ul className="flex space-x-6">
           <li><Link href="/" className="hover:underline">Home</Link></li>
           <li><Link href="/news" className="hover:underline">News</Link></li>

@@ -45,9 +45,9 @@ export default function TimelinePage() {
             <Head>
                 <title>ICIA - Timeline</title>
             </Head>
-            <main className="max-w-4xl mx-auto p-6 bg-gray-1000 text-white rounded-lg shadow-lg">
+            <main className="max-w-4xl mx-auto p-6 bg-white text-black rounded-lg shadow-lg">
                 <motion.h1
-                    className="text-4xl font-extrabold text-center mb-8 text-blue-400"
+                    className="text-4xl font-extrabold text-center mb-8 text-blue-600"
                     initial={{ opacity: 0, y: -50 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 1 }}
@@ -59,10 +59,10 @@ export default function TimelinePage() {
                         <VerticalTimelineElement
                             key={index}
                             className="vertical-timeline-element--work"
-                            contentStyle={{ background: "#1f2937", color: "#fff" }}
-                            contentArrowStyle={{ borderRight: "7px solid #1f2937" }}
+                            contentStyle={{ background: "#f3f4f6", color: "#000" }}
+                            contentArrowStyle={{ borderRight: "7px solid #f3f4f6" }}
                             date={event.date}
-                            dateClassName="text-blue-400 font-semibold"
+                            dateClassName="text-blue-600 font-semibold"
                             iconStyle={{ background: "#e63946", color: "#fff" }}
                             icon={event.icon}
                         >

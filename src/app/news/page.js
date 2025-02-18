@@ -40,9 +40,9 @@ export default function News() {
   ];
 
   return (
-    <main className="max-w-4xl mx-auto p-6 bg-gray-1000 text-white rounded-lg shadow-lg">
+    <main className="max-w-4xl mx-auto p-6 bg-white text-black rounded-lg shadow-lg">
       <motion.h1
-        className="text-4xl font-extrabold text-center mb-8 text-blue-400"
+        className="text-4xl font-extrabold text-center mb-8 text-blue-600"
         initial={{ opacity: 0, y: -50 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 1 }}
@@ -52,12 +52,12 @@ export default function News() {
       {mediaLinks.map((section, index) => (
         <motion.section
           key={index}
-          className="mb-8 p-4 bg-gray-800 rounded-lg shadow-md"
+          className="mb-8 p-4 bg-gray-100 rounded-lg shadow-md"
           initial={{ opacity: 0, x: -50 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.8, delay: index * 0.2 }}
         >
-          <h2 className="text-2xl font-semibold mb-4 text-yellow-400">{section.title}</h2>
+          <h2 className="text-2xl font-semibold mb-4 text-yellow-600">{section.title}</h2>
           <ul className="space-y-2">
             {section.items.map((item, idx) => (
               <motion.li
@@ -69,7 +69,7 @@ export default function News() {
                   href={item.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-blue-300 hover:text-yellow-300 hover:underline transition duration-300"
+                  className="text-blue-500 hover:text-yellow-500 hover:underline transition duration-300"
                 >
                   {item.text}
                 </a>
