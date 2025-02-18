@@ -1,28 +1,74 @@
-export default function Home() {
-  return (
-    <main className="min-h-screen">
-      {/* Hero Section */}
-      <section className="relative h-[500px] bg-black">
-        <img
-          src="/hero.png"
-          alt="AI Research"
-          className="absolute inset-0 w-full h-full object-cover opacity-50"
-        />
-        <div className="absolute inset-0 flex flex-col justify-center items-center text-white text-center">
-          <h1 className="text-5xl font-bold">Welcome to the AI Institute</h1>
-          <p className="mt-4 text-xl max-w-2xl">Leading research and innovation in artificial intelligence.</p>
-        </div>
-      </section>
+"use client";
 
-      {/* Content Section */}
-      <section className="container mx-auto p-8">
-        <h2 className="text-3xl font-bold text-[#e6e6fa]">About us</h2>
-        <p className="text-[#e6e6fa]-600 mt-2">*insert joke*</p>
-      </section>
+import { motion, AnimatePresence } from "framer-motion";
+import { useState, useEffect } from "react";
+
+// List of images to cycle through
+const images = [
+  "/media/AI stuff/AI1.png",
+  "/media/AI stuff/AI2.png",
+  "/media/AI stuff/AI3.png",
+  "/media/AI stuff/AI4.png"
+];
+
+export default function Home() {
+  const [index, setIndex] = useState(0);
+  const [fromLeft, setFromLeft] = useState(true);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setIndex((prev) => (prev + 1) % images.length);
+      setFromLeft((prev) => !prev); // Toggle direction each time
+    }, 3000); // Change image every 3 sec
+
+    return () => clearInterval(interval);
+  }, []);
+
+  return (
+    <main className="relative flex flex-col items-center justify-center min-h-screen bg-black text-white overflow-hidden">
+      {/* Title */}
+      <motion.h1 
+        initial={{ opacity: 0, y: -50 }} 
+        animate={{ opacity: 1, y: 0 }} 
+        transition={{ duration: 1 }}
+        className="text-4xl font-bold"
+      >
+        Welcome to the AI Institute
+      </motion.h1>
+
+      <motion.p 
+        initial={{ opacity: 0, y: 50 }} 
+        animate={{ opacity: 1, y: 0 }} 
+        transition={{ duration: 1.5 }}
+        className="mt-4 text-lg"
+      >
+        Advancing artificial intelligence research in Romania.
+      </motion.p>
+
+      {/* Animated Images Sliding Past Above and Below Title */}
+      <AnimatePresence mode="wait">
+        {/* Image above title (left to right) */}
+        <motion.img
+          key={`top-${index}`}
+          src={images[index]}
+          className="absolute top-[20%] w-[300px] h-[200px] object-cover rounded-xl shadow-lg"
+          initial={{ x: fromLeft ? "-100vw" : "100vw", opacity: 0 }}
+          animate={{ x: 0, opacity: 1 }}
+          exit={{ x: fromLeft ? "100vw" : "-100vw", opacity: 0 }}
+          transition={{ duration: 3, ease: "easeInOut" }}
+        />
+
+        {/* Image below title (right to left) */}
+        <motion.img
+          key={`bottom-${index}`}
+          src={images[(index + 1) % images.length]} // Show a different image
+          className="absolute bottom-[20%] w-[300px] h-[200px] object-cover rounded-xl shadow-lg"
+          initial={{ x: fromLeft ? "100vw" : "-100vw", opacity: 0 }}
+          animate={{ x: 0, opacity: 1 }}
+          exit={{ x: fromLeft ? "-100vw" : "100vw", opacity: 0 }}
+          transition={{ duration: 3, ease: "easeInOut" }}
+        />
+      </AnimatePresence>
     </main>
   );
 }
-
-export const metadata = {
-  title: "ICIA - Home",
-};

@@ -8,30 +8,37 @@ import Head from "next/head";
 export default function TimelinePage() {
     const events = [
         {
-            date: "2022",
-            title: "This was all made statically",
-            description: "Let me know how we should we be able to add to this list. Maybe by email? We shall see.",
-            icon: <FaBuilding />,
+          date: "2023-01-15",
+          title: "Announcement of AI Institute at UTCN",
+          description: "The Technical University of Cluj-Napoca announced plans to establish a dedicated Artificial Intelligence Institute to foster research and innovation in AI technologies.",
+          icon: <FaBuilding />,
         },
         {
-            date: "2022",
-            title: "Shumy is now a director",
-            description: "Hooray",
-            icon: <FaUserTie />,
+          date: "2023-06-10",
+          title: "Groundbreaking Ceremony",
+          description: "Official groundbreaking ceremony for the construction of the AI Institute building, attended by university officials and local dignitaries.",
+          icon: <FaUserTie />,
         },
         {
-            date: "2021",
-            title: "A PC Blew Up",
-            description: "Kaboom.",
-            icon: <FaFirefox />,
+          date: "2024-09-01",
+          title: "Completion of Construction",
+          description: "The construction of the AI Institute's state-of-the-art facility was completed, featuring modern laboratories and collaborative spaces.",
+          icon: <FaBuilding />,
         },
         {
-            date: "2018",
-            title: "I don't know",
-            description: "Send More Money.",
-            icon: <FaBuilding />,
+          date: "2024-10-15",
+          title: "Inaugural AI Symposium",
+          description: "The institute hosted its first symposium, bringing together AI researchers, industry experts, and students to discuss the latest advancements in artificial intelligence.",
+          icon: <FaFirefox />,
         },
-    ];
+        {
+          date: "2025-02-18",
+          title: "Launch of AI Research Programs",
+          description: "The AI Institute officially launched its research programs, focusing on machine learning, robotics, and data science, aiming to contribute to both academic knowledge and practical applications.",
+          icon: <FaUserTie />,
+        },
+      ];
+      
 
     return (
         <>
