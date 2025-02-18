@@ -15,17 +15,7 @@ const mediaItems = [
     src: "/media/Construction2.png",
     alt: "ICIA Research Team",
     title: "Research Team at Work",
-  },
-  {
-    type: "video",
-    src: "https://www.youtube.com/watch?v=7_pRiUfp938",
-    title: "ICIA Grand Opening",
-  },
-  {
-    type: "video",
-    src: "https://www.youtube.com/embed/exampleVideoID",
-    title: "Drone Footage of ICIA Campus",
-  },
+  }
 ];
 
 //TODO
@@ -50,9 +40,9 @@ export default function MediaPage() {
               onClick={() => setSelectedMedia(item)}
             >
               {item.type === "image" ? (
-                <Image src={item.src} alt={item.alt} width={400} height={250} className="w-full" />
+                <Image src={item.src} alt={item.alt} width={400} height={250} className="w-full w-full h-full object-cover object-center rounded-lg" />
               ) : (
-                <div className="relative w-full aspect-video bg-black flex items-center justify-center text-white">
+                <div className="relative w-full aspect-video bg-black flex items-center justify-center text-blue">
                   🎥 Video: {item.title}
                 </div>
               )}
@@ -70,7 +60,7 @@ export default function MediaPage() {
                 ✖
               </button>
               {selectedMedia.type === "image" ? (
-                <Image src={selectedMedia.src} alt={selectedMedia.alt} width={800} height={500} className="w-full" />
+                <Image src={selectedMedia.src} alt={selectedMedia.alt} width={800} height={500} className="w-full h-full object-cover object-center rounded-lg" />
               ) : (
                 <iframe
                   width="100%"
@@ -82,7 +72,8 @@ export default function MediaPage() {
                   allowFullScreen
                 ></iframe>
               )}
-              <p className="mt-2 text-center font-semibold">{selectedMedia.title}</p>
+              {/* Change the selected media title to black (or some other color) */}
+              <p className="mt-2 text-center font-semibold text-[#01274a]">{selectedMedia.title}</p> 
             </div>
           </div>
         )}
