@@ -37,7 +37,8 @@ export default function TimelinePage() {
             description: "The AI Institute officially launched its research programs, focusing on machine learning, robotics, and data science, aiming to contribute to both academic knowledge and practical applications.",
             icon: <FaUserTie />,
         },
-    ];
+      ];
+      
 
     return (
         <>
