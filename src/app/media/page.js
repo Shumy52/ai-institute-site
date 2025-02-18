@@ -30,7 +30,7 @@ export default function MediaPage() {
       </Head>
       <main className="max-w-4xl mx-auto p-6">
         <h1 className="text-3xl font-bold mb-6">📸 ICIA Media Gallery</h1>
-        <p className="mb-4">Explore images and videos showcasing the progress of the ICIA Institute.</p>
+        <p className="mb-4">Explore images and videos showcasing the progress of the ICIA Institute</p>
         
         <div className="grid grid-cols-2 gap-4">
           {mediaItems.map((item, index) => (
@@ -77,6 +77,7 @@ export default function MediaPage() {
             </div>
           </div>
         )}
+        <p className="mb-4">Note: Videos from Youtube will not work here, security reasons</p>
       </main>
     </>
   );

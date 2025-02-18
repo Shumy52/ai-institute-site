@@ -1,3 +1,6 @@
+"use client";
+import { motion } from "framer-motion";
+
 export default function News() {
   const mediaLinks = [
     {
@@ -17,45 +20,64 @@ export default function News() {
         { text: "Latest Site Photos (January 17, 2025)", url: "https://zcj.ro/economie/cum-arata-santierul-institutului-de-cercetare-in-inteligenta-artificiala-din-cluj-napoca-e-primul-din-romania--274626.html" }
       ]
     },
-    {
-      title: "Event Videos & Visits",
-      items: [
-        { text: "Groundbreaking Ceremony Video", url: "https://www.linkedin.com/posts/kesz-romania_kaezszromania-stonelayingceremony-project-activity-7206606723040608256-_n4_" },
-        { text: "Best Construction Progress Video", url: "https://www.linkedin.com/posts/kesz-romania_the-construction-work-of-the-artificial-intelligence-activity-7211671006652841984-8bA2" },
-        { text: "Prime Minister Marcel Ciolacu’s Visit", url: "https://www.linkedin.com/posts/kesz-romania_kaezszromania-project-artificialintelligenceresearchinstitute-activity-7244698737023799296-m2ZK" },
-        { text: "Ligia Deca’s Visit", url: "https://www.linkedin.com/feed/update/urn:li:activity:7249391606162706433" }
-      ]
-    },
-    {
-      title: "Architectural & Development Contributions",
-      items: [
-        { text: "Architectural Design by Arhimar", url: "https://www.linkedin.com/posts/arhimar_arhimar-airesearch-clujnapoca-activity-7257280386357993474-R5_P" },
-        { text: "Scientific Director of Research, Puskas Attila", url: "https://www.linkedin.com/posts/kesz-romania_kaezszromania-stonelayingceremony-project-activity-7199756314938392582-cM7B" }
-      ]
-    }
+  {
+    title: "Event Videos & Visits",
+    items: [
+      { text: "Groundbreaking Ceremony Video", url: "https://www.linkedin.com/posts/kesz-romania_kaezszromania-stonelayingceremony-project-activity-7206606723040608256-_n4_" },
+      { text: "Best Construction Progress Video", url: "https://www.linkedin.com/posts/kesz-romania_the-construction-work-of-the-artificial-intelligence-activity-7211671006652841984-8bA2" },
+      { text: "Prime Minister Marcel Ciolacu’s Visit", url: "https://www.linkedin.com/posts/kesz-romania_kaezszromania-project-artificialintelligenceresearchinstitute-activity-7244698737023799296-m2ZK" },
+      { text: "Ligia Deca’s Visit", url: "https://www.linkedin.com/feed/update/urn:li:activity:7249391606162706433" }
+    ]
+  },
+  {
+    title: "Architectural & Development Contributions",
+    items: [
+      { text: "Architectural Design by Arhimar", url: "https://www.linkedin.com/posts/arhimar_arhimar-airesearch-clujnapoca-activity-7257280386357993474-R5_P" },
+      { text: "Scientific Director of Research, Puskas Attila", url: "https://www.linkedin.com/posts/kesz-romania_kaezszromania-stonelayingceremony-project-activity-7199756314938392582-cM7B" }
+    ]
+  }
+
   ];
 
   return (
-    <main className="max-w-4xl mx-auto p-6">
-      <h1 className="text-3xl font-bold mb-6">📢 News Page - ICIA Updates</h1>
+    <main className="max-w-4xl mx-auto p-6 bg-gray-1000 text-white rounded-lg shadow-lg">
+      <motion.h1
+        className="text-4xl font-extrabold text-center mb-8 text-blue-400"
+        initial={{ opacity: 0, y: -50 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 1 }}
+      >
+        📢 ICIA News & Updates
+      </motion.h1>
       {mediaLinks.map((section, index) => (
-        <section key={index} className="mb-6">
-          <h2 className="text-xl font-semibold mb-2">{section.title}</h2>
-          <ul className="list-disc list-inside">
+        <motion.section
+          key={index}
+          className="mb-8 p-4 bg-gray-800 rounded-lg shadow-md"
+          initial={{ opacity: 0, x: -50 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.8, delay: index * 0.2 }}
+        >
+          <h2 className="text-2xl font-semibold mb-4 text-yellow-400">{section.title}</h2>
+          <ul className="space-y-2">
             {section.items.map((item, idx) => (
-              <li key={idx}>
-                <a href={item.url} target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline">
+              <motion.li
+                key={idx}
+                whileHover={{ x: 10 }}
+                transition={{ duration: 0.3 }}
+              >
+                <a
+                  href={item.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-blue-300 hover:text-yellow-300 hover:underline transition duration-300"
+                >
                   {item.text}
                 </a>
-              </li>
+              </motion.li>
             ))}
           </ul>
-        </section>
+        </motion.section>
       ))}
     </main>
   );
 }
-
-export const metadata = {
-  title: "ICIA - News",
-};
