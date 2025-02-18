@@ -6,6 +6,7 @@ import Head from "next/head";
 import { motion } from "framer-motion";
 
 export default function TimelinePage() {
+    const today = new Date().toISOString().split('T')[0];
     const events = [
         {
             date: "2023-01-15",
@@ -32,12 +33,19 @@ export default function TimelinePage() {
             icon: <FaFirefox />,
         },
         {
-            date: "2025-02-18",
-            title: "Launch of AI Research Programs",
-            description: "The AI Institute officially launched its research programs, focusing on machine learning, robotics, and data science, aiming to contribute to both academic knowledge and practical applications.",
-            icon: <FaUserTie />,
+            date: today,
+            title: "Current Building Progress",
+            description: (
+                <>
+                    Stay updated with the current building progress of the AI Institute.<br></br> Watch live through our webcam:{" "} <br></br>
+                    <a href="http://webcam.obs.utcluj.ro/" target="_blank" rel="noopener noreferrer" className="text-blue-600 underline">
+                        http://webcam.obs.utcluj.ro/
+                    </a>
+                </>
+            ),
+            icon: <FaBuilding />,
         },
-      ];
+    ];
       
 
     return (
