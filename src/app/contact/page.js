@@ -9,16 +9,16 @@ export default function Contact() {
         { text: "Contact & Collaboration Interest Form", url: "https://forms.office.com/Pages/ResponsePage.aspx?id=-nnrpqnEzkyBjbhSdNFTBXfygrOv6LlPruqY6PJRcsFURDdWSVMxNVdRVjhNSEFQMVdXQ0UzNlo0Ti4u&origin=QRCode"}
       ]
     },
-    {
+    /* {
       title: "E-mail",
       items: [
         { text: "E-mail", url: "mailto:exemplu@yahoo.com"}
       ]
-    },
+    }, */
     {
       title: "Phone",
       items: [
-        { text: "0770454647"}
+        { text: "+40264202206"}
        
       ]
     },
@@ -34,7 +34,7 @@ export default function Contact() {
   {
     title: "LinkedIn",
     items: [
-      { text: "LinkedIn Profile", url: "https://www.linkedin.com" }
+      { text: "LinkedIn Profile", url: "https://www.linkedin.com/school/universitatea-tehnica-din-cluj-napoca/posts/?feedView=all" }
     ]
   }
 
