@@ -15,12 +15,31 @@ export default function Home() {
       </section>
 
       {/* Content Section */}
-      <section className="container mx-auto p-8">
+      <section className="container mx-auto p-8 max-w-5xl">
         <h2 className="text-3xl font-bold text-gray-800">About us</h2>
-        <p className="text-gray-800 mt-2">
-          {text}
-        </p>
-        <div className="mt-8">
+        <motion.p
+          className="text-gray-800 mt-2"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.5, staggerChildren: 0.05 }}
+        >
+          {text.split(" ").map((word, index) => (
+            <motion.span
+              key={index}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: index * 0.05 }}
+            >
+              {word}{" "}
+            </motion.span>
+          ))}
+        </motion.p>
+        <motion.div
+          className="mt-8"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: text.split(" ").length * 0.05 + 0.5 }}
+        >
           <a
             href="http://webcam.obs.utcluj.ro/"
             target="_blank"
@@ -29,7 +48,7 @@ export default function Home() {
           >
             View Live Construction Site Camera
           </a>
-        </div>
+        </motion.div>
       </section>
     </main>
   );

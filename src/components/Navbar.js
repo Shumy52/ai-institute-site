@@ -16,6 +16,7 @@ export default function Navbar() {
           <li><Link href="/news" className="hover:underline">News</Link></li>
           <li><Link href="/media" className="hover:underline">Media</Link></li>
           <li><Link href="/timeline" className="hover:underline">Timeline</Link></li>
+          <li><Link href="/contact" className="hover:underline">Contact</Link></li>
         </ul>
       </div>
     </nav>
