@@ -1,8 +1,19 @@
 "use client";
 import { motion } from "framer-motion";
+import Image from "next/image";
+import Logo3 from '../../../public/media/Logos/Logo3.png';
 
 export default function Contact() {
   const contacts = [
+    {
+      title: "",
+      items: [
+        { text: `Thank you for your interest in the Artificial Intelligence Research Institute (AIRI) at UTCN.
+          We would love to hear from you! Whether you have a question about our research, events, or anything else,
+          our team is ready to answer all your questions.
+          With our appreciation, The AIRI Team at the Technical University from Cluj-Napoca`}
+      ]
+    },
     {
       title: "Contact Form",
       items: [
@@ -54,7 +65,7 @@ export default function Contact() {
       {contacts.map((section, index) => (
         <motion.section
           key={index}
-          className="p-5"
+          className={`p-5 ${index === 0 ? "bg-gray-100 text-blue-800 p-6 rounded-lg shadow-md" : ""}`}
           initial={{ opacity: 0, x: -50 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.8, delay: index * 0.2 }}
