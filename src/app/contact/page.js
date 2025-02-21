@@ -1,7 +1,5 @@
 "use client";
 import { motion } from "framer-motion";
-import Image from "next/image";
-import Logo3 from '../../../public/media/Logos/Logo3.png';
 
 export default function Contact() {
   const contacts = [
