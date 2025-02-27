@@ -4,6 +4,18 @@
 import { motion } from "framer-motion";
 import Head from "next/head";
 
+const itemVariants = {
+    hidden: { y: 20, opacity: 0 },
+    visible: {
+      y: 0,
+      opacity: 1,
+      transition: {
+        duration: 0.5,
+        ease: "easeOut",
+      },
+    },
+  };
+
 export default function Contact() {
     return (
         <>
@@ -52,6 +64,7 @@ export default function Contact() {
                         loading="lazy"
                     ></iframe>
                 </section>
+                
             </main>
         </>
     );

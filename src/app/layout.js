@@ -1,6 +1,5 @@
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-// Added by me, get navbar on all pages
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 
@@ -15,20 +14,14 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata = {
-  title: "ICIA - Home",
-  description: "Official website of the AI Institute at UTCN.",
+  title: "AIRI",
+  description: "The Artificial Intelligence Research Institute (AIRI) within the Technical University of Cluj-Napoca assumes a catalytic role in advancing research, innovation, and exploration in the field of artificial intelligence. AIRi contributes to the development of an ecosystem of excellence that generates a significant impact on society, the economy, and the academic environment. By integrating expertise from various constituent departments, ICIA aims to surpass individual results by promoting interdisciplinary collaboration, knowledge transfer, and the implementation of AI-based solutions in key sectors such as healthcare, industry, energy, or education. ICIA will also serve as a space for interaction between researchers, as well as between AI and human intelligence. ",
 };
-
-// Title and description, for search engines
-
-// We pass to it the "prop" (kinda like parameter): children
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en">
-      <body
-        // className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
+    <html lang="en" className={`${geistSans.variable} ${geistMono.variable}`}>
+      <body className="antialiased">
         <Navbar />
         {children}
         <Footer />
