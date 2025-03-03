@@ -17,11 +17,20 @@ const mediaItems = [
     alt: "ICIA Research Team",
     title: "Research Team at Work",
   },
+  // Easter egg
+  // {
+  //   type: "video",
+  //   src: "https://www.youtube.com/embed/dQw4w9WgXcQ",
+  //   alt: "ICIA Presentation",
+  //   title: "ICIA Institute Presentation",
+  // },
+  // TESTING
   {
-    type: "video",
-    src: "https://www.youtube.com/embed/dQw4w9WgXcQ",
-    alt: "ICIA Presentation",
-    title: "ICIA Institute Presentation",
+    type: "pdf",
+    src: "/media/Brosura Prezentare ICIA.pdf",
+    alt: "ICIA Document",
+    title: "Presentation brochure",
+    // thumbnail: "/media/thumbBrochure.png", // Add a thumbnail... but it doesn't look right...
   },
 ];
 
@@ -97,6 +106,14 @@ export default function MediaPage() {
                       height={400}
                       className="w-full h-full object-cover object-center"
                     />
+                  ) : item.thumbnail ? (
+                    <Image
+                      src={item.thumbnail}
+                      alt={item.alt}
+                      width={600}
+                      height={400}
+                      className="w-full h-full object-cover object-center"
+                    />
                   ) : (
                     <div className="relative w-full aspect-video bg-gray-200 flex items-center justify-center">
                       <span className="text-blue-600 font-semibold">
@@ -159,7 +176,7 @@ export default function MediaPage() {
               transition={{ duration: 0.3 }}
             >
               <motion.div
-                className="bg-white p-6 rounded-3xl max-w-4xl w-full relative"
+                className="bg-white p-6 rounded-3xl max-w-6xl w-full relative"
                 initial={{ scale: 0.95 }}
                 animate={{ scale: 1 }}
                 exit={{ scale: 0.95 }}
@@ -189,14 +206,14 @@ export default function MediaPage() {
                   <Image
                     src={selectedMedia.src}
                     alt={selectedMedia.alt}
-                    width={1200}
-                    height={800}
+                    width={1920}
+                    height={1080}
                     className="w-full h-full object-cover object-center rounded-2xl"
                   />
                 ) : (
                   <iframe
                     width="100%"
-                    height="600"
+                    height="800"
                     src={selectedMedia.src}
                     title={selectedMedia.title}
                     style={{ border: 0 }}

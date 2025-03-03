@@ -1,4 +1,3 @@
-"use client";
 import { motion } from "framer-motion";
 
 export default function Home() {
@@ -8,47 +7,25 @@ export default function Home() {
     <main className="xl: bg-white">
       <section className="relative h-64 md:h-96 lg:h-128 overflow-hidden">
         <img
-          src="/hero5.png"
+          src="/homepage/hero5.png"
           alt="AI Research"
           className="absolute inset-0 w-full h-full object-cover opacity-75"
+        />
+        <img
+          src="/homepage/qrSignup.jpg"
+          alt="Sign Up QR Code"
+          className="absolute bottom-4 left-4 w-48 h-48 md:w-64 md:h-64 object-contain"
         />
       </section>
 
       {/* Content Section */}
-      <section className="container mx-auto p-8 max-w-5xl">
-        <h2 className="text-3xl font-bold text-gray-800">About us</h2>
-        <motion.p
-          className="text-gray-800 mt-2"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.5, staggerChildren: 0.05 }}
-        >
-          {text.split(" ").map((word, index) => (
-            <motion.span
-              key={index}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: index * 0.05 }}
-            >
-              {word}{" "}
-            </motion.span>
-          ))}
-        </motion.p>
-        <motion.div
-          className="mt-8"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: text.split(" ").length * 0.05 + 0.5 }}
-        >
-          <a
-            href="http://webcam.obs.utcluj.ro/"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-blue-500 underline"
-          >
-            View Live Construction Site Camera
-          </a>
-        </motion.div>
+        <section className="container mx-auto p-8 max-w-5xl">
+          <h2 className="text-3xl font-bold text-gray-800">About us</h2>
+          <p className="text-gray-800 mt-2">{text}</p> 
+          {/* If you want to add the contents of a constant/var, use {} */}
+          <br></br>
+          <a href="http://webcam.obs.utcluj.ro/" className="text-blue-500 underline">View Live Construction Site Camera</a>
+        
       </section>
     </main>
   );

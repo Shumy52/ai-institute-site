@@ -13,134 +13,105 @@ const submenus = [
 const researchUnits = [
     {
         name: "Unit of Software and Hardware Technologies for AI",
-        description: "Focuses on AI subfields like Machine Learning, NLP, and Computer Vision.",
+        description:
+            "Covers AI subfields such as Intelligent Agents, Machine Learning, Knowledge Engineering, Semantic Web, NLP, and Deep Learning-based Computer Vision.",
         icon: "💻",
         content: (
             <>
                 <p>
-                    Consists of laboratories covering key subfields of artificial
-                    intelligence, including Intelligent Agents, Machine Learning,
-                    Knowledge Engineering and Reasoning, Semantic Web, Natural Language
-                    Processing, Deep Learning-based Computer Vision, Human-Machine Verbal
-                    Communication Technologies, and Data Science.
+                    Consists of laboratories covering key AI subfields including Intelligent Agents, Machine Learning, Knowledge Engineering and Reasoning, Semantic Web, Natural Language Processing, Deep Learning-based Computer Vision, Human-Machine Verbal Communication Technologies, and Data Science.
                 </p>
                 <p>
-                    These laboratories conduct research and develop solutions for various
-                    challenges in AI application development and intelligent systems.
+                    These laboratories develop innovative solutions for AI application challenges, data processing, and knowledge engineering while supporting research in telecommunications, software engineering, and commercialization.
                 </p>
                 <p>
-                    Hardware Technologies for AI includes laboratories dedicated to networks,
-                    communication protocols, integrated circuits, and sensor design.
-                </p>
-                <p>
-                    Contributes to innovation in IoT, Cyber-physical systems, Cybersecurity,
-                    Cloud computing, and more.
+                    Additionally, Hardware Technologies for AI includes labs dedicated to networks, communication protocols, cellular and wireless communications, sensor networks, as well as the design of analog/digital integrated circuits and digital systems.
                 </p>
             </>
         ),
     },
     {
         name: "Unit of Intelligent and Autonomous Systems",
-        description: "Dedicated to intelligent systems with autonomous capabilities.",
+        description:
+            "Dedicated to the research and implementation of intelligent systems with autonomous capabilities.",
         icon: "🤖",
         content: (
             <>
                 <p>
-                    Focuses on research, design, and implementation of intelligent systems,
-                    components, and applications with autonomous capabilities.
+                    Focuses on the design and implementation of intelligent systems involving sensory perception, environmental representation, intelligent communications, control systems, distributed systems, and cyber-physical systems.
                 </p>
                 <p>
-                    Specialized laboratories develop solutions for autonomous systems across
-                    various sectors.
+                    The laboratories also advance autonomous production, Industrial IoT (IIoT), connected mobility, and both industrial and medical robotics, bolstering innovation in IoT, cyber-physical systems, and social robotics.
                 </p>
                 <p>
-                    Contributes to innovation in IoT, Cyber-physical systems, Autonomous
-                    mobility, and Social robotics.
-                </p>
-                <p>
-                    Also contributes to Advanced Manufacturing Technologies and Healthcare
-                    through robotics innovation.
+                    Contributes to advanced manufacturing technologies and healthcare innovation through robotics.
                 </p>
             </>
         ),
     },
     {
         name: "Unit of Microelectronics",
-        description: "Focuses on AI applications in the design of integrated circuits and systems",
+        description:
+            "Focuses on AI applications in integrated circuit design, rapid parameter analysis, and signal processing.",
         icon: "💡",
         content: (
             <>
                 <p>
-                    Focuses on AI applications in the design of integrated circuits and
-                    systems.
+                    Concentrates on applying AI in designing integrated circuits and systems, including rapid determination of electro-thermal parameters and AI-assisted customized signal processing.
                 </p>
                 <p>
-                    Includes rapid determination of electro-thermal parameters, AI-assisted
-                    signal processing, and AI-based yield analysis.
-                </p>
-                <p>
-                    Also focuses on ASIC design and testing for intelligent sensors and
-                    developing AI-based methodologies for testing and standardization in
-                    electromagnetic compatibility.
+                    The unit also addresses AI-based yield analysis, post-Si verification, ASIC design and testing for intelligent sensors, and the development of methodologies for electromagnetic compatibility testing and standardization.
                 </p>
             </>
         ),
     },
     {
         name: "Unit of Intelligent Applications in Cybersecurity and Space",
-        description: "Integrates AI benefits into cybersecurity and space applications.",
+        description:
+            "Integrates AI benefits into cybersecurity defenses and civilian space applications.",
         icon: "🚀",
         content: (
             <>
                 <p>
-                    Integrates AI benefits into cybersecurity and space applications by
-                    developing intelligent solutions for cybersecurity protection and civilian
-                    space applications.
+                    Focuses on developing intelligent cybersecurity solutions alongside the formulation of AI-powered applications for space exploration and civilian space uses.
                 </p>
-                <p>Includes laboratories focused on intelligent cybersecurity.</p>
-                <p>Includes laboratories focused on intelligent space applications.</p>
+                <p>
+                    Laboratories within this unit work on enhancing cybersecurity protocols and innovating in space application technologies.
+                </p>
             </>
         ),
     },
     {
         name: "Unit of Robotics and Industrial IoT (I-IoT)",
-        description: "Focuses on autonomous mobile robots, production planning, and real-time quality control.",
+        description:
+            "Explores autonomous robotics, production optimization, and digital twin simulations.",
         icon: "🏭",
         content: (
             <>
                 <p>
-                    Focuses on the development of autonomous mobile robots and industrial
-                    robots.
+                    Concentrates on the development of autonomous mobile and industrial robots, as well as the optimization of production planning and real-time quality control.
                 </p>
                 <p>
-                    Includes optimization of production planning, real-time quality control,
-                    and supply chain management.
-                </p>
-                <p>
-                    Also focuses on simulation and optimization of manufacturing processes
-                    using AR/VR solutions.
+                    Also engages in virtual prototyping, product testing using Generative AI, real-time supply chain management, lifecycle optimization, and simulating manufacturing processes via AR/VR and digital twins.
                 </p>
             </>
         ),
     },
     {
         name: "Unit of Medical Technologies",
-        description: "Focuses on increasing the precision of medical procedures.",
+        description:
+            "Advances medical procedures with robotics, AI diagnostics, and personalized healthcare.",
         icon: "⚕️",
         content: (
             <>
                 <p>
-                    Focuses on the development of robots, mechanisms, and instruments to
-                    increase the precision of medical procedures.
+                    Specializes in developing robots, mechanisms, and instruments to enhance the precision of medical procedures such as robotic surgery and precise instrument positioning.
                 </p>
                 <p>
-                    Includes personalized oncological treatments, AI models for differential
-                    diagnosis, and the application of AI and robotics in oral surgery and
-                    dental medicine.
+                    Focuses on personalized oncological treatments, AI models for differential diagnosis, and the application of robotics in oral surgery, dental medicine, patient rehabilitation, and telemedicine.
                 </p>
                 <p>
-                    Also includes dedicated laboratories for medical imaging, AI-based
-                    diagnostics, and bioinformatics.
+                    The unit also incorporates laboratories dedicated to medical imaging, AI-based diagnostics, and bioinformatics, promoting non-invasive imaging and genetic analysis for early diagnosis and monitoring.
                 </p>
             </>
         ),
