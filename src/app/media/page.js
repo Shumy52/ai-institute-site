@@ -232,7 +232,8 @@ export default function MediaPage() {
                       height={1080}
                       className="w-full h-full object-cover object-center rounded-2xl"
                     />
-                    <div className="absolute bottom-4 right-4 flex space-x-2">
+                    {/* <div className="absolute bottom-4 right-4 flex space-x-2"> */}
+                    <div className="flex justify-center mt-4 space-x-2">
                       <FacebookShareButton
                         url={shareUrl}
                         title={title}
@@ -278,7 +279,7 @@ export default function MediaPage() {
                     className="rounded-2xl"
                   ></iframe>
                 )}
-                <p className="mt-4 text-center font-semibold text-blue-800 text-lg">
+                <p className="mt-4 text-center font-semibold text-blue-800 text-lg break-words">
                   {selectedMedia.title}
                 </p>
               </motion.div>
