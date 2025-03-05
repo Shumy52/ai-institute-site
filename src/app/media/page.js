@@ -3,6 +3,18 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 import Head from "next/head";
+import {
+  FacebookShareButton,
+  TwitterShareButton,
+  LinkedinShareButton,
+  PinterestShareButton,
+  EmailShareButton,
+  FacebookIcon,
+  TwitterIcon,
+  LinkedinIcon,
+  PinterestIcon,
+  EmailIcon,
+} from "next-share";
 
 const mediaItems = [
   {
@@ -59,6 +71,9 @@ const itemVariants = {
 
 export default function MediaPage() {
   const [selectedMedia, setSelectedMedia] = useState(null);
+  const shareUrl =
+    typeof window !== "undefined" ? window.location.href : "localhost:3000"; // the URL to share
+  const title = selectedMedia ? selectedMedia.title : "ICIA Media"; // Title for sharing
 
   return (
     <>
@@ -87,10 +102,12 @@ export default function MediaPage() {
               Institute.
             </motion.p>
 
+            {/* Part responsible to the animation of the images on page load (upwards & fade-in) */}
             <motion.div
               className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
               variants={containerVariants}
             >
+              {/* Mapping over the items from the start of the page, easier to edit */}
               {mediaItems.map((item, index) => (
                 <motion.div
                   key={index}
@@ -165,6 +182,7 @@ export default function MediaPage() {
           </div>
         </motion.div>
 
+        {/* Animating the images when they're selected */}
         <AnimatePresence>
           {selectedMedia && (
             <motion.div
@@ -175,6 +193,7 @@ export default function MediaPage() {
               exit={{ opacity: 0 }}
               transition={{ duration: 0.3 }}
             >
+              {/* The actual white rectangle with the image, after clicking an item */}
               <motion.div
                 className="bg-white p-6 rounded-3xl max-w-6xl w-full relative"
                 initial={{ scale: 0.95 }}
@@ -183,6 +202,7 @@ export default function MediaPage() {
                 transition={{ duration: 0.3 }}
                 onClick={(e) => e.stopPropagation()}
               >
+                {/* The X button, but clicking outside the image will also work. */}
                 <button
                   className="absolute top-4 right-4 text-gray-600 hover:text-gray-800 transition-colors duration-200"
                   onClick={() => setSelectedMedia(null)}
@@ -202,14 +222,50 @@ export default function MediaPage() {
                     />
                   </svg>
                 </button>
+
                 {selectedMedia.type === "image" ? (
-                  <Image
-                    src={selectedMedia.src}
-                    alt={selectedMedia.alt}
-                    width={1920}
-                    height={1080}
-                    className="w-full h-full object-cover object-center rounded-2xl"
-                  />
+                  <>
+                    <Image
+                      src={selectedMedia.src}
+                      alt={selectedMedia.alt}
+                      width={1920}
+                      height={1080}
+                      className="w-full h-full object-cover object-center rounded-2xl"
+                    />
+                    <div className="absolute bottom-4 right-4 flex space-x-2">
+                      <FacebookShareButton
+                        url={shareUrl}
+                        title={title}
+                      >
+                        <FacebookIcon size={32} round />
+                      </FacebookShareButton>
+                      <TwitterShareButton
+                        url={shareUrl}
+                        title={title}
+                      >
+                        <TwitterIcon size={32} round />
+                      </TwitterShareButton>
+                      <LinkedinShareButton
+                        url={shareUrl}
+                        title={title}
+                      >
+                        <LinkedinIcon size={32} round />
+                      </LinkedinShareButton>
+                      <PinterestShareButton
+                        url={shareUrl}
+                        title={title}
+                        media={`${shareUrl}${selectedMedia.src}`}
+                      >
+                        <PinterestIcon size={32} round />
+                      </PinterestShareButton>
+                      <EmailShareButton
+                        url={shareUrl}
+                        title={title}
+                      >
+                        <EmailIcon size={32} round />
+                      </EmailShareButton>
+                    </div>
+                  </>
                 ) : (
                   <iframe
                     width="100%"
