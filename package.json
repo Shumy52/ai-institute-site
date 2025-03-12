@@ -6,6 +6,7 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
+    "export": "STATIC_BUILD=true next build",
     "lint": "next lint"
   },
   "dependencies": {

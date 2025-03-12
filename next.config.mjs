@@ -1,17 +1,15 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-    output: "export",  // Enables static export
-    images: { unoptimized: true },  // If ya use <Image> component, else it won't work
-    trailingSlash: true, // This forces /news/ to serve /news/index.html
+  // Default configuration shared between builds
+  trailingSlash: true,
+  
+  // Conditional configuration based on environment
+  ...(process.env.STATIC_BUILD === 'true' ? {
+    output: "export",
+    images: { unoptimized: true },
+  } : {
+    // Server-rendered specific config can go here if needed
+  })
 };
-  
-  export default nextConfig;
-// MODIFIED TO EXPORT AUTOMATICALLY ON BUILD
-// CHECK THE "OUT" FOLDER
 
-// /** @type {import('next').NextConfig} */
-// const nextConfig = {};
-
-// export default nextConfig;
-
-  
+export default nextConfig;
