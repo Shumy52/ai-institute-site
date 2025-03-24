@@ -33,6 +33,7 @@ export default function Navbar() {
           <li><Link href="/media" className="hover:underline">Media</Link></li>
           <li><Link href="/timeline" className="hover:underline">Timeline</Link></li>
           <li><Link href="/contact" className="hover:underline">Contact</Link></li>
+          <li><Link href="/collaborators" className="hover:underline">Collaborators</Link></li>
         </ul>
       </div>
 
@@ -45,6 +46,7 @@ export default function Navbar() {
           <li><Link href="/media" className="hover:underline" onClick={() => setIsOpen(false)}>Media</Link></li>
           <li><Link href="/timeline" className="hover:underline" onClick={() => setIsOpen(false)}>Timeline</Link></li>
           <li><Link href="/contact" className="hover:underline" onClick={() => setIsOpen(false)}>Contact</Link></li>
+          <li><Link href="/collaborators" className="hover:underline" onClick={() => setIsOpen(false)}>Collaborators</Link></li>
         </ul>
       )}
     </nav>
