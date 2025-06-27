@@ -1,12 +1,12 @@
-"use client";
-import dynamic from "next/dynamic";
+export const metadata = {
+  title: "ICIA - Collaborators",
+};
 
-// Dynamically import the map component with SSR disabled
-const CollaboratorsMap = dynamic(() => import("./MapComponent.js"), {
-  ssr: false, // This prevents the component from being rendered on the server
-  loading: () => <div>Loading map...</div>,
-});
+import CollaboratorsClient from "./CollaboratorsClient";
+
+// Massive workaround, just to get it to display the right title
+// TODO: Come up with something better
 
 export default function Page() {
-  return <CollaboratorsMap />;
+  return <CollaboratorsClient />;
 }
