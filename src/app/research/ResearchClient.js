@@ -150,12 +150,12 @@ export default function ResearchClient() {
     };
 
     return (
-        <main className="flex flex-col items-center justify-center bg-gray-50 py-12">
-            <div className="container max-w-5xl mx-auto bg-white rounded-2xl shadow-xl overflow-hidden">
+        <main className="flex flex-col items-center justify-center bg-gray-50 dark:bg-gray-900 py-12 transition-colors duration-300 ">
+            <div className="container max-w-5xl mx-auto bg-white dark:bg-gray-950 rounded-2xl shadow-xl overflow-hidden">
                 <div className="grid grid-cols-1 md:grid-cols-4">
                     {/* Sidebar Navigation */}
-                    <nav className="bg-gray-100 p-6">
-                        <h2 className="text-2xl font-semibold text-gray-800 mb-6 border-b pb-2">
+                    <nav className="bg-gray-100 dark:bg-gray-800 p-6">
+                        <h2 className="text-2xl font-semibold text-gray-800 dark:text-gray-200 mb-6 border-b pb-2">
                             Research Areas
                         </h2>
                         <ul className="space-y-3">
@@ -165,7 +165,7 @@ export default function ResearchClient() {
                                     className={`flex items-center space-x-3 py-2 px-4 rounded-md transition-colors duration-300 cursor-pointer ${
                                         activeTab === submenu.id
                                             ? "bg-blue-600 text-white hover:bg-blue-700"
-                                            : "text-gray-700 hover:bg-gray-200"
+                                            : "text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700"
                                     }`}
                                     onClick={() => setActiveTab(submenu.id)}
                                 >
@@ -186,7 +186,7 @@ export default function ResearchClient() {
                             >
                                 <motion.h1
                                     variants={itemVariants}
-                                    className="text-3xl font-extrabold text-blue-700 mb-6"
+                                    className="text-3xl font-extrabold text-blue-700 dark:text-yellow-400 mb-6"
                                 >
                                     Research Units
                                 </motion.h1>
@@ -195,13 +195,13 @@ export default function ResearchClient() {
                                         <motion.div
                                             key={index}
                                             variants={itemVariants}
-                                            className="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 p-5 border border-gray-200 cursor-pointer"
+                                            className="bg-white dark:bg-gray-900 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 p-5 border border-gray-200 dark:border-gray-700 cursor-pointer"
                                             onClick={() => handleUnitClick(unit)}
                                         >
-                                            <h2 className="text-xl font-semibold text-gray-800 flex items-center gap-3 mb-2">
+                                            <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-200 flex items-center gap-3 mb-2">
                                                 {unit.icon} {unit.name}
                                             </h2>
-                                            <p className="text-gray-600">{unit.description}</p>
+                                            <p className="text-gray-600 dark:text-gray-300">{unit.description}</p>
                                         </motion.div>
                                     ))}
                                 </div>
@@ -239,10 +239,10 @@ export default function ResearchClient() {
                                 animate={{ opacity: 1 }}
                                 transition={{ duration: 0.5 }}
                             >
-                                <h2 className="text-2xl font-semibold text-gray-700">
+                                <h2 className="text-2xl font-semibold text-gray-700 dark:text-gray-200">
                                     Projects Content Coming Soon!
                                 </h2>
-                                <p className="text-gray-500 mt-3">
+                                <p className="text-gray-500 dark:text-gray-400 mt-3">
                                     Stay tuned for exciting updates.
                                 </p>
                             </motion.div>
@@ -255,10 +255,10 @@ export default function ResearchClient() {
                                 animate={{ opacity: 1 }}
                                 transition={{ duration: 0.5 }}
                             >
-                                <h2 className="text-2xl font-semibold text-gray-700">
+                                <h2 className="text-2xl font-semibold text-gray-700 dark:text-gray-200">
                                     Publications Content Coming Soon!
                                 </h2>
-                                <p className="text-gray-500 mt-3">
+                                <p className="text-gray-500 dark:text-gray-400 mt-3">
                                     Check back later for our latest research publications.
                                 </p>
                             </motion.div>

@@ -2,8 +2,8 @@
 import { VerticalTimeline, VerticalTimelineElement } from "react-vertical-timeline-component";
 import "react-vertical-timeline-component/style.min.css";
 import { FaBuilding, FaFirefox, FaUserTie } from "react-icons/fa";
-import Head from "next/head";
 import { motion } from "framer-motion";
+import { useEffect, useState } from "react";
 
 export default function TimelineClient() {
     const today = new Date().toISOString().split('T')[0];
@@ -47,52 +47,58 @@ export default function TimelineClient() {
         },
     ];
       
+    const [isDark, setIsDark] = useState(false);
+    useEffect(() => {
+        if (typeof window !== "undefined") {
+            setIsDark(document.documentElement.classList.contains("dark"));
+            const observer = new MutationObserver(() => {
+                setIsDark(document.documentElement.classList.contains("dark"));
+            });
+            observer.observe(document.documentElement, { attributes: true, attributeFilter: ["class"] });
+            return () => observer.disconnect();
+        }
+    }, []);
 
     return (
-        <>
-            <Head>
-                <title>ICIA - Timeline</title>
-            </Head>
-            <main className="max-w-4xl mx-auto p-6 bg-white text-black rounded-lg shadow-lg">
-                <motion.h1
-                    className="text-4xl font-extrabold text-center mb-8 text-blue-600"
-                    initial={{ opacity: 0, y: -50 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 1 }}
-                >
-                    📅 ICIA Timeline
-                </motion.h1>
-                <VerticalTimeline>
-                    {events.map((event, index) => (
-                        <VerticalTimelineElement
-                            key={index}
-                            className="vertical-timeline-element--work"
-                            contentStyle={{ background: "#f3f4f6", color: "#000" }}
-                            contentArrowStyle={{ borderRight: "7px solid #f3f4f6" }}
-                            date={event.date}
-                            dateClassName="text-blue-600 font-semibold"
-                            iconStyle={{ background: "#e63946", color: "#fff" }}
-                            icon={event.icon}
+        <main className="max-w-4xl mx-auto p-6 bg-white dark:bg-gray-900 text-black dark:text-white rounded-lg shadow-lg transition-colors duration-300">
+            <motion.h1
+                className="text-4xl font-extrabold text-center mb-8 text-blue-600 dark:text-yellow-400"
+                initial={{ opacity: 0, y: -50 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 1 }}
+            >
+                📅 ICIA Timeline
+            </motion.h1>
+            <VerticalTimeline>
+                {events.map((event, index) => (
+                    <VerticalTimelineElement
+                        key={index}
+                        className="vertical-timeline-element--work"
+                        contentStyle={{ background: isDark ? "#1a202c" : "#f3f4f6", color: isDark ? "#fff" : "#000" }}
+                        contentArrowStyle={{ borderRight: isDark ? "7px solid #1a202c" : "7px solid #f3f4f6" }}
+                        date={event.date}
+                        dateClassName="text-blue-600 dark:text-yellow-400 font-semibold"
+                        iconStyle={{ background: "#e63946", color: "#fff" }}
+                        icon={event.icon}
+                    >
+                        <motion.h3
+                            className="text-xl font-bold"
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            transition={{ duration: 0.5, delay: index * 0.2 }}
                         >
-                            <motion.h3
-                                className="text-xl font-bold"
-                                initial={{ opacity: 0 }}
-                                animate={{ opacity: 1 }}
-                                transition={{ duration: 0.5, delay: index * 0.2 }}
-                            >
-                                {event.title}
-                            </motion.h3>
-                            <motion.p
-                                initial={{ opacity: 0 }}
-                                animate={{ opacity: 1 }}
-                                transition={{ duration: 0.5, delay: index * 0.2 }}
-                            >
-                                {event.description}
-                            </motion.p>
-                        </VerticalTimelineElement>
-                    ))}
-                </VerticalTimeline>
-            </main>
-        </>
+                            {event.title}
+                        </motion.h3>
+                        <motion.p
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            transition={{ duration: 0.5, delay: index * 0.2 }}
+                        >
+                            {event.description}
+                        </motion.p>
+                    </VerticalTimelineElement>
+                ))}
+            </VerticalTimeline>
+        </main>
     );
 }

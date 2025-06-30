@@ -16,9 +16,9 @@ const itemVariants = {
 
 export default function ContactClient() {
   return (
-    <main className="max-w-4xl mx-auto p-6 bg-white text-black rounded-lg shadow-lg">
+    <main className="max-w-4xl mx-auto p-6 bg-white dark:bg-gray-900 text-black dark:text-white rounded-lg shadow-lg transition-colors duration-300">
       <motion.h1
-        className="text-4xl font-extrabold text-center mb-8 text-blue-600"
+        className="text-4xl font-extrabold text-center mb-8 text-blue-600 dark:text-yellow-400"
         initial={{ opacity: 0, y: -50 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 1 }}
@@ -26,8 +26,8 @@ export default function ContactClient() {
         📞 Contact Us
       </motion.h1>
       <section className="mb-8">
-        <h2 className="text-2xl font-semibold mb-4 text-yellow-600">Get in Touch</h2>
-        <p className="text-gray-800 mb-4">
+        <h2 className="text-2xl font-semibold mb-4 text-yellow-600 dark:text-yellow-400">Get in Touch</h2>
+        <p className="text-gray-800 dark:text-gray-200 mb-4">
           We would love to hear from you! Whether you have a question about our research, events, or anything else, our team is ready to answer all your questions.
         </p>
         <div style={{ overflow: 'hidden', height: '450px' }}>
@@ -45,8 +45,8 @@ export default function ContactClient() {
         </div>
       </section>
       <section>
-        <h2 className="text-2xl font-semibold mb-4 text-yellow-600">Our Location</h2>
-        <p className="text-gray-800 mb-4">
+        <h2 className="text-2xl font-semibold mb-4 text-yellow-600 dark:text-yellow-400">Our Location</h2>
+        <p className="text-gray-800 dark:text-gray-200 mb-4">
           Adresa: Strada Observatorului 2, Cluj-Napoca 400347, Romania
         </p>
         <iframe

@@ -8,5 +8,9 @@ import CollaboratorsClient from "./CollaboratorsClient";
 // TODO: Come up with something better
 
 export default function Page() {
-  return <CollaboratorsClient />;
+  return (
+    <main className="min-h-screen">
+      <CollaboratorsClient />
+    </main>
+  );
 }

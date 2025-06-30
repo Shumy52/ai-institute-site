@@ -84,22 +84,22 @@ export default function MediaClient() {
       <Head>
         <title>ICIA - Media</title>
       </Head>
-      <main className="flex flex-col items-center justify-center  bg-gray-100 py-12">
+      <main className="flex flex-col items-center justify-center bg-gray-100 dark:bg-gray-900 py-12 transition-colors duration-300">
         <motion.div
-          className="max-w-5xl mx-auto bg-white rounded-3xl shadow-xl overflow-hidden"
+          className="max-w-5xl mx-auto bg-white dark:bg-gray-950 rounded-3xl shadow-xl overflow-hidden"
           variants={containerVariants}
           initial="hidden"
           animate="visible"
         >
           <div className="px-8 py-12">
             <motion.h1
-              className="text-5xl font-extrabold text-center text-blue-700 mb-6"
+              className="text-5xl font-extrabold text-center text-blue-700 dark:text-yellow-400 mb-6"
               variants={itemVariants}
             >
               <span className="inline-block mr-2">📸</span> ICIA Media Gallery
             </motion.h1>
             <motion.p
-              className="text-lg text-center text-gray-700 mb-10"
+              className="text-lg text-center text-gray-700 dark:text-gray-200 mb-10"
               variants={itemVariants}
             >
               Explore images and videos showcasing the progress of the ICIA
@@ -147,7 +147,7 @@ export default function MediaClient() {
             </motion.div>
           </div>
 
-          <div className="bg-gray-50 px-4 py-6">
+          <div className="bg-gray-50 dark:bg-gray-800 px-4 py-6">
             <motion.div
               className="flex justify-center space-x-6"
               variants={itemVariants}
@@ -199,7 +199,7 @@ export default function MediaClient() {
             >
               {/* The actual white rectangle with the image, after clicking an item */}
               <motion.div
-                className="bg-white p-6 rounded-3xl max-w-6xl w-full relative"
+                className="bg-white dark:bg-gray-900 p-6 rounded-3xl max-w-6xl w-full relative"
                 initial={{ scale: 0.95 }}
                 animate={{ scale: 1 }}
                 exit={{ scale: 0.95 }}
@@ -283,7 +283,7 @@ export default function MediaClient() {
                     className="rounded-2xl"
                   ></iframe>
                 )}
-                <p className="mt-4 text-center font-semibold text-blue-800 text-lg break-words">
+                <p className="mt-4 text-center font-semibold text-blue-800 dark:text-yellow-300 text-lg break-words">
                   {selectedMedia.title}
                 </p>
               </motion.div>
