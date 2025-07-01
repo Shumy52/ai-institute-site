@@ -16,7 +16,7 @@ const itemVariants = {
 
 export default function ContactClient() {
   return (
-    <main className="max-w-4xl mx-auto p-6 bg-white dark:bg-gray-900 text-black dark:text-white rounded-lg shadow-lg transition-colors duration-300">
+    <main className="max-w-4xl mx-auto p-6 bg-white dark:bg-gray-950 text-black dark:text-white rounded-lg shadow-lg transition-colors duration-300">
       <motion.h1
         className="text-4xl font-extrabold text-center mb-8 text-blue-600 dark:text-yellow-400"
         initial={{ opacity: 0, y: -50 }}
