@@ -69,7 +69,7 @@ export default function NewsClient() {
                   href={item.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-blue-500 dark:text-yellow-300 hover:text-yellow-500 dark:hover:text-yellow-400 hover:underline transition duration-300"
+                  className="text-blue-500 dark:text-amber-700 hover:text-yellow-500 dark:hover:text-amber-600 hover:underline transition duration-300"
                 >
                   {item.text}
                 </a>
