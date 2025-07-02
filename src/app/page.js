@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 export const metadata = {
   title: "AIRI - Home",
   description:
@@ -22,12 +24,12 @@ export default function Home() {
             Advancing research, innovation, and exploration in the field of
             artificial intelligence at the Technical University of Cluj-Napoca.
           </p>
-          <a
+          <Link
             href="#about"
             className="inline-block bg-yellow-400 dark:bg-yellow-600 text-black dark:text-white font-semibold px-8 py-3 rounded-full shadow-lg hover:bg-yellow-300 dark:hover:bg-yellow-500 transition"
           >
             Learn More
-          </a>
+          </Link>
         </div>
         <img
           src="/homepage/qrSignup.jpg"
@@ -63,7 +65,7 @@ export default function Home() {
       {/* Quick Links Section */}
       <section className="container mx-auto px-4 pb-16 max-w-5xl">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          <a
+          <Link
             href="/research"
             className="bg-blue-50 dark:bg-gray-800 hover:bg-blue-100 dark:hover:bg-gray-700 rounded-lg p-6 shadow text-center transition"
           >
@@ -73,8 +75,8 @@ export default function Home() {
             <p className="text-gray-600 dark:text-gray-300">
               Explore our research units and projects.
             </p>
-          </a>
-          <a
+          </Link>
+          <Link
             href="/news"
             className="bg-blue-50 dark:bg-gray-800 hover:bg-blue-100 dark:hover:bg-gray-700 rounded-lg p-6 shadow text-center transition"
           >
@@ -82,8 +84,8 @@ export default function Home() {
             <p className="text-gray-600 dark:text-gray-300">
               Stay updated with the latest news and events.
             </p>
-          </a>
-          <a
+          </Link>
+          <Link
             href="/media"
             className="bg-blue-50 dark:bg-gray-800 hover:bg-blue-100 dark:hover:bg-gray-700 rounded-lg p-6 shadow text-center transition"
           >
@@ -93,7 +95,7 @@ export default function Home() {
             <p className="text-gray-600 dark:text-gray-300">
               Browse our media gallery and publications.
             </p>
-          </a>
+          </Link>
         </div>
       </section>
 
