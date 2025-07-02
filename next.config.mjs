@@ -1,7 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   // Default configuration shared between builds
-  trailingSlash: true,
+  trailingSlash: false,
   
   // Conditional configuration based on environment
   ...(process.env.STATIC_BUILD === 'true' ? {
