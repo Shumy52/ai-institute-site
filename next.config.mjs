@@ -2,7 +2,7 @@
 const nextConfig = {
   // Default configuration shared between builds
   trailingSlash: false,
-  
+    basePath: '/staging', // Subdomain for current production server
   // Conditional configuration based on environment
   ...(process.env.STATIC_BUILD === 'true' ? {
     output: "export",
@@ -11,5 +11,7 @@ const nextConfig = {
     // Server-rendered specific config can go here if needed
   })
 };
+
+
 
 export default nextConfig;
