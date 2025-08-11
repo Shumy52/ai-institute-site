@@ -3,31 +3,10 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import Image from "next/image";
+import Link from "next/link";
+import { staffData } from "@/app/data/staffData";
 
-const staffCategories = [
-  "Scientific Staff",
-  "Adjunct Scientists",
-  "Associated Units' Personal",
-  "PHD Students",
-  "Master Students",
-  "Engineers",
-  "Administrative Staff",
-  "IT Staff",
-  "Content & Communications Staff",
-  "Maintenance Staff",
-];
-
-const staffData = {
-  "Scientific Staff": [
-    {
-      name: "Prenume Nume",
-      title: "Titlu",
-      phone: "0744444444",
-      email: "Nume.Prenume@ex.com",
-      image: "/people/Basic_avatar_image.png",
-    },
-  ],
-};
+const staffCategories = Object.keys(staffData);
 
 export default function StaffClient() {
   const [selectedCategory, setSelectedCategory] = useState(null);
@@ -51,9 +30,9 @@ export default function StaffClient() {
         {staffCategories.map((category) => (
           <div key={category}>
             <motion.button
-              onClick={() => {
-                setSelectedCategory(selectedCategory === category ? null : category);
-              }}
+              onClick={() =>
+                setSelectedCategory(selectedCategory === category ? null : category)
+              }
               whileHover={{ scale: 1.03 }}
               whileTap={{ scale: 0.98 }}
               className={`w-full text-lg font-semibold ${
@@ -69,30 +48,33 @@ export default function StaffClient() {
               <section className="mt-4">
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
                   {staffData[category].map((person, index) => (
-                    <div
+                    <Link
                       key={index}
-                      className="bg-gray-100 dark:bg-gray-800 p-4 rounded shadow text-center"
+                      href={`/people/staff/${person.slug}`}
+                      className="block"
                     >
-                      <div className="w-32 h-32 mx-auto mb-4 relative rounded overflow-hidden">
-                        <Image
-                          src={person.image}
-                          alt={person.name}
-                          width={128}
-                          height={128}
-                          className="object-cover w-full h-full rounded"
-                        />
+                      <div className="bg-gray-100 dark:bg-gray-800 p-4 rounded shadow text-center hover:shadow-md transition cursor-pointer">
+                        <div className="w-32 h-32 mx-auto mb-4 relative rounded overflow-hidden">
+                          <Image
+                            src={person.image}
+                            alt={person.name}
+                            width={128}
+                            height={128}
+                            className="object-cover w-full h-full rounded"
+                          />
+                        </div>
+                        <h3 className="text-lg font-bold text-blue-700 dark:text-blue-300">
+                          {person.name}
+                        </h3>
+                        <p className="text-sm">{person.title}</p>
+                        {person.phone && (
+                          <p className="text-sm text-gray-600 dark:text-gray-300">
+                            Phone Ext. {person.phone}
+                          </p>
+                        )}
+                        <p className="text-sm italic">{person.email}</p>
                       </div>
-                      <h3 className="text-lg font-bold text-blue-700 dark:text-blue-300">
-                        {person.name}
-                      </h3>
-                      <p className="text-sm">{person.title}</p>
-                      {person.phone && (
-                        <p className="text-sm text-gray-600 dark:text-gray-300">
-                          Phone Ext. {person.phone}
-                        </p>
-                      )}
-                      <p className="text-sm italic">{person.email}</p>
-                    </div>
+                    </Link>
                   ))}
                 </div>
               </section>
