@@ -11,7 +11,7 @@ export const metadata = {
 export default function Home() {
   return (
     <main className="bg-white dark:bg-gray-900 transition-colors duration-300">
-      /* Hero Section */
+      {/* Hero Section */}
         <section className="relative h-[60vh] flex items-center justify-center bg-gradient-to-br from-blue-600 to-indigo-800 dark:from-gray-900 dark:to-gray-800 overflow-hidden">
           <img
             src={withBasePath("/homepage/hero5.png")}
