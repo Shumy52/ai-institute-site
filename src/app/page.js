@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { withBasePath } from "../utils/basePath";
+import { basePath, withBasePath } from "../utils/basePath";
 
 
 export const metadata = {
@@ -11,10 +11,10 @@ export const metadata = {
 export default function Home() {
   return (
     <main className="bg-white dark:bg-gray-900 transition-colors duration-300">
-      {/* Hero Section */}
-      <section className="relative h-[60vh] flex items-center justify-center bg-gradient-to-br from-blue-600 to-indigo-800 dark:from-gray-900 dark:to-gray-800 overflow-hidden">
-        <img
-          src="/staging/homepage/hero5.png" // Added basepath
+      /* Hero Section */
+        <section className="relative h-[60vh] flex items-center justify-center bg-gradient-to-br from-blue-600 to-indigo-800 dark:from-gray-900 dark:to-gray-800 overflow-hidden">
+          <img
+            src={withBasePath("/homepage/hero5.png")}
           alt="AI Research Hero"
           className="absolute inset-0 w-full h-full object-cover opacity-60"
         />
@@ -34,7 +34,7 @@ export default function Home() {
           </Link>
         </div>
         <img
-          src="/staging/homepage/qrSignup.jpg" // Added basepath
+          src={withBasePath("/homepage/qrSignup.jpg")} // Added basepath
           alt="Sign Up QR Code"
           className="absolute bottom-8 left-8 w-32 h-32 md:w-48 md:h-48 object-contain rounded-xl shadow-xl border-4 border-white dark:border-gray-800"
         />
@@ -68,7 +68,7 @@ export default function Home() {
       <section className="container mx-auto px-4 pb-16 max-w-5xl">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           <Link
-            href="/research" // Added basepath
+            href="/research" // No need to add basepath for links. The router handles it
             className="bg-blue-50 dark:bg-gray-800 hover:bg-blue-100 dark:hover:bg-gray-700 rounded-lg p-6 shadow text-center transition"
           >
             <h3 className="text-xl font-semibold text-blue-700 dark:text-yellow-400 mb-2">
@@ -105,7 +105,7 @@ export default function Home() {
       <section className="container mx-auto px-4 pb-16 max-w-3xl">
         <div className="bg-yellow-50 dark:bg-gray-800 border-l-4 border-yellow-400 dark:border-yellow-600 rounded-lg p-6 flex items-center gap-6 shadow">
           <img
-            src="/staging/homepage/hero4.jpg" // Added basepath
+            src={withBasePath("/homepage/hero4.jpg")} 
             alt="Construction Site"
             className="w-32 h-32 object-cover rounded-lg border border-gray-200 dark:border-gray-700"
           />
