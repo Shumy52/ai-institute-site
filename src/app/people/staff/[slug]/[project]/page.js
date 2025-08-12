@@ -1,7 +1,6 @@
 import Image from "next/image";
 import { allStaff } from "@/app/data/staffData";
 
-// aceeași funcție ca în lista de proiecte (să genereze exact același slug)
 const slugify = (s) =>
   String(s || "")
     .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
@@ -11,7 +10,6 @@ const slugify = (s) =>
     .replace(/\s+/g, "-")
     .replace(/-+/g, "-");
 
-// ✅ Pre-generăm rutele dinamice pentru build/static export
 export function generateStaticParams() {
   const params = [];
   for (const person of allStaff) {
@@ -57,7 +55,6 @@ export default function ProjectDetailPage({ params }) {
   const person = allStaff.find((p) => p.slug === slug);
   if (!person) return <div className="p-6">Staff member not found.</div>;
 
-  // normalize projects (handle strings)
   const normalizedProjects = (person.projects ?? []).map((proj) =>
     typeof proj === "string"
       ? { title: proj, lead: undefined, domain: undefined, description: undefined, start: undefined, end: undefined }
