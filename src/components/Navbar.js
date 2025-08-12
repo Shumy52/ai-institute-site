@@ -12,7 +12,7 @@ const navLinks = [
   { href: '/research', label: 'Research' },
   { href: '/people/', label: 'People' },
   { href: '/news', label: 'News' },
-  { href: '/media', label: 'Media' },
+  { href: '/engagement', label: 'Engagement' },
   { href: '/timeline', label: 'Timeline' },
   { href: '/collaborators', label: 'Collaborators' },
   { href: '/contact', label: 'Contact' },
