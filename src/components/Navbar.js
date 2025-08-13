@@ -12,10 +12,21 @@ const navLinks = [
   { href: '/research', label: 'Research' },
   { href: '/people/', label: 'People' }, 
   { href: '/news', label: 'News' },
-  { href: '/media', label: 'Media' },
+  { href: '/engagement', label: 'Engagement' },
   { href: '/timeline', label: 'Timeline' },
   { href: '/collaborators', label: 'Collaborators' },
   { href: '/contact', label: 'Contact' },
+];
+
+const engagementMenu = [
+  { href: '/engagement/public', label: 'Public engagement' },
+  { href: '/engagement/academic', label: 'Academic engagement' },
+  { href: '/engagement/industry', label: 'Industry engagement' },
+  { href: '/engagement/high-school', label: 'High-school engagement' },
+  { href: '/engagement/partners', label: 'Partners' },
+  { href: '/engagement/tech-transfer', label: 'Technology transfer & development' },
+  { href: '/engagement/hpc-ai', label: 'HPC-AI services' },
+  { href: '/engagement/industrial-phd', label: 'Industrial PhD' },
 ];
 
 export default function Navbar() {
@@ -24,6 +35,8 @@ export default function Navbar() {
   const [isPeopleOpen, setIsPeopleOpen] = useState(false);       
   const [mobilePeopleOpen, setMobilePeopleOpen] = useState(false); 
   const peopleTimeoutRef = useRef(null);
+  const [engOpen, setEngOpen] = useState(false);
+  const [engMobileOpen, setEngMobileOpen] = useState(false); 
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -90,42 +103,79 @@ export default function Navbar() {
                   <span className="cursor-pointer hover:underline">{link.label}</span>
 
                   {isPeopleOpen && (
-                    <ul
-                      className="absolute top-full left-0 mt-2 w-56 bg-white dark:bg-gray-950 shadow-lg rounded-md border border-gray-200 dark:border-gray-800 z-50"
-                      onMouseEnter={() => {
-                        if (peopleTimeoutRef.current) clearTimeout(peopleTimeoutRef.current);
-                        setIsPeopleOpen(true);
-                      }}
-                      onMouseLeave={() => {
-                        peopleTimeoutRef.current = setTimeout(() => {
-                          setIsPeopleOpen(false);
-                        }, 200);
-                      }}
+                  <ul
+                    className="absolute top-full left-0 mt-2 w-56 bg-white dark:bg-gray-950 shadow-lg rounded-md border border-gray-200 dark:border-gray-800 z-50"
+                    onMouseEnter={() => {
+                      clearTimeout(peopleTimeoutRef.current);
+                      setIsPeopleOpen(true);
+                    }}
+                    onMouseLeave={() => {
+                      peopleTimeoutRef.current = setTimeout(() => {
+                      setIsPeopleOpen(false);
+                    }, 200);
+                    }}>
+                    <li>
+                      <Link href="/people/researchers" className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-800">
+                        RESEARCHERS
+                      </Link>
+                    </li>
+                    <li>
+                      <Link href="/people/staff" className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-800">
+                        STAFF & STUDENTS
+                      </Link>
+                    </li>
+                    <li>
+                      <Link href="/people/alumni" className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-800">
+                        ALUMNI
+                      </Link>
+                    </li>
+                    <li>
+                      <Link href="/people/visiting_researches" className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-800">
+                        VISITING RESEARCHERS
+                      </Link>
+                    </li>
+                  </ul>)}
+                </li>);
+            } else if (link.label === 'Engagement'){
+              return (
+                <li
+                  key={link.href}
+                  className="relative"
+                  onMouseEnter={() => setEngOpen(true)}
+                  onMouseLeave={() => setEngOpen(false)}
+                >
+                  <span 
+                    type="button"
+                    tabIndex={0}
+                    aria-haspopup="menu"
+                    aria-expanded={engOpen}
+                    className="hover:underline cursor:pointer"
+                    onClick={() => setEngOpen(o => !o)}
+                  >
+                    {link.label}
+                    </span>
+
+                    <div 
+                      className={`absolute left-0 top-full w-80 z-50 ${engOpen ? 'block' : 'hidden'}`}
+                      role="menu"
                     >
-                      <li>
-                        <Link href="/people/researchers" className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-800">
-                          Researchers
-                        </Link>
-                      </li>
-                      <li>
-                        <Link href="/people/staff" className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-800">
-                          Staff
-                        </Link>
-                      </li>
-                      <li>
-                        <Link href="/people/alumni" className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-800">
-                          Alumni
-                        </Link>
-                      </li>
-                      <li>
-                        <Link href="/people/visiting_researchers" className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-800">
-                          Visiting Researchers
-                        </Link>
-                      </li>
-                    </ul>
-                  )}
-                </li>
-              );
+                    <div className="pt-2 rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950 shadow-lg">
+                      <ul className="py-2">
+                        {engagementMenu.map(item => (
+                          <li key={item.href}>
+                            <Link
+                              href={item.href}
+                              className="block px-4 py-2.5 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800"
+                            >
+                              {item.label}
+                            </Link>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+                 </li>
+                );
             } else {
               return (
                 <li key={link.href}>
@@ -141,90 +191,64 @@ export default function Navbar() {
 
       {/* Mobile Dropdown */}
       {isOpen && (
-        <ul className="md:hidden flex flex-col items-stretch space-y-1 mt-4 bg-white dark:bg-gray-950 py-4 border-t border-gray-300 dark:border-gray-800">
-          {navLinks.map(link => {
-            if (link.label === 'People') {
-              return (
-                <li key="people-mobile" className="w-full">
-                  <button
-                    className="w-full text-left px-6 py-3 hover:bg-gray-100 dark:hover:bg-gray-800"
-                    onClick={() => setMobilePeopleOpen(prev => !prev)}
-                    aria-expanded={mobilePeopleOpen}
-                    aria-controls="people-submenu-mobile"
-                  >
-                    People
-                  </button>
+  <ul className="md:hidden flex flex-col items-center space-y-4 mt-4 bg-white dark:bg-gray-950 py-4 border-t border-gray-300 dark:border-gray-800">
+    {navLinks
+      .filter(l => l.label !== 'Engagement')
+      .map(link => (
+        <li key={link.href}>
+          <Link
+            href={link.href}
+            className="hover:underline"
+            onClick={() => setIsOpen(false)}
+          >
+            {link.label}
+          </Link>
+        </li>
+      ))}
+    <li className="w-full max-w-sm">
+      <button
+        type="button"
+        className="w-full flex items-center justify-between px-4 py-2 rounded-lg border
+                   border-gray-200 dark:border-gray-800"
+        onClick={() => setEngMobileOpen(o => !o)}
+        aria-expanded={engMobileOpen}
+        aria-controls="engagement-mobile-submenu"
+      >
+        <span>Engagement</span>
+        <svg
+          viewBox="0 0 20 20"
+          className={`h-4 w-4 transition-transform ${engMobileOpen ? 'rotate-180' : ''}`}
+          fill="currentColor"
+          aria-hidden
+        >
+          <path
+            fillRule="evenodd"
+            d="M5.23 7.21a.75.75 0 011.06.02L10 10.94l3.71-3.71a.75.75 0 111.06 1.06l-4.24 4.24a.75.75 0 01-1.06 0L5.21 8.29a.75.75 0 01.02-1.08z"
+            clipRule="evenodd"
+          />
+        </svg>
+      </button>
 
-                  {mobilePeopleOpen && (
-                    <ul id="people-submenu-mobile" className="pl-6">
-                      <li>
-                        <Link
-                          href="/people/researchers"
-                          className="block px-6 py-2 hover:bg-gray-100 dark:hover:bg-gray-800"
-                          onClick={() => {
-                            setIsOpen(false);
-                            setMobilePeopleOpen(false);
-                          }}
-                        >
-                          Researchers
-                        </Link>
-                      </li>
-                      <li>
-                        <Link
-                          href="/people/staff"
-                          className="block px-6 py-2 hover:bg-gray-100 dark:hover:bg-gray-800"
-                          onClick={() => {
-                            setIsOpen(false);
-                            setMobilePeopleOpen(false);
-                          }}
-                        >
-                          Staff
-                        </Link>
-                      </li>
-                      <li>
-                        <Link
-                          href="/people/alumni"
-                          className="block px-6 py-2 hover:bg-gray-100 dark:hover:bg-gray-800"
-                          onClick={() => {
-                            setIsOpen(false);
-                            setMobilePeopleOpen(false);
-                          }}
-                        >
-                          Alumni
-                        </Link>
-                      </li>
-                      <li>
-                        <Link
-                          href="/people/visiting_researchers"
-                          className="block px-6 py-2 hover:bg-gray-100 dark:hover:bg-gray-800"
-                          onClick={() => {
-                            setIsOpen(false);
-                            setMobilePeopleOpen(false);
-                          }}
-                        >
-                          Visiting Researchers
-                        </Link>
-                      </li>
-                    </ul>
-                  )}
-                </li>
-              );
-            }
-
-            return (
-              <li key={link.href}>
-                <Link
-                  href={link.href}
-                  className="block px-6 py-3 hover:bg-gray-100 dark:hover:bg-gray-800"
-                  onClick={() => setIsOpen(false)}
-                >
-                  {link.label}
-                </Link>
-              </li>
-            );
-          })}
+      {engMobileOpen && (
+        <ul id="engagement-mobile-submenu" className="mt-2 space-y-1">
+          {engagementMenu.map(item => (
+            <li key={item.href}>
+              <Link
+                href={item.href}
+                className="block px-6 py-2 text-sm text-gray-700 dark:text-gray-200
+                           hover:bg-gray-100 dark:hover:bg-gray-800 rounded-md"
+                onClick={() => { setIsOpen(false); setEngMobileOpen(false); }}
+              >
+                {item.label}
+              </Link>
+            </li>
+          ))}
         </ul>
       )}
+    </li>
+  </ul>
+)}
+
     </nav>
   );
 }

@@ -3,6 +3,7 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 import Head from "next/head";
+import { withBasePath } from "../../utils/basePath";
 import {
   FacebookShareButton,
   TwitterShareButton,
@@ -19,13 +20,13 @@ import {
 const mediaItems = [
   {
     type: "image",
-    src: "/media/Construction1.png",
+    src: withBasePath("/media/Construction1.png"),
     alt: "ICIA Construction Site",
     title: "Construction Progress",
   },
   {
     type: "image",
-    src: "/media/Construction2.png",
+    src: withBasePath("/media/Construction2.png"),
     alt: "ICIA Research Team",
     title: "Research Team at Work",
   },
@@ -39,10 +40,10 @@ const mediaItems = [
   // TESTING
   {
     type: "pdf",
-    src: "/media/Brosura Prezentare ICIA.pdf",
+    src: withBasePath("/media/Brosura Prezentare ICIA.pdf"),
     alt: "ICIA Document",
     title: "Presentation brochure",
-    // thumbnail: "/media/thumbBrochure.png", // Add a thumbnail... but it doesn't look right...
+    // thumbnail: withBasePath("/media/thumbBrochure.png"), // Add a thumbnail... but it doesn't look right...
   },
 ];
 
@@ -129,7 +130,7 @@ export default function MediaClient() {
                     />
                   ) : item.thumbnail ? (
                     <Image
-                      src={item.thumbnail}
+                      src={withBasePath(item.thumbnail)}
                       alt={item.alt}
                       width={600}
                       height={400}
