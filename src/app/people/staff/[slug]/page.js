@@ -3,10 +3,11 @@
 import Image from "next/image";
 import Link from "next/link"; 
 import { useMemo, useState } from "react";
+import { useParams } from "next/navigation";
 import { allStaff } from "@/app/data/staffData";
 
-export default function StaffDetailPage({ params }) {
-  const { slug } = params;
+export default function StaffDetailPage() {
+  const { slug } = useParams();
   const person = allStaff.find((p) => p.slug === slug);
 
   const [view, setView] = useState("publications");

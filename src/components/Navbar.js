@@ -5,12 +5,12 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { FaBars, FaTimes } from 'react-icons/fa';
 import Logo5 from '../../public/media/Logos/Logo5.svg';
-import Logo5White from '../../public/media/Logos/Logo3.png'; // TODO: Replace with an actual fitting model
+import Logo5White from '../../public/media/Logos/Logo3.png'; 
 
 const navLinks = [
   { href: '/', label: 'Home' },
   { href: '/research', label: 'Research' },
-  { href: '/people/', label: 'People' },
+  { href: '/people/', label: 'People' }, 
   { href: '/news', label: 'News' },
   { href: '/engagement', label: 'Engagement' },
   { href: '/timeline', label: 'Timeline' },
@@ -32,7 +32,8 @@ const engagementMenu = [
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [isDark, setIsDark] = useState(false);
-  const [isPeopleOpen, setIsPeopleOpen] = useState(false);
+  const [isPeopleOpen, setIsPeopleOpen] = useState(false);       
+  const [mobilePeopleOpen, setMobilePeopleOpen] = useState(false); 
   const peopleTimeoutRef = useRef(null);
   const [engOpen, setEngOpen] = useState(false);
   const [engMobileOpen, setEngMobileOpen] = useState(false); 
@@ -71,7 +72,10 @@ export default function Navbar() {
         {/* Mobile menu button */}
         <button
           className="md:hidden text-2xl"
-          onClick={() => setIsOpen(!isOpen)}
+          onClick={() => {
+            setIsOpen(!isOpen);
+            if (!isOpen) setMobilePeopleOpen(false);
+          }}
           aria-label="Toggle menu"
           aria-expanded={isOpen}
         >
@@ -87,14 +91,15 @@ export default function Navbar() {
                   key={link.href}
                   className="relative"
                   onMouseEnter={() => {
-                    clearTimeout(peopleTimeoutRef.current);
+                    if (peopleTimeoutRef.current) clearTimeout(peopleTimeoutRef.current);
                     setIsPeopleOpen(true);
                   }}
-                    onMouseLeave={() => {
-                      peopleTimeoutRef.current = setTimeout(() => {
+                  onMouseLeave={() => {
+                    peopleTimeoutRef.current = setTimeout(() => {
                       setIsPeopleOpen(false);
                     }, 200);
-                  }}>
+                  }}
+                >
                   <span className="cursor-pointer hover:underline">{link.label}</span>
 
                   {isPeopleOpen && (
