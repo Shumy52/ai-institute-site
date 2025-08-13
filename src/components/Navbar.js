@@ -109,7 +109,7 @@ export default function Navbar() {
                       </li>
                       <li>
                         <Link href="/people/staff" className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-800">
-                          Staff & Students
+                          Staff
                         </Link>
                       </li>
                       <li>
@@ -178,7 +178,7 @@ export default function Navbar() {
                             setMobilePeopleOpen(false);
                           }}
                         >
-                          Staff & Students
+                          Staff
                         </Link>
                       </li>
                       <li>

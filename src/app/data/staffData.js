@@ -1,5 +1,5 @@
 export const staffData = {
-  "Scientific Staff": [
+  "Personal": [
     {
       slug: "prenume-nume",
       name: "Groza Adrian Petru",
@@ -43,15 +43,7 @@ export const staffData = {
       ]
     }
   ],
-  "Adjunct Scientists": [],
-  "Associated Units' Personal": [],
-  "PHD Students": [],
-  "Master Students": [],
-  "Engineers": [],
-  "Administrative Staff": [],
-  "IT Staff": [],
-  "Content & Communications Staff": [],
-  "Maintenance Staff": [],
+  "Students": [],
 };
 
 export const allStaff = Object.values(staffData).flat();
