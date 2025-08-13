@@ -1,9 +1,13 @@
-// src/utils/basePath.js
+export function withBasePath(p) {
+  const path = p.startsWith('/') ? p : `/${p}`;
+  let base = '';
 
-// Get basePath from NEXT_PUBLIC_BASE_PATH or fallback to '/staging'
-export const basePath = process.env.NEXT_PUBLIC_BASE_PATH || '/icia-staging';
+  if (typeof window !== 'undefined') {
+    base = window.__NEXT_DATA__?.basePath || window.__NEXT_DATA__?.assetPrefix || '';
+  } else {
+    base = process.env.NEXT_PUBLIC_BASE_PATH || '';
+  }
 
-export function withBasePath(path) {
-  if (!path.startsWith('/')) return basePath + '/' + path;
-  return basePath + path;
+  const full = `${base}${path}`;
+  return full.replace(/\/{2,}/g, '/');
 }

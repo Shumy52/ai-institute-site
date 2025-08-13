@@ -23,3 +23,22 @@ body {
 .vertical-timeline::before {
   background: #3b82f6 !important; /* Bright blue */
 }
+
+@layer components {
+  .title-hero {@apply text-gray-900 dark:text-gray-50; }
+  .muted {@apply text-gray-600 dark:text-gray-300; }
+
+  .card {
+    @apply rounded-2xl border bg-white text-gray-900 border-gray-200 dark:bg-gray-900 dark:text-gray-100 dark:border-gray-800;
+  }
+
+  .card-hover {
+    @apply transition hover:shadow-lg hover:bg-gray-50 dark:hover:bg-gray-800/70;
+  }
+}
+
+@layer base {
+  body {
+    @apply bg-white text-gray-900 dark:bg-gray-950 dark:text-gray-100;
+  }
+}
