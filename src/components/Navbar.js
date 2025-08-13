@@ -98,22 +98,22 @@ export default function Navbar() {
                     }}>
                     <li>
                       <Link href="/people/researchers" className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-800">
-                        RESEARCHERS
+                        Researchers
                       </Link>
                     </li>
                     <li>
                       <Link href="/people/staff" className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-800">
-                        STAFF & STUDENTS
+                        Staff & Students
                       </Link>
                     </li>
                     <li>
                       <Link href="/people/alumni" className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-800">
-                        ALUMNI
+                        Alumni
                       </Link>
                     </li>
                     <li>
                       <Link href="/people/visiting_researches" className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-800">
-                        VISITING RESEARCHERS
+                        Visiting Researchers
                       </Link>
                     </li>
                   </ul>)}

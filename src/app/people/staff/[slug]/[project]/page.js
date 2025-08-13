@@ -57,8 +57,19 @@ export default function ProjectDetailPage({ params }) {
 
   const normalizedProjects = (person.projects ?? []).map((proj) =>
     typeof proj === "string"
-      ? { title: proj, lead: undefined, domain: undefined, description: undefined, start: undefined, end: undefined }
-      : proj
+      ? {
+          title: proj,
+          lead: undefined,
+          domain: undefined,
+          description: undefined,
+          start: undefined,
+          end: undefined,
+          docUrl: undefined,
+        }
+      : {
+          ...proj,
+          docUrl: proj.docUrl || proj.documentation || proj.docs || proj.link || undefined,
+        }
   );
 
   const proj = normalizedProjects.find((p) => slugify(p.title) === project);
@@ -102,11 +113,31 @@ export default function ProjectDetailPage({ params }) {
         {proj.description && (
           <p className="text-base leading-relaxed text-gray-800 dark:text-gray-200">{proj.description}</p>
         )}
+
+        {/* Link for documentation */}
+        {proj.docUrl && (
+          <a
+            href={proj.docUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="mt-4 inline-flex items-center gap-2 px-3 py-2 rounded-md border border-gray-300 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-900 transition"
+            aria-label="Open project documentation in a new tab"
+          >
+            <span>📄 View documentation</span>
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4"
+                 fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 6H18m0 0v4.5M18 6l-7.5 7.5M6 18h6" />
+            </svg>
+          </a>
+        )}
       </section>
 
       {/* Link back */}
       <div className="mt-8">
-        <a href={`/people/staff/${encodeURIComponent(slug)}`} className="text-sm underline opacity-80 hover:opacity-100">
+        <a
+          href={`/people/staff/${encodeURIComponent(slug)}`}
+          className="text-sm underline opacity-80 hover:opacity-100"
+        >
           ← Back to {person.name}
         </a>
       </div>
