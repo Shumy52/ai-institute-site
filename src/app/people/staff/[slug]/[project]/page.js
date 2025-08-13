@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { use } from "react";
 import { allStaff } from "@/app/data/staffData";
 
 const slugify = (s) =>
@@ -28,7 +29,7 @@ export function generateStaticParams() {
 }
 
 export default function ProjectDetailPage({ params }) {
-  const { slug, project } = params;
+  const { slug, project } = use(params);
 
   const toMonthName = (m) => {
     if (m == null) return "";
