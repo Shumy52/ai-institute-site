@@ -32,8 +32,7 @@ const peopleMenu = [
   { href: '/people/researchers', label: 'Researchers' },
   { href: '/people/staff', label: 'Staff' },
   { href: '/people/alumni', label: 'Alumni' },
-  { href: '/people/visiting_researches', label: 'Visiting researchers' },
-  { href: '/people/solid-server', label: 'Solid Server' },
+  { href: '/people/visiting_researchers', label: 'Visiting researchers' },
 ];
 
 const researchMenu = [
