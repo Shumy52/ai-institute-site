@@ -234,7 +234,9 @@ export default function Navbar() {
 
         <button
           className="md:hidden text-2xl"
+
           onClick={() => setIsOpen(!isOpen)}
+
           aria-label="Toggle menu"
           aria-expanded={isOpen}
         >
@@ -248,12 +250,14 @@ export default function Navbar() {
               return (
                 <DesktopDropdown
                   key={link.href}
+
                   link={link}
                   open={dd.open}
                   setOpen={dd.setOpen}
                   items={dd.items}
                   alignRight={link.label === 'Search' || link.label === 'About'}
                 />
+
               );
             }
             return (
