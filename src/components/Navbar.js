@@ -32,8 +32,7 @@ const peopleMenu = [
   { href: '/people/researchers', label: 'Researchers' },
   { href: '/people/staff', label: 'Staff' },
   { href: '/people/alumni', label: 'Alumni' },
-  { href: '/people/visiting_researches', label: 'Visiting researchers' },
-  { href: '/people/solid-server', label: 'Solid Server' },
+  { href: '/people/visiting_researchers', label: 'Visiting researchers' },
 ];
 
 const researchMenu = [
@@ -228,7 +227,9 @@ export default function Navbar() {
 
         <button
           className="md:hidden text-2xl"
+
           onClick={() => setIsOpen(!isOpen)}
+
           aria-label="Toggle menu"
           aria-expanded={isOpen}
         >
@@ -242,12 +243,14 @@ export default function Navbar() {
               return (
                 <DesktopDropdown
                   key={link.href}
+
                   link={link}
                   open={dd.open}
                   setOpen={dd.setOpen}
                   items={dd.items}
                   alignRight={link.label === 'Search' || link.label === 'About'}
                 />
+
               );
             }
 
