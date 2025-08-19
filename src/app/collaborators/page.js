@@ -1,4 +1,4 @@
-export const metadata = {
+/* export const metadata = {
   title: "ICIA - Collaborators",
 };
 
@@ -13,4 +13,10 @@ export default function Page() {
       <CollaboratorsClient />
     </main>
   );
+}
+  */
+ import { notFound } from 'next/navigation';
+
+export default function Page() {
+  notFound();
 }

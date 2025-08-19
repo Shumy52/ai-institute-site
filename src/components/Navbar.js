@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect,  useState } from 'react';
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { FaBars, FaTimes } from 'react-icons/fa';
@@ -57,6 +57,7 @@ const newsMenu = [
 
 const aboutMenu = [
   { href: '/about#mission', label: 'Mission' },
+  { href: '/timeline', label: 'History (Timeline)' },
   { href: '/about/organigram', label: 'Organigram' },
   { href: '/about/sitemap', label: 'Sitemap' },
   { href: '/about/reports', label: 'Reports Self-assessment reports' },
@@ -82,21 +83,15 @@ function DesktopDropdown({ link, open, setOpen, items, alignRight = false }) {
       onMouseLeave={() => setOpen(false)}
     >
       <span
-        role="button"
-        tabIndex={0}
         aria-haspopup="true"
         aria-expanded={open}
-        className="hover:underline cursor-pointer"
-        onClick={() => setOpen((o) => !o)}
-        onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && setOpen((o) => !o)}
+        className="cursor-default select-none"
       >
         {link.label}
       </span>
 
       <div
-        className={`absolute ${alignRight ? 'right-0' : 'left-0'} top-full z-50 ${
-          open ? 'block' : 'hidden'
-        } max-h-[70vh] overflow-auto min-w-64 max-w-[90vw]`}
+        className={`absolute ${alignRight ? 'right-0' : 'left-0'} top-full z-50 ${open ? 'block' : 'hidden'} max-h-[70vh] overflow-auto min-w-64 max-w-[90vw]`}
         role="menu"
       >
         <div className="pt-2 rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950 shadow-lg">
@@ -189,9 +184,7 @@ export default function Navbar() {
 
       <div
         id={`${title.toLowerCase().replace(/\s+/g, '-')}-mobile-panel`}
-        className={`overflow-hidden transition-[max-height,opacity] duration-300 ${
-          open ? 'max-h-[1000px] opacity-100' : 'max-h-0 opacity-0'
-        }`}
+        className={`overflow-hidden transition-[max-height,opacity] duration-300 ${open ? 'max-h-[1000px] opacity-100' : 'max-h-0 opacity-0'}`}
       >
         <ul className="rounded-b-md border-x border-b border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 divide-y divide-gray-200 dark:divide-gray-800">
           {items.map((item) => (
@@ -257,9 +250,10 @@ export default function Navbar() {
                 />
               );
             }
+
             return (
               <li key={link.href}>
-                <Link href={link.href} className="hover:underline">
+                <Link href={link.href} className="">
                   {link.label}
                 </Link>
               </li>
@@ -279,42 +273,12 @@ export default function Navbar() {
               Home
             </Link>
           </li>
-          <MobileAccordion
-            title="Research"
-            open={researchMobileOpen}
-            setOpen={setResearchMobileOpen}
-            items={researchMenu}
-          />
-          <MobileAccordion
-            title="Engagement"
-            open={engMobileOpen}
-            setOpen={setEngMobileOpen}
-            items={engagementMenu}
-          />
-          <MobileAccordion
-            title="People"
-            open={peopleMobileOpen}
-            setOpen={setPeopleMobileOpen}
-            items={peopleMenu}
-          />
-          <MobileAccordion
-            title="News & Events"
-            open={newsMobileOpen}
-            setOpen={setNewsMobileOpen}
-            items={newsMenu}
-          />
-          <MobileAccordion
-            title="About"
-            open={aboutMobileOpen}
-            setOpen={setAboutMobileOpen}
-            items={aboutMenu}
-          />
-          <MobileAccordion
-            title="Search"
-            open={searchMobileOpen}
-            setOpen={setSearchMobileOpen}
-            items={searchMenu}
-          />
+          <MobileAccordion title="Research" open={researchMobileOpen} setOpen={setResearchMobileOpen} items={researchMenu} />
+          <MobileAccordion title="Engagement" open={engMobileOpen} setOpen={setEngMobileOpen} items={engagementMenu} />
+          <MobileAccordion title="People" open={peopleMobileOpen} setOpen={setPeopleMobileOpen} items={peopleMenu} />
+          <MobileAccordion title="News & Events" open={newsMobileOpen} setOpen={setNewsMobileOpen} items={newsMenu} />
+          <MobileAccordion title="About" open={aboutMobileOpen} setOpen={setAboutMobileOpen} items={aboutMenu} />
+          <MobileAccordion title="Search" open={searchMobileOpen} setOpen={setSearchMobileOpen} items={searchMenu} />
         </ul>
       )}
     </nav>
