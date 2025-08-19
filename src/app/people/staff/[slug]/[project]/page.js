@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { use } from "react";
 import { allStaff } from "@/app/data/staffData";
+import { proData } from "@/app/data/proData";
 
 const slugify = (s) =>
   String(s || "")
@@ -11,10 +12,61 @@ const slugify = (s) =>
     .replace(/\s+/g, "-")
     .replace(/-+/g, "-");
 
+function projectsForPersonSlug(personSlug) {
+  if (!proData) return [];
+
+  if (!Array.isArray(proData) && typeof proData === "object") {
+    const arr = proData[personSlug];
+    return Array.isArray(arr) ? arr : [];
+  }
+
+  if (Array.isArray(proData)) {
+    return proData.filter((p) => {
+      const ownerSlug = p?.personSlug || p?.ownerSlug || p?.slug;
+      const members = p?.members || p?.team || [];
+      const byOwner = typeof ownerSlug === "string" && ownerSlug.toLowerCase() === String(personSlug).toLowerCase();
+      const byMembers =
+        Array.isArray(members) &&
+        members.some((m) =>
+          typeof m === "string"
+            ? m.toLowerCase() === String(personSlug).toLowerCase()
+            : m && typeof m === "object" && typeof m.slug === "string" && m.slug.toLowerCase() === String(personSlug).toLowerCase()
+        );
+      return byOwner || byMembers;
+    });
+  }
+
+  return [];
+}
+
+function normalizeProject(p) {
+  if (typeof p === "string") {
+    return {
+      title: p,
+      lead: undefined,
+      domain: undefined,
+      description: undefined,
+      start: undefined,
+      end: undefined,
+      docUrl: undefined,
+    };
+  }
+  
+  return {
+    title: p?.title ?? "",
+    lead: p?.lead,
+    domain: p?.domain,
+    description: p?.description,
+    start: p?.start,
+    end: p?.end,
+    docUrl: p?.docUrl || p?.documentation || p?.docs || p?.link || undefined,
+  };
+}
+
 export function generateStaticParams() {
   const params = [];
   for (const person of allStaff) {
-    const projects = (person.projects ?? []).map((proj) =>
+    const projects = projectsForPersonSlug(person.slug).map((proj) =>
       typeof proj === "string" ? { title: proj } : proj
     );
     for (const p of projects) {
@@ -56,22 +108,7 @@ export default function ProjectDetailPage({ params }) {
   const person = allStaff.find((p) => p.slug === slug);
   if (!person) return <div className="p-6">Staff member not found.</div>;
 
-  const normalizedProjects = (person.projects ?? []).map((proj) =>
-    typeof proj === "string"
-      ? {
-          title: proj,
-          lead: undefined,
-          domain: undefined,
-          description: undefined,
-          start: undefined,
-          end: undefined,
-          docUrl: undefined,
-        }
-      : {
-          ...proj,
-          docUrl: proj.docUrl || proj.documentation || proj.docs || proj.link || undefined,
-        }
-  );
+  const normalizedProjects = projectsForPersonSlug(person.slug).map(normalizeProject);
 
   const proj = normalizedProjects.find((p) => slugify(p.title) === project);
   if (!proj) return <div className="p-6">Project not found.</div>;
@@ -88,7 +125,7 @@ export default function ProjectDetailPage({ params }) {
           className="rounded-full object-cover"
         />
         <div>
-          <div className="text-sm text-gray-600 dark:text-gray-400">Project lead profile</div>
+          <div className="text-sm text-gray-600 dark:text-gray-400">Project profile</div>
           <h1 className="text-xl font-semibold">{person.name}</h1>
         </div>
       </div>
@@ -132,16 +169,6 @@ export default function ProjectDetailPage({ params }) {
           </a>
         )}
       </section>
-
-      {/* Link back */}
-      <div className="mt-8">
-        <a
-          href={`/people/staff/${encodeURIComponent(slug)}`}
-          className="text-sm underline opacity-80 hover:opacity-100"
-        >
-          ← Back to {person.name}
-        </a>
-      </div>
     </main>
   );
 }
