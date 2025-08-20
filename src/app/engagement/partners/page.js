@@ -1,5 +1,7 @@
 export const metadata = { title: "Partners – AIRi @ UTCN" };
 
+import CollaboratorsClient from "../../collaborators/CollaboratorsClient";
+
 const partners = [
   { name: "CLAIRE", url: "https://claire-ai.org", blurb: "Confederation of Laboratories for AI Research in Europe." },
   { name: "ELLIS", url: "https://ellis.eu", blurb: "European Laboratory for Learning and Intelligent Systems." },
@@ -14,6 +16,7 @@ export default function PartnersPage(){
   return (
     <main className="max-w-6xl mx-auto px-4 py-12">
       <h1 className="text-3xl font-semibold mb-8">Partners</h1>
+
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {partners.map(p=>(
           <a key={p.name} href={p.url} target="_blank" rel="noopener noreferrer"
@@ -23,6 +26,11 @@ export default function PartnersPage(){
           </a>
         ))}
       </div>
+
+      <section className="mt-12">
+        <h2 className="text-2xl font-semibold mb-4">Partners map</h2>
+        <CollaboratorsClient />
+      </section>
     </main>
   );
 }
