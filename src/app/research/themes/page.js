@@ -1,5 +1,5 @@
 export const metadata = {
-  title: "ICIA - Research Themes",
+  title: "ICIA - Themes",
 };
 
 import ThemesClient from "./themesClient";
