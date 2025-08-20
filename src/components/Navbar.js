@@ -69,7 +69,7 @@ const aboutMenu = [
 const searchMenu = [
   { href: '/search', label: 'Classic search' },
   { href: '/search/chatbot', label: 'AIRi chatbot (LLM-based)' },
-  { href: '/search/knowledge-graphs', label: 'AIRi Knowledge graphs navigator' },
+  { href: '/search/knowledge-graph', label: 'AIRi Knowledge graphs navigator' },
 ];
 
 function DesktopDropdown({ link, open, setOpen, items, alignRight = false }) {

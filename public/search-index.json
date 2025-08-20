@@ -1,0 +1,48 @@
+[
+  { "title": "Home", "route": "/", "tags": ["home","landing"], "snippet": "AIRi @ UTCN — homepage." },
+
+  { "title": "About – Mission & History", "route": "/about", "tags": ["about","mission","history","timeline"], "snippet": "Mission și History (Timeline)." },
+  { "title": "About – Organigram", "route": "/organigram", "tags": ["about","organigram","director committee","scientific committee"], "snippet": "Structura comitetelor, PNG/PDF." },
+  { "title": "About – Sitemap", "route": "/about/sitemap", "tags": ["about","sitemap"], "snippet": "Harta site-ului." },
+  { "title": "About – Reports (Self‑assessment)", "route": "/about/reports", "tags": ["about","reports","self-assessment","racai"], "snippet": "Rapoarte (linkuri externe RACAI)." },
+  { "title": "About – Procedures & Regulations", "route": "/about/procedures", "tags": ["about","procedures","regulations","policies"], "snippet": "Proceduri, regulamente, comisii." },
+  { "title": "About – Guidelines (Onboarding)", "route": "/about/guidelines", "tags": ["about","guidelines","onboarding","toolkits"], "snippet": "Kituri de onboarding." },
+  { "title": "About – Virtual Tour", "route": "/about/virtual-tour", "tags": ["about","virtual tour","3d"], "snippet": "Tur virtual 3D." },
+  { "title": "About – Rooms & Calendar", "route": "/about/rooms-calendar", "tags": ["about","rooms","calendar","presence"], "snippet": "Camere & orar/prezență." },
+  { "title": "About – Contact", "route": "/about/contact", "tags": ["about","contact","social"], "snippet": "Date de contact și social media." },
+
+  { "title": "Research – Overview", "route": "/research", "tags": ["research","overview"], "snippet": "Prezentare cercetare." },
+  { "title": "Research – Departments", "route": "/research/departments", "tags": ["research","departments"], "snippet": "Departamente implicate." },
+  { "title": "Research – Themes", "route": "/research/themes", "tags": ["research","themes","areas"], "snippet": "Teme/Domenii de cercetare." },
+  { "title": "Research – Projects", "route": "/research/projects", "tags": ["research","projects"], "snippet": "Proiecte de cercetare." },
+  { "title": "Research – Publications", "route": "/research/publications", "tags": ["research","publications","papers"], "snippet": "Publicații." },
+  { "title": "Research – Thesis", "route": "/research/thesis", "tags": ["research","thesis"], "snippet": "Teze." },
+  { "title": "Research – Tools", "route": "/research/tools", "tags": ["research","tools","software"], "snippet": "Unelte și infrastructură." },
+  { "title": "Research – Datasets", "route": "/research/datasets", "tags": ["research","datasets","data"], "snippet": "Seturi de date." },
+
+  { "title": "Engagement – Public engagement", "route": "/engagement/public", "tags": ["engagement","public"], "snippet": "Inițiative pentru public." },
+  { "title": "Engagement – Academic engagement", "route": "/engagement/academic", "tags": ["engagement","academic","students"], "snippet": "Inițiative academice." },
+  { "title": "Engagement – Industry engagement", "route": "/engagement/industry", "tags": ["engagement","industry"], "snippet": "Colaborare cu industria." },
+  { "title": "Engagement – High‑school engagement", "route": "/engagement/high-school", "tags": ["engagement","high-school","outreach"], "snippet": "Activități pentru licee." },
+  { "title": "Engagement – Partners", "route": "/engagement/partners", "tags": ["engagement","partners"], "snippet": "Parteneri și colaboratori." },
+  { "title": "Engagement – Technology transfer & development", "route": "/engagement/tech-transfer", "tags": ["engagement","technology transfer","development"], "snippet": "Transfer tehnologic & dezvoltare." },
+  { "title": "Engagement – HPC‑AI services", "route": "/engagement/hpc-ai-services", "tags": ["engagement","hpc","ai services"], "snippet": "Servicii HPC‑AI." },
+  { "title": "Engagement – Industrial PhD", "route": "/engagement/industrial-phd", "tags": ["engagement","industrial phd","doctoral"], "snippet": "Doctorat industrial." },
+
+  { "title": "People – Researchers", "route": "/people/researchers", "tags": ["people","researchers"], "snippet": "Cercetători." },
+  { "title": "People – Staff", "route": "/people/staff", "tags": ["people","staff"], "snippet": "Personalul AIRi." },
+  { "title": "People – Alumni", "route": "/people/alumni", "tags": ["people","alumni"], "snippet": "Foști membri și alumni." },
+  { "title": "People – Visiting researchers", "route": "/people/visiting", "tags": ["people","visiting","researchers"], "snippet": "Cercetători vizitatori." },
+  { "title": "People – Solid Server", "route": "/people/solid-server", "tags": ["people","solid","server"], "snippet": "Solid Server." },
+
+  { "title": "News & Events – News", "route": "/news", "tags": ["news","media"], "snippet": "Știri." },
+  { "title": "News & Events – Events", "route": "/events", "tags": ["events","calendar"], "snippet": "Evenimente." },
+  { "title": "News & Events – Seminars", "route": "/events/seminars", "tags": ["events","seminars"], "snippet": "Seminarii." },
+  { "title": "News & Events – Open Project calls", "route": "/projects/open-calls", "tags": ["projects","open calls","funding"], "snippet": "Apeluri deschise de proiecte." },
+  { "title": "News & Events – Awards", "route": "/news/awards", "tags": ["news","awards","recognition"], "snippet": "Premii & distincții." },
+  { "title": "News & Events – Career/Job Opportunities", "route": "/careers", "tags": ["careers","jobs","opportunities"], "snippet": "Oportunități de carieră." },
+
+  { "title": "Search – Classic", "route": "/search/classic", "tags": ["search","classic"], "snippet": "Căutare clasică (index local)." },
+  { "title": "Search – AIRi Chatbot", "route": "/search/chatbot", "tags": ["search","chatbot","llm"], "snippet": "Chatbot LLM (Coming soon)." },
+  { "title": "Search – Knowledge Graphs", "route": "/search/knowledge-graph", "tags": ["search","knowledge graphs","navigator"], "snippet": "Navigator knowledge graphs (Coming soon)." }
+]
