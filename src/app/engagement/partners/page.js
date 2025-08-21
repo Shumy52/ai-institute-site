@@ -29,7 +29,7 @@ export default function PartnersPage(){
 
       <section className="mt-12">
         <h2 className="text-2xl font-semibold mb-4">Partners map</h2>
-        <CollaboratorsClient />
+        <CollaboratorsClient parners={partners} />
       </section>
     </main>
   );

@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 :root {
-  --background: #ffffff !important; /* Changed to white */
+  --background: #ffffff !important;
   --foreground: #171717;
 }
 
@@ -14,19 +14,9 @@
   }
 }
 
-body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
-}
-
-.vertical-timeline::before {
-  background: #3b82f6 !important; /* Bright blue */
-}
-
 @layer components {
-  .title-hero {@apply text-gray-900 dark:text-gray-50; }
-  .muted {@apply text-gray-600 dark:text-gray-300; }
+  .title-hero { @apply text-gray-900 dark:text-gray-50; }
+  .muted { @apply text-gray-600 dark:text-gray-300; }
 
   .card {
     @apply rounded-2xl border bg-white text-gray-900 border-gray-200 dark:bg-gray-900 dark:text-gray-100 dark:border-gray-800;
@@ -40,27 +30,32 @@ body {
 @layer base {
   body {
     @apply bg-white text-gray-900 dark:bg-gray-950 dark:text-gray-100;
+    color: var(--foreground);
+    background: var(--background);
+    font-family: Arial, Helvetica, sans-serif;
   }
 }
 
-/* THEME VARS for the About timeline wrapper */
-.icia-wrapper {
-  /* LIGHT MODE */
-  --icia-line: #2563eb;        
-  --icia-title: #2563eb;      
-  --icia-date: #2563eb;        
-  --icia-card-bg: #ffffff;    
-  --icia-card-text: #111827;   
-  --icia-card-border: #e5e7eb; 
+.vertical-timeline::before {
+  background: var(--icia-line, #3b82f6) !important;
 }
+
+.icia-wrapper {
+  --icia-line: #2563eb;
+  --icia-title: #2563eb;
+  --icia-date: #2563eb;
+  --icia-card-bg: #ffffff;
+  --icia-card-text: #111827;
+  --icia-card-border: #e5e7eb;
+}
+
 .dark .icia-wrapper {
-  /* DARK MODE */
-  --icia-line: #2563eb;        
-  --icia-title: #facc15;       
-  --icia-date: #facc15;        
-  --icia-card-bg: #111827;     
-  --icia-card-text: #e5e7eb;   
-  --icia-card-border: #4b5563; 
+  --icia-line: #2563eb;
+  --icia-title: #facc15;
+  --icia-date: #facc15;
+  --icia-card-bg: #111827;
+  --icia-card-text: #e5e7eb;
+  --icia-card-border: #4b5563;
 }
 
 .icia-wrapper .vertical-timeline-element-date,
@@ -68,4 +63,3 @@ body {
   color: var(--icia-date) !important;
   font-weight: 600;
 }
-
