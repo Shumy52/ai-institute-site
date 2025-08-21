@@ -46,12 +46,12 @@ const researchMenu = [
 ];
 
 const newsMenu = [
-  { href: '/news', label: 'News' },
-  { href: '/news/events', label: 'Events' },
-  { href: '/news/seminars', label: 'Seminars' },
-  { href: '/news/open-project-calls', label: 'Open Project calls' },
-  { href: '/news/awards', label: 'Awards' },
-  { href: '/news/careers', label: 'Career/Job Opportunities' },
+  { href: '/news&events/news', label: 'News' },
+  { href: '/news&events/events', label: 'Events' },
+  { href: '/news&events/seminars', label: 'Seminars' },
+  { href: '/news&events/open-project-calls', label: 'Open Project calls' },
+  { href: '/news&events/awards', label: 'Awards' },
+  { href: '/news&events/careers', label: 'Career/Job Opportunities' },
 ];
 
 const aboutMenu = [
