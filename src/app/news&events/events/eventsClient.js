@@ -1,7 +1,17 @@
 "use client";
 
 import { motion } from "framer-motion";
-import eventsData from "@/app/data/news&events/eventsData.json"; 
+import eventsData from "@/app/data/news&events/eventsData.json";
+
+/* Animations */
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: { opacity: 1, transition: { staggerChildren: 0.08, delayChildren: 0.15 },},
+};
+const itemVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: { opacity: 1, y: 0 },
+};
 
 export default function EventsClient() {
   const items = Array.isArray(eventsData) ? eventsData : [];
@@ -38,24 +48,15 @@ export default function EventsClient() {
       ) : (
         <motion.ul
           className="mt-10 space-y-4"
+          variants={containerVariants}
           initial="hidden"
-          animate="show"
-          variants={{
-            hidden: { opacity: 0 },
-            show: {
-              opacity: 1,
-              transition: { staggerChildren: 0.08, delayChildren: 0.15 },
-            },
-          }}
+          animate="visible"
         >
           {items.map((ev, idx) => (
             <motion.li
               key={`${ev.title}-${idx}`}
               className="border border-gray-200 dark:border-gray-800 rounded-xl bg-white dark:bg-gray-900 hover:shadow-lg transition-shadow"
-              variants={{
-                hidden: { opacity: 0, y: 20 },
-                show: { opacity: 1, y: 0 },
-              }}
+              variants={itemVariants}
             >
               <div className="p-5">
                 <a
