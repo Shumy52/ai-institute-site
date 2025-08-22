@@ -6,10 +6,7 @@ import { motion } from "framer-motion";
 /* Animations */
 const containerVariants = {
   hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: { staggerChildren: 0.08, delayChildren: 0.15 },
-  },
+  visible: { opacity: 1, transition: { staggerChildren: 0.08, delayChildren: 0.15 },},
 };
 const itemVariants = {
   hidden: { opacity: 0, y: 14 },

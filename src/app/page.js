@@ -66,7 +66,7 @@ export default function Home() {
       <section className="container mx-auto px-4 pb-16 max-w-5xl">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           <Link
-            href="/research" // No need to add basepath for links. The router handles it
+            href="/research/departments" // No need to add basepath for links. The router handles it
             className="bg-blue-50 dark:bg-gray-800 hover:bg-blue-100 dark:hover:bg-gray-700 rounded-lg p-6 shadow text-center transition"
           >
             <h3 className="text-xl font-semibold text-blue-700 dark:text-yellow-400 mb-2">
@@ -77,7 +77,7 @@ export default function Home() {
             </p>
           </Link>
           <Link
-            href="/news" 
+            href="/news&events/news" 
             className="bg-blue-50 dark:bg-gray-800 hover:bg-blue-100 dark:hover:bg-gray-700 rounded-lg p-6 shadow text-center transition"
           >
             <h3 className="text-xl font-semibold text-blue-700 dark:text-yellow-400 mb-2">News</h3>
