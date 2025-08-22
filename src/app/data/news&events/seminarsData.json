@@ -1,0 +1,14 @@
+[
+    {
+        "title": "Introduction to Artificial Intelligence (AI)",
+        "about": ["Explain the fundamental concepts and applications of AI in various domains.", "Analyze the role of generative AI in transforming business operations, identifying opportunities for innovation and process improvement.", "Describe the core principles of machine learning, deep learning, and neural networks, and apply them to real-world scenarios.", "Design a generative AI solution for an organizational challenge, integrating ethical considerations."],
+        "modules": ["Introduction and Applications of AI", "AI Concepts, Terminology and Application Domains", "Business and Career Transformation Through AI", "Issues, Concerns and Ethical Considerations"],
+        "url": "https://www.coursera.org/learn/introduction-to-ai#about"
+    },
+    {
+        "title": "Introduction to AI and Machine Learning on Google Cloud",
+        "about": ["Recognize the data-to-AI technologies and tools offered by Google Cloud.", "Choose between different options to develop an AI project on Google Cloud.", "Use generative AI capabilities in applications.", "Build ML models end-to-end by using Vertex AI."],
+        "modules": ["Introduction", "AI Foundations", "AI Development Options", "AI Development Workflow", "Generative AI", "Summary"],
+        "url": "https://www.coursera.org/learn/introduction-to-ai-and-machine-learning-on-google-cloud#modules"
+    }
+]
