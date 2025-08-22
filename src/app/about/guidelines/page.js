@@ -27,7 +27,7 @@ function Tile({ label, href, icon: Icon }) {
       {...(href ? { href } : {})}
       className={`group flex flex-col items-center gap-3 p-4 rounded-xl ${
         href
-          ? "focus:outline-none focus-visible:ring-2 ring-offset-2 ring-blue-500 cursor-pointer"
+          ? "focus:outline-none focus-visible:ring-2 ring-offset-2 ring-blue-500 cursor-pointer transition hover:bg-gray-50 dark:hover:bg-gray-800/60"
           : "opacity-60 cursor-default"
       }`}
     >
@@ -43,13 +43,17 @@ function Tile({ label, href, icon: Icon }) {
 
 export default function GuidelinesPage() {
   return (
-    <main className="max-w-6xl mx-auto px-6 py-12">
-      <h1 className="text-3xl font-semibold mb-8">Just For You</h1>
-      <section className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-x-12 gap-y-10">
-        {ITEMS.map((it) => (
-          <Tile key={it.label} {...it} />
-        ))}
-      </section>
+    <main className="flex flex-col items-center justify-center bg-gray-50 dark:bg-gray-900 py-12">
+      <div className="container max-w-6xl mx-auto bg-white dark:bg-gray-950 rounded-2xl shadow-xl p-6 md:p-10">
+        <h1 className="text-2xl md:text-3xl font-extrabold mb-10 text-gray-900 dark:text-gray-100 tracking-tight">
+          Just For You
+        </h1>
+        <section className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-x-12 gap-y-10">
+          {ITEMS.map((it) => (
+            <Tile key={it.label} {...it} />
+          ))}
+        </section>
+      </div>
     </main>
   );
 }

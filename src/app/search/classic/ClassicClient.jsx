@@ -3,64 +3,94 @@
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 
-function escapeRegExp(s) {
-  return s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-}
+/* --- helpers --- */
+const strip = (s) =>
+  (s || "")
+    .toString()
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, ""); // fără diacritice
 
 function parseTerms(q) {
-  return q.trim().toLowerCase().split(/\s+/).filter(Boolean);
-}
-
-function buildPrefixRegex(terms) {
-  if (!terms.length) return null;
-  const source = terms.map(escapeRegExp).join("|");
-  return new RegExp(`\\b(${source}\\w*)`, "ig");
+  return strip(q).split(/\s+/).filter(Boolean);
 }
 
 function highlightPrefix(text, terms) {
-  if (!terms.length || !text) return text;
-  const re = buildPrefixRegex(terms);
-  if (!re) return text;
-  const parts = text.split(re);
-  return parts.map((part, i) =>
-    re.test(part) ? (
-      <mark key={`h-${i}`} className="bg-yellow-200 px-0.5 rounded">
-        {part}
+  if (!terms?.length || !text) return text;
+  const raw = text.toString();
+  const lowered = strip(raw);
+
+  // marchează fiecare apariție a termenilor (substring)
+  let out = [];
+  let i = 0;
+  while (i < raw.length) {
+    // găsește cel mai devreme match pentru oricare termen
+    let nextIdx = -1;
+    let nextLen = 0;
+    for (const t of terms) {
+      if (!t) continue;
+      const j = lowered.indexOf(t, i);
+      if (j !== -1 && (nextIdx === -1 || j < nextIdx)) {
+        nextIdx = j;
+        nextLen = t.length;
+      }
+    }
+    if (nextIdx === -1) {
+      out.push(<span key={`t-${i}`}>{raw.slice(i)}</span>);
+      break;
+    }
+    if (nextIdx > i) {
+      out.push(<span key={`t-${i}`}>{raw.slice(i, nextIdx)}</span>);
+    }
+    out.push(
+      <mark key={`h-${nextIdx}`} className="bg-yellow-200 px-0.5 rounded">
+        {raw.slice(nextIdx, nextIdx + nextLen)}
       </mark>
-    ) : (
-      <span key={`t-${i}`}>{part}</span>
-    )
-  );
+    );
+    i = nextIdx + nextLen;
+  }
+  return out;
 }
 
-function matchesAllTermsPrefix(item, terms) {
+/* scoring & matching (fără regex, doar substring) */
+function matchesAllTerms(item, terms) {
   if (!terms.length) return false;
-  const title = (item.title || "").toLowerCase();
-  const snippet = (item.snippet || "").toLowerCase();
-  const tags = (item.tags || []).map((t) => (t || "").toLowerCase());
+  const title = strip(item.title);
+  const snippet = strip(item.snippet);
+  const tags = (item.tags || []).map(strip);
 
   return terms.every((t) => {
-    const re = new RegExp(`\\b${escapeRegExp(t)}`, "i");
-    if (re.test(title)) return true;
-    if (re.test(snippet)) return true;
-    for (const tag of tags) if (re.test(tag)) return true;
+    if (!t) return true;
+    if (title.includes(t)) return true;
+    if (snippet.includes(t)) return true;
+    for (const tag of tags) if (tag.includes(t)) return true;
     return false;
   });
 }
 
-function scoreItemPrefix(item, terms) {
+function scoreItem(item, terms) {
   let score = 0;
-  const title = (item.title || "").toLowerCase();
-  const snippet = (item.snippet || "").toLowerCase();
-  const tags = (item.tags || []).map((t) => (t || "").toLowerCase());
+  const title = strip(item.title);
+  const snippet = strip(item.snippet);
+  const tags = (item.tags || []).map(strip);
 
   for (const t of terms) {
-    const re = new RegExp(`\\b${escapeRegExp(t)}`, "i");
-    if (re.test(title)) score += 3;
-    else if (tags.some((tag) => re.test(tag))) score += 2;
-    else if (re.test(snippet)) score += 1;
+    if (!t) continue;
+    if (title.includes(t)) score += 3;
+    else if (tags.some((tg) => tg.includes(t))) score += 2;
+    else if (snippet.includes(t)) score += 1;
   }
   return score;
+}
+
+/* basePath helper (funcționează și cu /icia-staging, /ida-staging etc.) */
+function getBasePath() {
+  if (typeof window === "undefined") return "";
+  const fromNext = window.__NEXT_DATA__?.assetPrefix;
+  if (fromNext) return fromNext;
+  const seg = window.location.pathname.split("/")[1] || "";
+  if (/staging/i.test(seg)) return `/${seg}`;
+  return "";
 }
 
 export default function ClassicClient() {
@@ -69,9 +99,29 @@ export default function ClassicClient() {
   const [ready, setReady] = useState(false);
 
   useEffect(() => {
-    fetch("/search-index.json")
-      .then((r) => r.json())
-      .then(setIdx)
+    const base = getBasePath(); // ex. "/icia-staging" sau ""
+    const url = `${base}/search-index.json`;
+
+    fetch(url)
+      .then(async (r) => {
+        if (!r.ok) {
+          console.error("[search] failed to load index:", url, r.status, r.statusText);
+          return [];
+        }
+        return r.json();
+      })
+      .then((data) => {
+        if (!Array.isArray(data)) {
+          console.warn("[search] index is not array:", data);
+          setIdx([]);
+        } else {
+          setIdx(data);
+        }
+      })
+      .catch((err) => {
+        console.error("[search] error loading index:", err);
+        setIdx([]);
+      })
       .finally(() => setReady(true));
   }, []);
 
@@ -80,10 +130,11 @@ export default function ClassicClient() {
     if (!terms.length) return { results: [], terms };
 
     const raw = idx
-      .filter((item) => matchesAllTermsPrefix(item, terms))
-      .map((item) => ({ ...item, _score: scoreItemPrefix(item, terms) }))
+      .filter((item) => matchesAllTerms(item, terms))
+      .map((item) => ({ ...item, _score: scoreItem(item, terms) }))
       .sort((a, b) => b._score - a._score || a.title.localeCompare(b.title));
 
+    // dedupe
     const seen = new Set();
     const deduped = raw.filter((r) => {
       const key = `${r.route}::${r.title}`;
@@ -96,8 +147,8 @@ export default function ClassicClient() {
   }, [q, idx]);
 
   return (
-    <main className="max-w-5xl mx-auto px-6 py-10">
-      <h1 className="text-3xl font-semibold mb-4">Search</h1>
+    <>
+      <h1 className="text-3xl font-semibold mb-6 text-gray-900 dark:text-gray-100">Search</h1>
 
       <div className="rounded-2xl border p-4 mb-6 bg-white/70 dark:bg-slate-900/60 backdrop-blur">
         <input
@@ -119,7 +170,7 @@ export default function ClassicClient() {
             {results.map((r) => (
               <li
                 key={`${r.route}::${r.title}`}
-                className="rounded-xl border p-4 hover:bg-gray-50 dark:hover:bg-slate-800"
+                className="rounded-xl border p-4 bg-white/80 dark:bg-slate-900/70 backdrop-blur hover:shadow-md transition"
               >
                 <Link href={r.route} className="text-blue-600 dark:text-blue-400 underline font-medium">
                   {highlightPrefix(r.title, terms)}
@@ -153,6 +204,6 @@ export default function ClassicClient() {
           )}
         </>
       )}
-    </main>
+    </>
   );
 }
