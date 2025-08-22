@@ -2,7 +2,7 @@
     {
         "title": "Improving remote sensing crop classification by argumentation-based conflict resolution in ensemble learning",
         "lead": "Adrian Petru Groza",
-        "domain": "Unit of Software and Hardware Technologies for AI",
+        "domain": "Software and Hardware Technologies for AI/Robotics for healthcare Rob Tech Med",
         "description": "The acquisition of data through remote sensing has become of great importance in precision agriculture, as it covers large geographical areas faster and cheaper than ground inspections. The challenge is to develop technical solutions that can benefit from both huge amounts of raw data extracted from satellite images, but also from the robust amount of knowledge refined during centuries of agricultural practice. Aiming to accurately classify crops from satellite images, we developed a hybrid intelligent system that can exploit both agricultural expert knowledge and machine learning algorithms. As the crop raw data is characterized by heterogeneity, we drive our attention to ensemble learners, while expert knowledge is encapsulated within a rule-based system. Vote-based methods for solving conflicts between ensemble’s base learners have difficulties in classifying exceptional cases correctly and also to give the …",
         "start": { "month": 8, "year": 2015 },   
         "end":   { "month": 1, "year": 2016 },
@@ -13,7 +13,7 @@
     {
         "title": "Improving conflict resolution in version spaces for precision agriculture",
         "lead": "Adrian Petru Groza",
-        "domain": "Unit of Microelectronics",
+        "domain": "Microelectronics",
         "description": "We developed a plant monitoring system that uses machine learning to classify environment conditions as favorable or not for plant development. The decision is taken based on six features whose values are measured from sensors: light, temperature, vibrations, soil humidity, rain quantity and vertical distance. Aiming to assure transparency in the classification decision, we used a modified version of the version space algorithm. We adapted the version space algorithm to deal with situations when hypotheses do not agree on a single decision. As a result, 20% from the instances unclassified by the version space were classified by our enhanced version space algorithm. The developed tool is available online as an open-source project.",
         "start": { "month": 5, "year": 2017 },
         "end": { "month": 8, "year": 2018 },
@@ -24,7 +24,7 @@
     {
         "title": "Assuring safety in air traffic control systems with argumentation and model checking",
         "lead": "Adrian Petru Groza",
-        "domain": "Unit of Intelligent and Autonomous Systems",
+        "domain": "Intelligent and Autonomous Systems",
         "description": "Although the continuous safety technology advances in fields like air traffic control (ATC) systems or medical devices, the crux of safety assurance still comes down to human decision makers, which, within the context of having to define priorities while simultaneously considering different contextual criteria, present a constant high risk of erroneous decisions. We illustrate in this article a recommender framework for assisting flight controllers, which combines argumentation theory and model checking in the evaluation of trade-offs and compromises to be made in the presence of incomplete and potentially inconsistent information. We view a Hybrid Kripke model as a description of an ATC domain and we apply a rational decision strategy based on Hybrid Logics and Defeasible Reasoning to assist the process of model update when the system has to accommodate new properties or norm constraints. When the model fails to verify a property, a defeasible logic program is used to analyze the current state and perform updating operations on the model. The introduced decision making framework is tested on a recommender system in ATC and model update is demonstrated with respect to the verification and adaption of unmanned aerial vehicles routes in the air traffic space. The results show an important potential for the presented framework to be integrated directly into existing decision-making routines for achieving higher accuracy in recommender system methods.",
         "start": { "month": 2, "year": 2016 },
         "end": { "month": 6, "year": 2017 },

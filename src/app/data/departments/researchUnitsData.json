@@ -1,0 +1,172 @@
+[
+    {
+        "name": "Software and Hardware Technologies for AI/Robotics for healthcare Rob Tech Med",
+        "description": "The research program focuses on four major directions addressing critical needs for innovation across multiple medical specialties.",
+        "icon": "💻",
+        "coordonator": "Doina Pisla",
+        "co-coordonator": "Roxana Both",
+        "elements": [
+            {
+                "text": "Artificial Intelligence & Robotics in Cancer Diagnosis and Treatment",
+                "content": [
+                    "New robotic systems and instruments. Robotic surgery for minimally invasive, precise interventions. Targeted radiotherapy where robots ensure accurate positioning and AI algorithms optimize treatment parameters (exposure time, dose, frequency).",
+                    "Personalized cancer treatments. AI-driven decision systems to create individualized treatment plans using patient history, genetics, and imaging data.Predictive models that estimate treatment effectiveness and risk of recurrence, adapting plans in real time.",
+                    "Robots and AI for differential diagnosis.",
+                    "Robotic-assisted biopsies and ultrasound systems for precise early detection.",
+                    "AI algorithms to analyze imaging and pathology data, improving accuracy in early-stage diagnosis. AI-based ultrasound systems. Early detection and monitoring of lung cancer: low-cost, portable, real-time evaluation and guided biopsies. Non-invasive diagnosis of diffuse lung diseases using AI- enhanced thoracic ultrasound. AI-augmented ultrasound for lymph node analysis, critical for cancer staging and treatment decisions."
+                ]
+            },
+            {
+                "text": "Artificial Intelligence Robotics in Oral Surgery and Dentistry",
+                "content": [
+                    "Robotic implantology and AI imaging. More precise implant placement, even in patients with poor bone structure. Improved alignment of multiple implants.",
+                    "3D navigation and vision system. Integration of robotics and AI to monitor surgery in real time. Automated treatment planning based on patient-specific anatomical data."
+                ]
+            },
+            {
+                "text": "AI & Robotics in Neurorehabilitation",
+                "content": [
+                    "Neurological disorders are among the fastest-growing global health challenges (stroke, Parkinson’s disease, multiple sclerosis). WHO warns that by 2030, health systems may no longer cope with demand.",
+                    "Main directions:",
+                    "Adaptive robotic solutions: modular devices for hospitals and home rehabilitation.",
+                    "Human–robot interaction models: multimodal sensors + AI for patient evaluation, progress track-ing, and real-time therapy adjustment.",
+                    "AI-driven control strategies: personalized rehabilitation programs combining medical and technical data for both physical and cognitive recovery."
+                ]
+            },
+            {
+                "text": "AI & Robotics in Human–Robot Medical Interaction",
+                "content": [
+                    "Aging populations and longer life expectancy demand new approaches for healthy aging and telemedicine.",
+                    "Telemedicine systems: Robotic platforms for remote investigations (tele-ultrasound) and long-term rehabilitation programs.",
+                    "AI patient monitoring: Continuous, non-invasive tracking of vital and cognitive parameters. Early detection of acute events (falls, heart attacks) and monitoring of chronic conditions (mobility, hyper-tension, cognition)."
+                ]
+            }
+        ]
+    },
+    {
+        "name": "Intelligent and Autonomous Systems",
+        "description": "Dedicated to the research and implementation of intelligent systems with autonomous capabilities.",
+        "icon": "🤖",
+        "coordonator": "More information coming soon",
+        "co-coordonator": "More information coming soon",
+        "elements": [
+            {
+                "text": "More information coming soon",
+                "content": [
+                    "More information coming soon"
+                ]
+            }
+        ]
+    },
+    {
+        "name": "Microelectronics",
+        "description": "Focuses on AI applications in integrated circuit design, rapid parameter analysis, and signal processing.",
+        "icon": "💡",
+        "coordonator": "More information coming soon",
+        "co-coordonator": "More information coming soon",
+        "elements": [
+            {
+                "text": "More information coming soon",
+                "content": [
+                    "More information coming soon"
+                ]
+            }
+        ]
+    },
+    {
+        "name": "Intelligent Applications in Cybersecurity and Space",
+        "description": "Integrates AI benefits into cybersecurity defenses and civilian space applications.",
+        "icon": "🚀",
+        "coordonator": "More information coming soon",
+        "co-coordonator": "More information coming soon",
+        "elements": [
+            {
+                "text": "More information coming soon",
+                "content": [
+                    "More information coming soon"
+                ]
+            }
+        ]
+    },
+    {
+        "name": "Robotics and IoT",
+        "description": "The Robotics & IoT Department of ICIA offers an extensive range of RDI services (Research–Development–Innovation) tailored to the needs of SMEs in industry, public administration, and services, with a strong focus on applied artificial intelligence, intelligent robotics, and industrial digitalization. ",
+        "icon": "🏭",
+        "coordonator": "Stelian Brad",
+        "co-coordonator": "Valentin Sita,",
+        "elements": [
+            {
+                "text": "Applied Research and Experimental Development Services",
+                "content": [
+                    "AI modeling and development for industrial applications: defect detection, predictive maintenance, energy optimization, adapted to real industrial use cases.",
+                    "Design and validation of robotic systems: collaborative, mobile, or autonomous robots with inte-grated algorithms for adaptive control, navigation, and human–robot interaction.",
+                    "Edge AI and Industrial IoT (I-IoT) for smart factories: developing modules for data collection,local processing, and integration into hybrid PLC/SCADA networks.",
+                    "Prototyping and functional testing with digital twins: behavioral simulation, ergonomic-functional testing, validation before investment."
+                ]
+            },
+            {
+                "text": "Industrial Testing, Validation, and Optimization Services",
+                "content": [
+                    "Intelligent visual inspection systems: industrial cameras + AI for defect detection, mounted on collaborative robots or inspection cells.",
+                    "Navigation and robotic collaboration testing in semi-structured environments: validation of obstacle avoidance algorithms, object recognition, adaptive motion planning based on context.",
+                    "Validation of AI models on in-house and client-side infrastructure (“Zero-Data Lab”): real-condition testing with federated learning, without raw data transfer."
+                ]
+            },
+            {
+                "text": "Digitalization and Smart Transformation Services",
+                "content": [
+                    "Digital Twin-as-a-Service: operational data upload, automated twin generation, scenario execution, and personalized simulations.",
+                    "Process simulation and optimization with LLM + RoboDK/Anylogic: the operator describes the problem, AI proposes and tests optimization scenarios.",
+                    "Cloud platforms for SMEs (AI Factory): execution environment for AI models, training and inter-preting results without programming knowledge."
+                ]
+            },
+            {
+                "text": "Software/Hardware Development Services",
+                "content": [
+                    "Integrated AI + robotics systems for decentralized micro-manufacturing: plug-and-play platforms with industrial connectivity and real-time AI control.",
+                    "Industrial AI appliances (“AI on a pallet”): preconfigured edge devices for quality control or energy management.",
+                    "Retrofit kits for industrial vision: camera + AI + lighting, installed in one day, result-based pricing model."
+                ]
+            },
+            {
+                "text": "AI-Assisted Invention Services (AI-Inventor Lab)",
+                "content": [
+                    "Product and process design with AI + TRIZ: idea generation, simulations, optimizations, documentation for patenting or industrialization.",
+                    "Prompt Engineering for SMEs: generation of business plans, operating models, financial simulations, marketing optimization.",
+                    "Testing disruptive technologies and ideas through AI simulations and “white space” concept exploration."
+                ]
+            },
+            {
+                "text": "Support and Consulting Services for Scaling and Implementation",
+                "content": [
+                    "AI audit for industrial processes: robustness and compliance analysis with the AI Act, including the in-house “AI Wind Tunnel” service.",
+                    "Patent and technology licensing services: for prototypes, AI modules, and robotic applications developed in collaboration with SMEs.",
+                    "Training & education through the AI Academy for Industry: certified courses, bootcamps, digital onboarding via social robots."
+                ]
+            },
+            {
+                "text": "Support Services for Funded Projects and Grants",
+                "content": [
+                    "AI for Grants – transforming digitalization plans into eligible applications for Horizon Europe, Digital Europe, etc",
+                    "Consulting and implementation services for smart city strategies, administration digitalization, and intelligent micro-factory networks.",
+                    "Most of these services will be offered as RDI projects, technology transfer contracts, SaaS packages, pilot services, or subscriptions. Priority will be given to SMEs collaborating directly with the department during 2025–2027, under the subsidiary contracts of the project."
+                ]
+            }
+        ]
+    }, 
+    {
+        "name": "Medical Technologies",
+        "description": "Advances medical procedures with robotics, AI diagnostics, and personalized healthcare.",
+        "icon": "⚕️",
+        "coordonator": "More information coming soon",
+        "co-coordonator": "More information coming soon",
+        "elements": [
+            {
+                "text": "More information coming soon",
+                "content": [
+                    "More information coming soon"
+                ]
+            }
+        ]
+    }
+]

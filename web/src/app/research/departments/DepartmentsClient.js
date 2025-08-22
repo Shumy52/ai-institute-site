@@ -1,133 +1,16 @@
+// src/app/departments/DepartmentsClient.jsx
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
+import units from "@/app/data/departments/researchUnitsData.json";
 import { allStaff } from "@/app/data/staffData";
 import { proData } from "@/app/data/proData";
 import { pubData } from "@/app/data/pubData";
 
-/* --- Research Units descriptions --- */
-const researchUnits = [
-  {
-    name: "Unit of Software and Hardware Technologies for AI",
-    description:
-      "Covers AI subfields such as Intelligent Agents, Machine Learning, Knowledge Engineering, Semantic Web, NLP, and Deep Learning-based Computer Vision.",
-    icon: "💻",
-    content: (
-      <>
-        <p>
-          Consists of laboratories covering key AI subfields including Intelligent Agents, Machine Learning,
-          Knowledge Engineering and Reasoning, Semantic Web, Natural Language Processing, Deep Learning-based
-          Computer Vision, Human-Machine Verbal Communication Technologies, and Data Science.
-        </p>
-        <p>
-          These laboratories develop innovative solutions for AI application challenges, data processing, and
-          knowledge engineering while supporting research in telecommunications, software engineering, and
-          commercialization.
-        </p>
-        <p>
-          Additionally, Hardware Technologies for AI includes labs dedicated to networks, communication
-          protocols, cellular and wireless communications, sensor networks, as well as the design of analog/digital
-          integrated circuits and digital systems.
-        </p>
-      </>
-    ),
-  },
-  {
-    name: "Unit of Intelligent and Autonomous Systems",
-    description:
-      "Dedicated to the research and implementation of intelligent systems with autonomous capabilities.",
-    icon: "🤖",
-    content: (
-      <>
-        <p>
-          Focuses on the design and implementation of intelligent systems involving sensory perception, environmental
-          representation, intelligent communications, control systems, distributed systems, and cyber-physical systems.
-        </p>
-        <p>
-          The laboratories also advance autonomous production, Industrial IoT (IIoT), connected mobility, and both
-          industrial and medical robotics, bolstering innovation in IoT, cyber-physical systems, and social robotics.
-        </p>
-        <p>Contributes to advanced manufacturing technologies and healthcare innovation through robotics.</p>
-      </>
-    ),
-  },
-  {
-    name: "Unit of Microelectronics",
-    description:
-      "Focuses on AI applications in integrated circuit design, rapid parameter analysis, and signal processing.",
-    icon: "💡",
-    content: (
-      <>
-        <p>
-          Concentrates on applying AI in designing integrated circuits and systems, including rapid determination of
-          electro-thermal parameters and AI-assisted customized signal processing.
-        </p>
-        <p>
-          The unit also addresses AI-based yield analysis, post-Si verification, ASIC design and testing for intelligent
-          sensors, and the development of methodologies for electromagnetic compatibility testing and standardization.
-        </p>
-      </>
-    ),
-  },
-  {
-    name: "Unit of Intelligent Applications in Cybersecurity and Space",
-    description: "Integrates AI benefits into cybersecurity defenses and civilian space applications.",
-    icon: "🚀",
-    content: (
-      <>
-        <p>
-          Focuses on developing intelligent cybersecurity solutions alongside the formulation of AI-powered applications
-          for space exploration and civilian space uses.
-        </p>
-        <p>
-          Laboratories within this unit work on enhancing cybersecurity protocols and innovating in space application
-          technologies.
-        </p>
-      </>
-    ),
-  },
-  {
-    name: "Unit of Robotics and Industrial IoT (I-IoT)",
-    description: "Explores autonomous robotics, production optimization, and digital twin simulations.",
-    icon: "🏭",
-    content: (
-      <>
-        <p>
-          Concentrates on the development of autonomous mobile and industrial robots, as well as the optimization of
-          production planning and real-time quality control.
-        </p>
-        <p>
-          Also engages in virtual prototyping, product testing using Generative AI, real-time supply chain management,
-          lifecycle optimization, and simulating manufacturing processes via AR/VR and digital twins.
-        </p>
-      </>
-    ),
-  },
-  {
-    name: "Unit of Medical Technologies",
-    description: "Advances medical procedures with robotics, AI diagnostics, and personalized healthcare.",
-    icon: "⚕️",
-    content: (
-      <>
-        <p>
-          Specializes in developing robots, mechanisms, and instruments to enhance the precision of medical procedures
-          such as robotic surgery and precise instrument positioning.
-        </p>
-        <p>
-          Focuses on personalized oncological treatments, AI models for differential diagnosis, and the application of
-          robotics in oral surgery, dental medicine, patient rehabilitation, and telemedicine.
-        </p>
-        <p>
-          The unit also incorporates laboratories dedicated to medical imaging, AI-based diagnostics, and bioinformatics,
-          promoting non-invasive imaging and genetic analysis for early diagnosis and monitoring.
-        </p>
-      </>
-    ),
-  },
-];
+const researchUnits = Array.isArray(units) ? units : [];
 
 /* --- Animations --- */
 const containerVariants = {
@@ -169,15 +52,12 @@ const formatDuration = (start, end) => {
   return `${s}${s || e ? " – " : ""}${e || "present"}`;
 };
 
-
 function projectsForPersonSlug(personSlug, personName) {
   if (!proData) return [];
-  
   if (!Array.isArray(proData) && typeof proData === "object") {
     const arr = proData[personSlug];
     return Array.isArray(arr) ? arr : [];
   }
-  
   if (Array.isArray(proData)) {
     const slugLC = String(personSlug).toLowerCase();
     const nameLC = String(personName || "").toLowerCase();
@@ -203,12 +83,10 @@ function projectsForPersonSlug(personSlug, personName) {
 
 function publicationsForPersonSlug(personSlug, personName) {
   if (!pubData) return [];
-  
   if (!Array.isArray(pubData) && typeof pubData === "object") {
     const arr = pubData[personSlug];
     return Array.isArray(arr) ? arr : [];
   }
-  
   if (Array.isArray(pubData)) {
     const slugLC = String(personSlug).toLowerCase();
     const nameLC = String(personName || "").toLowerCase();
@@ -250,9 +128,57 @@ const normalizePublication = (pb) =>
     ? { title: pb, year: undefined, domain: undefined, kind: undefined, description: undefined }
     : pb;
 
+function Chevron({ open }) {
+  return (
+    <svg
+      className={`h-5 w-5 transition-transform duration-200 ${open ? "rotate-180" : ""}`}
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 20 20"
+      fill="currentColor"
+      aria-hidden="true"
+    >
+      <path
+        fillRule="evenodd"
+        d="M5.23 7.21a.75.75 0 011.06.02L10 10.18l3.71-2.95a.75.75 0 11.94 1.16l-4.24 3.37a.75.75 0 01-.94 0L5.21 8.39a.75.75 0 01.02-1.18z"
+        clipRule="evenodd"
+      />
+    </svg>
+  );
+}
+function SectionToggle({ label, children, defaultOpen = false }) {
+  const [open, setOpen] = useState(defaultOpen);
+  return (
+    <div className="mt-3">
+      <button
+        type="button"
+        onClick={() => setOpen((v) => !v)}
+        aria-expanded={open}
+        className="w-full flex items-center justify-between px-4 py-2 rounded-md border border-gray-200 dark:border-gray-800 bg-gray-100 dark:bg-gray-800 text-sm font-medium transition hover:bg-gray-200 dark:hover:bg-gray-700"
+      >
+        <span>{label}</span>
+        <Chevron open={open} />
+      </button>
+      <AnimatePresence initial={false}>
+        {open && (
+          <motion.div
+            key="content"
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: "auto", opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.25 }}
+            className="overflow-hidden"
+          >
+            <div className="px-5 py-3">{children}</div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+}
+
 export default function DepartmentsClient() {
   const [selectedUnit, setSelectedUnit] = useState(null);
-  const [unitView, setUnitView] = useState("themes");
+  const [unitView, setUnitView] = useState("details"); 
 
   const asideRef = useRef(null);
   const mobileBarRef = useRef(null);
@@ -260,7 +186,7 @@ export default function DepartmentsClient() {
   // Select a unit: set state + pushState + scroll to proper submenu
   const handleUnitClick = (unit) => {
     setSelectedUnit(unit);
-    setUnitView("themes");
+    setUnitView("details"); 
     if (typeof window !== "undefined") {
       window.history.pushState({ department: unit.name }, "", "");
       setTimeout(() => {
@@ -273,7 +199,6 @@ export default function DepartmentsClient() {
     }
   };
 
-  // Back for browser
   useEffect(() => {
     if (typeof window === "undefined") return;
     const onPopState = () => {
@@ -417,8 +342,7 @@ export default function DepartmentsClient() {
                 {row.lead && (row.start || row.end) && <span> • </span>}
                 {(row.start || row.end) && <span>{formatDuration(row.start, row.end)}</span>}
                 <span className="block opacity-70">
-                  {row.domain ? `${row.domain} • ` : ""}
-                  {row.personName}
+                  {row.domain ? `${row.domain} • ` : ""}{row.personName}
                 </span>
               </div>
             </Link>
@@ -440,9 +364,7 @@ export default function DepartmentsClient() {
             </div>
             {pb.description && <p className="mt-1 text-sm text-gray-700 dark:text-gray-300">{pb.description}</p>}
             <div className="mt-1 text-xs opacity-70">
-              {pb.domain ? `${pb.domain} • ` : ""}
-              {pb.personName}
-              {pb.kind ? ` • ${pb.kind}` : ""}
+              {pb.domain ? `${pb.domain} • ` : ""}{pb.personName}{pb.kind ? ` • ${pb.kind}` : ""}
             </div>
           </li>
         ))}
@@ -502,10 +424,15 @@ export default function DepartmentsClient() {
       <p className="text-gray-500">No themes found.</p>
     );
 
+  // coordinator fields from JSON (supports multiple key variants)
+  const coordinator = selectedUnit?.coordonator || selectedUnit?.coordinator || selectedUnit?.["coordonator"] || "";
+  const coCoordinator = selectedUnit?.["co-coordonator"] || selectedUnit?.coCoordonator || selectedUnit?.co_coordinator || "";
+  const elements = Array.isArray(selectedUnit?.elements) ? selectedUnit.elements : [];
+
   return (
     <main className="flex flex-col items-center justify-center bg-gray-50 dark:bg-gray-900 py-12">
       <div className="container max-w-6xl mx-auto bg-white dark:bg-gray-950 rounded-2xl shadow-xl">
-        {/* For desktop: sidebar + content; for mobil: content, hidden sidebar */}
+        {/* For desktop: sidebar + content; for mobile: content, hidden sidebar */}
         <div className={`grid ${selectedUnit ? "grid-cols-1 md:grid-cols-[240px_minmax(0,1fr)]" : "grid-cols-1"}`}>
           
           {selectedUnit && (
@@ -515,6 +442,7 @@ export default function DepartmentsClient() {
             >
               <ul className="space-y-2">
                 {[
+                  { id: "details", label: "Details" },
                   { id: "themes", label: "Themes" },
                   { id: "projects", label: "Projects" },
                   { id: "members", label: "Members" },
@@ -549,7 +477,7 @@ export default function DepartmentsClient() {
                       onClick={() => handleUnitClick(unit)}
                     >
                       <h2 className="text-lg md:text-xl font-bold text-gray-900 dark:text-gray-100 flex items-center gap-3 mb-2">
-                        {unit.icon} {unit.name}
+                        {unit.icon || "🏷️"} {unit.name}
                       </h2>
                       <p className="text-gray-700 dark:text-gray-300">{unit.description}</p>
                     </motion.div>
@@ -565,6 +493,7 @@ export default function DepartmentsClient() {
               >
                 <div className="flex gap-2 overflow-x-auto no-scrollbar">
                   {[
+                    { id: "details", label: "Details" },
                     { id: "themes", label: "Themes" },
                     { id: "projects", label: "Projects" },
                     { id: "members", label: "Members" },
@@ -591,6 +520,53 @@ export default function DepartmentsClient() {
                 <h2 className="text-xl md:text-2xl font-bold text-gray-900 dark:text-gray-100 mb-4">
                   {selectedUnit.name}
                 </h2>
+
+                {unitView === "details" && (
+                  <motion.div variants={containerVariants} initial="hidden" animate="visible">
+                    <motion.div variants={itemVariants} className="space-y-4">
+                      {selectedUnit.description && (
+                        <p className="text-gray-700 dark:text-gray-300">{selectedUnit.description}</p>
+                      )}
+
+                      {!!coordinator && (
+                        <p className="text-sm text-gray-800 dark:text-gray-200">
+                          <span className="font-semibold">Coordinator:</span> {coordinator}
+                        </p>
+                      )}
+                      {!!coCoordinator && (
+                        <p className="text-sm text-gray-800 dark:text-gray-200">
+                          <span className="font-semibold">Co-coordinator:</span> {coCoordinator}
+                        </p>
+                      )}
+
+                      {elements.length > 0 && (
+                        <div className="mt-2">
+                          {/* New label before listing elements */}
+                          <p className="text-sm font-semibold text-gray-900 dark:text-gray-100 mb-1">
+                            Categories:
+                          </p>
+
+                          {elements.map((el, i) => (
+                            <SectionToggle key={`${el.text}-${i}`} label={el.text}>
+                              {Array.isArray(el.content) ? (
+                                <div className="space-y-2 text-sm text-gray-800 dark:text-gray-200">
+                                  {el.content.map((p, idx) => (
+                                    <p key={idx}>{p}</p>
+                                  ))}
+                                </div>
+                              ) : (
+                                <p className="text-sm text-gray-800 dark:text-gray-200">
+                                  {String(el.content || "")}
+                                </p>
+                              )}
+                            </SectionToggle>
+                          ))}
+                        </div>
+                      )}
+                    </motion.div>
+                  </motion.div>
+                )}
+
                 {unitView === "themes" && renderThemes(unitThemes)}
                 {unitView === "projects" && renderProjects(unitProjects)}
                 {unitView === "members" && renderMembersCards(unitMembers)}
