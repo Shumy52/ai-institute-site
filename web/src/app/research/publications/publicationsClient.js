@@ -186,7 +186,7 @@ export default function PublicationsClient() {
         <motion.div variants={containerVariants} initial="hidden" animate="visible">
           <motion.h1
             variants={itemVariants}
-            className="text-2xl md:text-3xl font-extrabold mb-6 text-gray-900 dark:text-gray-100 text-center"
+            className="text-4xl font-extrabold text-center mb-8 text-blue-600 dark:text-yellow-400 text-center"
           >
             📚 Publications
           </motion.h1>

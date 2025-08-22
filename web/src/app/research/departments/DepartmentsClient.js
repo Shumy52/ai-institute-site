@@ -513,7 +513,6 @@ export default function DepartmentsClient() {
               ref={asideRef}
               className="hidden md:block bg-gray-100 dark:bg-gray-800 p-6 border-r md:sticky md:top-16 md:z-10"
             >
-              <h3 className="text-lg font-semibold mb-4 text-gray-900 dark:text-gray-100">Research Unit</h3>
               <ul className="space-y-2">
                 {[
                   { id: "themes", label: "Themes" },
@@ -541,12 +540,6 @@ export default function DepartmentsClient() {
           <section className="p-6 md:p-8">
             {!selectedUnit && (
               <motion.div variants={containerVariants} initial="hidden" animate="visible">
-                <motion.h1
-                  variants={itemVariants}
-                  className="text-2xl md:text-3xl font-extrabold mb-4 md:mb-6 text-gray-900 dark:text-gray-100 tracking-tight"
-                >
-                  Research Units
-                </motion.h1>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
                   {researchUnits.map((unit, index) => (
                     <motion.div
