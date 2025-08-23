@@ -3,7 +3,12 @@ export const metadata = {
 };
 
 import Client from "./Client";
+import { Suspense } from "react";
 
 export default function Page() {
-  return <Client />;
+  return (
+    <Suspense fallback={null}>
+      <Client />
+    </Suspense>
+  );
 }

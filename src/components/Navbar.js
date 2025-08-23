@@ -54,7 +54,7 @@ const newsMenu = [
 ];
 
 const aboutMenu = [
-  { href: '/about#mission', label: 'Mission' },
+  { href: '/about#mission', label: 'Mission, History(timeline)' },
   { href: '/about/organigram', label: 'Organigram' },
   { href: '/about/sitemap', label: 'Sitemap' },
   { href: '/about/reports', label: 'Reports Self-assessment reports' },
