@@ -1,0 +1,118 @@
+{
+  "Personal": [
+    {
+      "slug": "AdrianPetru-Groza",
+      "name": "Groza Adrian Petru",
+      "title": "Professor",
+      "phone": "0744444444",
+      "email": "adrian.groza@cs.utcluj.ro",
+      "image": "/people/AdrianGroza.png"
+    },
+    {
+      "slug": "AncaNicoleta-Marginean",
+      "name": "Mărginean Anca Nicoleta",
+      "title": "Professor",
+      "phone": "0733333333",
+      "email": "anca.marginean@cs.utcluj.ro",
+      "image": "/people/Basic_avatar_image.png"
+    },
+    {
+      "slug": "Rodica-Potolea",
+      "name": "Potolea Rodica",
+      "title": "Professor",
+      "phone": "0722222222",
+      "email": "rodica.potolea@cs.utcluj.ro",
+      "image": "/people/Basic_avatar_image.png"
+    },
+    {
+      "slug": "Sergiu-Nedevschi",
+      "name": "Nedevschi Sergiu",
+      "title": "Professor",
+      "phone": "0711111111",
+      "email": "sergiu.nedevschi@cs.utcluj.ro",
+      "image": "/people/Basic_avatar_image.png"
+    },
+    {
+      "slug": "FlorinIoan-Oniga",
+      "name": "Oniga Florin Ioan",
+      "title": "Professor",
+      "phone": "0766666666",
+      "email": "florin.oniga@cs.utcluj.ro",
+      "image": "/people/Basic_avatar_image.png"
+    },
+    {
+      "slug": "SorinAdrian-Hintea",
+      "name": "Hintea Sorin Adrian",
+      "title": "Professor",
+      "phone": "0777777777",
+      "email": "sorin.hintea@cs.utcluj.ro",
+      "image": "/people/Basic_avatar_image.png"
+    },
+    {
+      "slug": "Marius-Neag",
+      "name": "Neag Marius",
+      "title": "Professor",
+      "phone": "0788888888",
+      "email": "marius.neag@cs.utcluj.ro",
+      "image": "/people/Basic_avatar_image.png"
+    },
+    {
+      "slug": "Lucian-Busoniu",
+      "name": "Busoniu Lucian",
+      "title": "Professor",
+      "phone": "0799999999",
+      "email": "lucian.busoniu@cs.utcluj.ro",
+      "image": "/people/Basic_avatar_image.png"
+    },
+    {
+      "slug": "RaduGabriel-Danescu",
+      "name": "Dănescu Radu Gabriel",
+      "title": "Professor",
+      "phone": "0712121212",
+      "email": "radu.danescu@cs.utcluj.ro",
+      "image": "/people/Basic_avatar_image.png"
+    },
+    {
+      "slug": "Dorian-Gorgan",
+      "name": "Gorgan Dorian",
+      "title": "Professor",
+      "phone": "0713131313",
+      "email": "dorian.gorgan@cs.utcluj.ro",
+      "image": "/people/Basic_avatar_image.png"
+    },
+    {
+      "slug": "Tiberiu-Marita",
+      "name": "Marița Tiberiu",
+      "title": "Professor",
+      "phone": "0714141414",
+      "email": "tiberiu.marita@cs.utcluj.ro",
+      "image": "/people/Basic_avatar_image.png"
+    },
+    {
+      "slug": "Mircea-Girgiu",
+      "name": "Girgiu Mircea",
+      "title": "Professor",
+      "phone": "0715151515",
+      "email": "mircea.girgiu@cs.utcluj.ro",
+      "image": "/people/Basic_avatar_image.png"
+    },
+    {
+      "slug": "DorinaLiana-Pisla",
+      "name": "Pisla Dorina Liana",
+      "title": "Professor",
+      "phone": "0716161616",
+      "email": "dorina.pisla@cs.utcluj.ro",
+      "image": "/people/Basic_avatar_image.png"
+    }
+  ],
+  "Students": [
+    {
+      "slug": "Marian-Ion",
+      "name": "Ion Marian",
+      "title": "Student",
+      "phone": "0722222222",
+      "email": "marian.ion@cs.utcluj.ro",
+      "image": "/people/Basic_avatar_image.png"
+    }
+  ]
+}
