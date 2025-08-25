@@ -52,16 +52,16 @@ export default function HighSchoolClient() {
             className="text-gray-700 dark:text-gray-300 mb-6"
             variants={itemVariants}
           >
-            Concursuri, evenimente și resurse de alfabetizare AI pentru elevi și profesori.
+            Competitions, events, and AI literacy resources for students and teachers.
           </motion.p>
 
           <motion.div
             className="grid gap-4 md:grid-cols-3 mb-8"
             variants={containerVariants}
           >
-            <Feature emoji="🏆" title="Concursuri" desc="Competiții de AI și programare pentru liceeni." />
-            <Feature emoji="🎓" title="Evenimente" desc="Workshop-uri, vizite în laboratoare, întâlniri cu experți." />
-            <Feature emoji="📚" title="Resurse educaționale" desc="Ghiduri și materiale de alfabetizare AI." />
+            <Feature emoji="🏆" title="Competitions" desc="AI and programming competitions for high-school students." />
+            <Feature emoji="🎓" title="Events" desc="Workshops, lab visits, and sessions with experts." />
+            <Feature emoji="📚" title="Educational resources" desc="Guides and materials for AI literacy." />
           </motion.div>
 
           <motion.a
@@ -71,7 +71,7 @@ export default function HighSchoolClient() {
             className="inline-flex items-center rounded-xl border border-gray-300 dark:border-gray-700 px-4 py-2 text-sm font-medium hover:bg-gray-50 dark:hover:bg-gray-900 transition"
             variants={itemVariants}
           >
-            📖 AILIT Framework – Link resurse
+            📖 AILIT Framework – Resources
           </motion.a>
         </section>
       </motion.div>

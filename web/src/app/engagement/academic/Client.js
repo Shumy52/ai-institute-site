@@ -90,16 +90,16 @@ export default function Client() {
         return (
           <motion.section className="space-y-4" variants={containerVariants} initial="hidden" animate="visible">
             <motion.h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100" variants={itemVariants}>
-              Inițiative
+              Initiatives
             </motion.h2>
             <motion.div
               className="rounded-xl border border-gray-200 dark:border-gray-800 p-5 bg-white dark:bg-gray-900 shadow-sm"
               variants={itemVariants}
             >
               <ul className="list-disc pl-6 space-y-1 text-sm text-gray-700 dark:text-gray-300">
-                <li>Școli de vară & workshop-uri</li>
-                <li>Program de co-tutoring, vizite științifice, mobilități</li>
-                <li>Seminarii comune & invitați internaționali</li>
+                <li>Summer schools & workshops</li>
+                <li>Co-tutoring program, research visits, mobility</li>
+                <li>Joint seminars & invited speakers</li>
               </ul>
             </motion.div>
           </motion.section>
@@ -111,10 +111,10 @@ export default function Client() {
               Courses & Workshops
             </motion.h2>
             <motion.div className="grid gap-4 md:grid-cols-2" variants={containerVariants}>
-              <Feature emoji="🧠" title="Machine Learning" desc="Cursuri comune, module aplicate, proiecte." />
-              <Feature emoji="🤖" title="Robotics & Vision" desc="Laboratoare, proiecte, echipe mixte." />
-              <Feature emoji="🖥️" title="HPC for AI" desc="Module practice pe infrastructura HPC." />
-              <Feature emoji="🔐" title="AI Ethics & Safety" desc="Ateliere pe AI responsabil & reglementare." />
+              <Feature emoji="🧠" title="Machine Learning" desc="Joint courses, applied modules, projects." />
+              <Feature emoji="🤖" title="Robotics & Vision" desc="Labs, projects, mixed teams." />
+              <Feature emoji="🖥️" title="HPC for AI" desc="Hands-on modules on the HPC infrastructure." />
+              <Feature emoji="🔐" title="AI Ethics & Safety" desc="Workshops on responsible AI & regulation." />
             </motion.div>
           </motion.section>
         );
@@ -122,16 +122,16 @@ export default function Client() {
         return (
           <motion.section className="space-y-4" variants={containerVariants} initial="hidden" animate="visible">
             <motion.h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100" variants={itemVariants}>
-              Co-tutelă & Mobility
+              Co-tutoring & Mobility
             </motion.h2>
             <motion.div
               className="rounded-xl border border-gray-200 dark:border-gray-800 p-5 bg-white dark:bg-gray-900 shadow-sm"
               variants={itemVariants}
             >
               <ul className="list-disc pl-6 space-y-1 text-sm text-gray-700 dark:text-gray-300">
-                <li>Co-supervizare doctorate cu universități partenere</li>
-                <li>Burse de mobilitate (studenți, doctoranzi, staff)</li>
-                <li>Vizite științifice & stagii scurte</li>
+                <li>Co-supervision of PhD theses with partner universities</li>
+                <li>Mobility grants (students, PhD candidates, staff)</li>
+                <li>Research visits & short-term placements</li>
               </ul>
             </motion.div>
           </motion.section>
@@ -139,9 +139,9 @@ export default function Client() {
       default:
         return (
           <motion.div className="grid gap-4 md:grid-cols-3" variants={containerVariants} initial="hidden" animate="visible">
-            <Feature emoji="🤝" title="Academic partnerships" desc="Rețea de colaborări și activități comune." />
-            <Feature emoji="🏫" title="Teaching & training" desc="Cursuri, școli de vară, workshop-uri." />
-            <Feature emoji="🌍" title="Mobility" desc="Co-tutoring, vizite, stagii, mobilități." />
+            <Feature emoji="🤝" title="Academic partnerships" desc="A network of collaborations and joint activities." />
+            <Feature emoji="🏫" title="Teaching & training" desc="Courses, summer schools, workshops." />
+            <Feature emoji="🌍" title="Mobility" desc="Co-tutoring, visits, internships, exchanges." />
           </motion.div>
         );
     }
@@ -162,14 +162,14 @@ export default function Client() {
                 <span className="inline-block mr-2">🎓</span> Academic engagement
               </h1>
               <p className="text-gray-700 dark:text-gray-300">
-                Colaborări cu universități și institute: co-tutoring, cursuri comune, workshop-uri, vizite, mobilități.
+                Collaborations with universities and institutes: co-tutoring, joint courses, workshops, research visits, mobility.
               </p>
             </div>
             <Link
-              href="/about/contact?team=academic"
+              href="/contact"
               className="mt-4 md:mt-0 inline-flex items-center rounded-xl border border-gray-300 dark:border-gray-700 px-4 py-2 text-sm font-medium hover:bg-gray-50 dark:hover:bg-gray-900 transition"
             >
-              Contact academic team
+              Contact the academic team
             </Link>
           </motion.div>
 

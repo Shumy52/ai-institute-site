@@ -57,20 +57,13 @@ const containerVariants = {
   hidden: { opacity: 0 },
   visible: {
     opacity: 1,
-    transition: {
-      delayChildren: 0.2,
-      staggerChildren: 0.15,
-    },
+    transition: { delayChildren: 0.2, staggerChildren: 0.15 },
   },
 };
 
 const itemVariants = {
   hidden: { y: 20, opacity: 0 },
-  visible: {
-    y: 0,
-    opacity: 1,
-    transition: { duration: 0.5, ease: "easeOut" },
-  },
+  visible: { y: 0, opacity: 1, transition: { duration: 0.5, ease: "easeOut" } },
 };
 
 export default function Client() {
@@ -88,8 +81,8 @@ export default function Client() {
       case "Projects":
         return (
           <motion.div className="grid gap-4 md:grid-cols-2" variants={containerVariants} initial="hidden" animate="visible">
-            <Feature emoji="⚙️" title="Applied R&D" desc="Proiecte aplicate împreună cu companiile pentru soluții AI." />
-            <Feature emoji="🔬" title="Joint labs" desc="Laboratoare comune pentru testare și dezvoltare." />
+            <Feature emoji="⚙️" title="Applied R&D" desc="Applied projects with companies for AI solutions." />
+            <Feature emoji="🔬" title="Joint labs" desc="Shared labs for testing and development." />
           </motion.div>
         );
       case "Consulting":
@@ -103,9 +96,9 @@ export default function Client() {
               variants={itemVariants}
             >
               <ul className="list-disc pl-6 space-y-1 text-sm text-gray-700 dark:text-gray-300">
-                <li>Audit AI pentru procese industriale</li>
-                <li>Consultanță pentru transformare digitală</li>
-                <li>Asistență tehnică în proiecte complexe</li>
+                <li>AI audits for industrial processes</li>
+                <li>Consulting for digital transformation</li>
+                <li>Technical assistance in complex projects</li>
               </ul>
             </motion.div>
           </motion.section>
@@ -113,16 +106,16 @@ export default function Client() {
       case "Training":
         return (
           <motion.div className="grid gap-4 md:grid-cols-2" variants={containerVariants} initial="hidden" animate="visible">
-            <Feature emoji="📊" title="AI for managers" desc="Programe scurte de training pentru decidenți." />
-            <Feature emoji="💻" title="Hands-on workshops" desc="Ateliere aplicate pentru angajați și echipe R&D." />
+            <Feature emoji="📊" title="AI for managers" desc="Short training programs for decision-makers." />
+            <Feature emoji="💻" title="Hands-on workshops" desc="Practical workshops for employees and R&D teams." />
           </motion.div>
         );
       default:
         return (
           <motion.div className="grid gap-4 md:grid-cols-3" variants={containerVariants} initial="hidden" animate="visible">
-            <Feature emoji="🤝" title="Partnerships" desc="Colaborăm cu industrie pentru AI aplicat." />
-            <Feature emoji="📈" title="Consulting" desc="Audit AI și suport tehnic pentru companii." />
-            <Feature emoji="🎓" title="Training" desc="Programe de training & workshop-uri pentru industrie." />
+            <Feature emoji="🤝" title="Partnerships" desc="We collaborate with industry for applied AI." />
+            <Feature emoji="📈" title="Consulting" desc="AI audits and technical support for companies." />
+            <Feature emoji="🎓" title="Training" desc="Training programs and workshops for industry." />
           </motion.div>
         );
     }
@@ -143,14 +136,14 @@ export default function Client() {
                 <span className="inline-block mr-2">🏭</span> Industry engagement
               </h1>
               <p className="text-gray-700 dark:text-gray-300">
-                Colaborăm cu companii pentru proiecte aplicate, consultanță și training.
+                We collaborate with companies on applied projects, consulting, and training.
               </p>
             </div>
             <Link
-              href="/about/contact?team=industry"
+              href="/contact"
               className="mt-4 md:mt-0 inline-flex items-center rounded-xl border border-gray-300 dark:border-gray-700 px-4 py-2 text-sm font-medium hover:bg-gray-50 dark:hover:bg-gray-900 transition"
             >
-              Contact industry team
+              Contact the industry team
             </Link>
           </motion.div>
 

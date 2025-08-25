@@ -33,7 +33,7 @@ export default function Client() {
             className="text-gray-700 dark:text-gray-300"
             variants={itemVariants}
           >
-            Cadru pentru doctorate industriale, co-finanțare și teme aplicate cu partenerii noștri.
+            Framework for industrial PhDs, co-funding, and application-oriented topics with our partners.
           </motion.p>
         </section>
       </motion.div>
