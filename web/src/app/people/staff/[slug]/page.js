@@ -59,13 +59,21 @@ export default function StaffDetailPage() {
     const pubs = getPublicationsByAuthor(person.slug) ?? [];
     return pubs.map((pub) =>
       typeof pub === "string"
-        ? { title: pub, year: undefined, domain: undefined, kind: undefined, description: undefined }
+        ? {
+            title: pub,
+            year: undefined,
+            domain: undefined,
+            kind: undefined,
+            description: undefined,
+            docUrl: undefined,
+          }
         : {
             title: pub.title ?? "",
             year: pub.year,
             domain: pub.domain,
             kind: pub.kind,
             description: pub.description,
+            docUrl: pub.docUrl || pub.url || pub.link || undefined,
           }
     );
   }, [person.slug]);
@@ -361,6 +369,28 @@ export default function StaffDetailPage() {
                       {pub.description && (
                         <p className="mt-1 text-sm text-gray-700 dark:text-gray-300">{pub.description}</p>
                       )}
+
+                      {pub.docUrl && (
+                        <a
+                          href={pub.docUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="mt-3 inline-flex items-center gap-2 px-3 py-2 rounded-md border border-gray-300 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-900 transition text-sm"
+                          aria-label="Open publication documentation in a new tab"
+                        >
+                          View documentation
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            className="h-4 w-4"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                            strokeWidth="1.5"
+                          >
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 6H18m0 0v4.5M18 6l-7.5 7.5M6 18h6" />
+                          </svg>
+                        </a>
+                      )}
                     </li>
                   ))}
                 </ul>
@@ -445,8 +475,6 @@ export default function StaffDetailPage() {
                           aria-label={`Open project ${p.title || `#${i + 1}`}`}
                         >
                           <div className="font-medium group-hover:underline">{p.title}</div>
-
-                          {/* Subtitlu: Lead */}
                           {p.lead && (
                             <div className="mt-1 text-sm text-gray-700 dark:text-gray-300">
                               <span className="font-medium">Lead:</span> {p.lead}

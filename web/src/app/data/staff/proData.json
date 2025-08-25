@@ -79,5 +79,37 @@
 		],
 		"publication": "Deep Clustering for Blood Cell Classification and Quantification",
 		"partners": "Universitatea Tehnica din Cluj-Napoca"		
+	},
+	{
+		"title": "5G Scalable Hubs for Accessible and Resilient Education - [5G-SHARE]",
+		"lead": "Atlantic Technological University IE",
+		"abstract": "he 5G-SHARE project represents a transformative, strategic leap in educational and research technology across Europe, uniting a consortium of 9 partners from 4 countries (Ireland, Romania, Czech Republic, and Italy), including 4 leading universities. The initiative focuses on deploying and interconnecting 4 advanced 5G Standalone (SA) Mobile Private Networks (MPNs), 3 of which will be newly installed, as Hybrid or Private, tailored to the specific 5G development needs of each country. By interlinking these networks, 5G-SHARE fosters collaborative, interoperable and secure scenarios that enhance cross-border data exchange, research innovation, and real-time applications. This infrastructure will support the implementation of 7 pioneering use cases spanning Extended Reality (XR) in education, Internet of Things (IoT) advancements, 3D content streaming, Artificial Intelligence (AI)-driven applications, and next-generation Post-Quantum Cryptography (PQC). These use cases will leverage the ultra-low latency and high-speed capabilities of 5G to redefine industry standards, cybersecurity frameworks, and innovative learning methodologies. A core aspect of 5G-SHARE is knowledge-sharing and large-scale pilot adoption. Each use case will involve multi-partner collaboration, particularly in addressing security challenges and establishing best practices for replicability across diverse campus environments. A flagship initiative within the project, the Hybrid XR Learning use case, will be jointly developed across all university partners, engaging a vast network of students and faculty members while contributing to a shared content library for immersive education. 5G-SHARE will set a new benchmark for high-impact 5G-powered education and research across Europe, deploying scalable, large scale, cross-border pilots involving thousands of users that drive innovation, connectivity, and cybersecurity while shaping the future of EU society, academia, industry, and digital ecosystems",
+		"themes": [
+			""
+		],
+		"teams": [
+			{
+				"title": "",
+				"name": ""
+			}
+		],
+		"region": "internationale",
+		"domain": [
+			"Software and Hardware Technologies for AI/Robotics for healthcare Rob Tech Med",
+			"Microelectronics",
+			"Intelligent Applications in Cybersecurity and Space",
+			"Robotics and IoT"
+		],
+		"publication": "",
+		"partners": [
+			"Fifth Ingenium srls IT",
+			"Vodafone Romania SA RO",
+			"Universitatea Tehnica din Cluj-Napoca", 
+			"Universitatea Nationala de Stiinta si Tehnologie P RO",
+			"Vodafone Ireland",
+			"Vodafone Czech Republic",
+			"Vysoke Uceni Technicke V Brne CZ",
+			"ADAPTA studio srl IT"
+		]			
 	}
 ]

@@ -94,13 +94,11 @@ export default function ProjectDetailPage() {
   const allPubs = Array.isArray(pubData) ? pubData : [];
   const matchedPubs = useMemo(() => {
     const norm = (s) => String(s || "").trim().toLowerCase();
-    const wanted = new Set(publicationTitles.map(norm));
-    
     return publicationTitles.map((t) => {
       const tNorm = norm(t);
       return (
         allPubs.find((p) => norm(p.title) === tNorm) ||
-        { title: t } 
+        { title: t }
       );
     });
   }, [publicationTitles, allPubs]);
@@ -203,6 +201,18 @@ export default function ProjectDetailPage() {
                   </div>
                   {pub.description && (
                     <p className="mt-1 text-sm text-gray-700 dark:text-gray-300">{pub.description}</p>
+                  )}
+
+                  {pub.docUrl && (
+                    <a
+                      href={pub.docUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="mt-3 inline-flex items-center gap-2 px-3 py-2 rounded-md border border-gray-300 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-900 transition"
+                      aria-label="Open publication documentation"
+                    >
+                      View documentation
+                    </a>
                   )}
                 </li>
               ))}
