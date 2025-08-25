@@ -2,7 +2,7 @@
   {
     "title": "Improving remote sensing crop classification by argumentation-based conflict resolution in ensemble learning",
     "year": 2015,
-    "domain": "Software and Hardware Technologies for AI/Robotics for healthcare Rob Tech Med",
+    "domain": "Software and Hardware Technologies for AI",
     "kind": "Paperwork",
     "description": "The acquisition of data through remote sensing has become of great importance in precision agriculture, as it covers large geographical areas faster and cheaper than ground inspections. The challenge is to develop technical solutions that can benefit from both huge amounts of raw data extracted from satellite images, but also from the robust amount of knowledge refined during centuries of agricultural practice. Aiming to accurately classify crops from satellite images, we developed a hybrid intelligent system that can exploit both agricultural expert knowledge and machine learning algorithms. As the crop raw data is characterized by heterogeneity, we drive our attention to ensemble learners, while expert knowledge is encapsulated within a rule-based system. Vote-based methods for solving conflicts between ensemble’s base learners have difficulties in classifying exceptional cases correctly and also to give the …",
     "authors": ["AdrianPetru-Groza", "Marian-Ion"],
