@@ -23,7 +23,7 @@ export default function MissionClient() {
       </motion.h1>
 
       <motion.p className="text-gray-700 dark:text-gray-300" variants={item}>
-        Paragraf mission...
+        Mission paragraph...
       </motion.p>
     </motion.section>
   );
