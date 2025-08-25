@@ -76,8 +76,7 @@ export default function HistorySection({ items = EVENTS }) {
               color: "var(--icia-card-text)",
               border: "1px solid var(--icia-card-border)",
               borderRadius: "10px",
-              boxShadow:
-                "0 2px 0 rgba(203,213,225,1), 0 10px 40px rgba(0,0,0,.08)",
+              boxShadow: "0 2px 0 rgba(203,213,225,1), 0 10px 40px rgba(0,0,0,.08)",
               padding: "22px",
             }}
             contentArrowStyle={{ borderRight: "7px solid var(--icia-card-border)" }}
@@ -86,7 +85,7 @@ export default function HistorySection({ items = EVENTS }) {
               style={{
                 marginBottom: "8px",
                 fontSize: "1.35rem",
-                fontWeight: "700",
+                fontWeight: 700,
                 color: "var(--icia-card-text)",
               }}
             >

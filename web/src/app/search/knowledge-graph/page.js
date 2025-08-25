@@ -1,15 +1,14 @@
 export const metadata = { title: "Search – Knowledge Graphs" };
 
+import KnowledgeGraphClient from "./KnowledgeGraphClient";
+
 export default function KGPSoon() {
   return (
-    <main className="max-w-5xl mx-auto px-6 py-10">
-      <h1 className="text-3xl font-semibold mb-4">Search</h1>
-
-      <div className="rounded-2xl border p-6 bg-white/70 dark:bg-slate-900/60 backdrop-blur">
-        <h2 className="text-xl font-semibold mb-2">AIRi Knowledge Graphs</h2>
-        <p className="text-slate-700 dark:text-slate-300">
-          Coming soon — interactive navigator for AIRi knowledge graphs.
-        </p>
+    <main className="flex flex-col items-center justify-center bg-gray-50 dark:bg-gray-900 py-12">
+      <div className="container max-w-5xl mx-auto bg-white dark:bg-gray-950 rounded-2xl shadow-xl w-full">
+        <section className="p-6 md:p-10">
+          <KnowledgeGraphClient />
+        </section>
       </div>
     </main>
   );
