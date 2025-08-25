@@ -14,7 +14,7 @@ export default function VisitingResearchersClient() {
         🌍 Visiting Researchers
       </motion.h1>
       <p className="text-gray-800 dark:text-gray-200">
-        A space dedicated to scholars who joined our institute temporarily for collaboration and exchange.
+        We are eager for our first visiting researcher, who will mark the beginning of our tradition of collaboration and knowledge exchange. At our institute, visiting scholars will find cutting-edge infrastructure, a collaborative culture, and strong ties with industry and society.
       </p>
     </main>
   );

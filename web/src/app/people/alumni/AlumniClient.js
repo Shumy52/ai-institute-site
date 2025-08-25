@@ -14,7 +14,7 @@ export default function AlumniClient() {
         🎓 Alumni
       </motion.h1>
       <p className="text-gray-800 dark:text-gray-200">
-        Discover the success stories and contributions of our former students and researchers.
+        Since our institute has just started, we do not have any alumni yet. However, we are committed to building a strong community of graduates in the coming years.
       </p>
     </main>
   );
