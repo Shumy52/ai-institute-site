@@ -1,8 +1,14 @@
+"use client";
+
 import Image from "next/image";
-import { use } from "react";
+import Link from "next/link";
+import { useMemo, useState } from "react";
+import { useParams } from "next/navigation";
 import { allStaff } from "@/app/data/staffData";
 import { proData } from "@/app/data/proData";
+import { pubData } from "@/app/data/pubData";
 
+/* helpers */
 const slugify = (s) =>
   String(s || "")
     .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
@@ -12,163 +18,240 @@ const slugify = (s) =>
     .replace(/\s+/g, "-")
     .replace(/-+/g, "-");
 
-function projectsForPersonSlug(personSlug) {
-  if (!proData) return [];
+const normalizeKey = (s) =>
+  String(s || "")
+    .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase()
+    .replace(/[^a-z0-9]/g, "");
 
-  if (!Array.isArray(proData) && typeof proData === "object") {
-    const arr = proData[personSlug];
-    return Array.isArray(arr) ? arr : [];
-  }
+function projectsForPerson(person) {
+  const list = Array.isArray(proData) ? proData : [];
+  const meKey = normalizeKey(person.slug);
+  const meNameKey = normalizeKey(person.name);
 
-  if (Array.isArray(proData)) {
-    return proData.filter((p) => {
-      const ownerSlug = p?.personSlug || p?.ownerSlug || p?.slug;
-      const members = p?.members || p?.team || [];
-      const byOwner = typeof ownerSlug === "string" && ownerSlug.toLowerCase() === String(personSlug).toLowerCase();
-      const byMembers =
-        Array.isArray(members) &&
-        members.some((m) =>
-          typeof m === "string"
-            ? m.toLowerCase() === String(personSlug).toLowerCase()
-            : m && typeof m === "object" && typeof m.slug === "string" && m.slug.toLowerCase() === String(personSlug).toLowerCase()
-        );
-      return byOwner || byMembers;
+  return list.filter((proj) => {
+    const teams = Array.isArray(proj?.teams) ? proj.teams : [];
+    const inTeam = teams.some((t) => {
+      const tk = normalizeKey(t?.name);
+      return tk === meKey || tk === meNameKey;
     });
-  }
+    const isLead =
+      normalizeKey(proj?.lead) === meKey || normalizeKey(proj?.lead) === meNameKey;
 
-  return [];
+    return inTeam || isLead;
+  });
 }
 
 function normalizeProject(p) {
-  if (typeof p === "string") {
-    return {
-      title: p,
-      lead: undefined,
-      domain: undefined,
-      description: undefined,
-      start: undefined,
-      end: undefined,
-      docUrl: undefined,
-    };
-  }
-  
+  const domains = Array.isArray(p?.domain)
+    ? p.domain.filter((d) => typeof d === "string" && d.trim().length > 0)
+    : p?.domain ? [String(p.domain)] : [];
+
   return {
     title: p?.title ?? "",
-    lead: p?.lead,
-    domain: p?.domain,
-    description: p?.description,
-    start: p?.start,
-    end: p?.end,
-    docUrl: p?.docUrl || p?.documentation || p?.docs || p?.link || undefined,
+    lead: p?.lead ?? "",
+    abstract: p?.abstract ?? "",
+    publication: p?.publication ?? "",
+    domains,
+    themes: Array.isArray(p?.themes) ? p.themes : [],
+    teams: Array.isArray(p?.teams) ? p.teams : [],
+    region: p?.region,
+    partners: p?.partners ?? p?.parteners ?? "",
   };
 }
 
-export function generateStaticParams() {
-  const params = [];
-  for (const person of allStaff) {
-    const projects = projectsForPersonSlug(person.slug).map((proj) =>
-      typeof proj === "string" ? { title: proj } : proj
-    );
-    for (const p of projects) {
-      if (!p?.title) continue;
-      params.push({
-        slug: person.slug,
-        project: slugify(p.title),
-      });
-    }
-  }
-  return params;
-}
-
-export default function ProjectDetailPage({ params }) {
-  const { slug, project } = use(params);
-
-  const toMonthName = (m) => {
-    if (m == null) return "";
-    const names = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-    const n = Number(m);
-    if (!Number.isNaN(n) && n >= 1 && n <= 12) return names[n - 1];
-    const s = String(m).trim();
-    return s || "";
-  };
-
-  const formatDuration = (start, end) => {
-    const mk = (v) => {
-      if (!v) return "";
-      const mm = v.month ? toMonthName(v.month) + " " : "";
-      const yy = v.year ?? "";
-      return (mm || yy) ? `${mm}${yy}` : "";
-    };
-    const s = mk(start);
-    const e = mk(end);
-    if (!s && !e) return "";
-    return `${s}${s || e ? " – " : ""}${e || "present"}`;
-  };
+export default function ProjectDetailPage() {
+  const params = useParams();
+  const slug = Array.isArray(params?.slug) ? params.slug[0] : params?.slug;
+  const projectSlug = Array.isArray(params?.project) ? params.project[0] : params?.project;
 
   const person = allStaff.find((p) => p.slug === slug);
   if (!person) return <div className="p-6">Staff member not found.</div>;
 
-  const normalizedProjects = projectsForPersonSlug(person.slug).map(normalizeProject);
+  const { project, staffTeam } = useMemo(() => {
+    const normalized = projectsForPerson(person).map(normalizeProject);
+    const proj = normalized.find((p) => slugify(p.title) === projectSlug);
 
-  const proj = normalizedProjects.find((p) => slugify(p.title) === project);
-  if (!proj) return <div className="p-6">Project not found.</div>;
+    const memberSlugs = (proj?.teams || [])
+      .map((t) => String(t?.name || "").trim())
+      .filter(Boolean);
+    const staff = allStaff.filter((s) => memberSlugs.includes(s.slug));
+
+    return { project: proj, staffTeam: staff };
+  }, [person, projectSlug]);
+
+  const [tab, setTab] = useState("description");
+
+  if (!project) return <div className="p-6">Project not found.</div>;
+
+  // --- Publications ---
+  const publicationTitles = useMemo(() => {
+    if (Array.isArray(project.publication)) return project.publication;
+    if (project.publication) return [project.publication];
+    return [];
+  }, [project]);
+
+  const allPubs = Array.isArray(pubData) ? pubData : [];
+  const matchedPubs = useMemo(() => {
+    const norm = (s) => String(s || "").trim().toLowerCase();
+    const wanted = new Set(publicationTitles.map(norm));
+    
+    return publicationTitles.map((t) => {
+      const tNorm = norm(t);
+      return (
+        allPubs.find((p) => norm(p.title) === tNorm) ||
+        { title: t } 
+      );
+    });
+  }, [publicationTitles, allPubs]);
+
+  const partnersText = Array.isArray(project.partners)
+    ? project.partners.filter(Boolean).join(", ")
+    : (project.partners || "");
 
   return (
     <main className="max-w-4xl mx-auto p-6 bg-white dark:bg-gray-950 text-black dark:text-white rounded-lg shadow-lg">
-      {/* Header */}
-      <div className="flex items-center gap-4 mb-6">
-        <Image
-          src={person.image || "/people/Basic_avatar_image.png"}
-          alt={person.name}
-          width={72}
-          height={72}
-          className="rounded-full object-cover"
-        />
-        <div>
-          <div className="text-sm text-gray-600 dark:text-gray-400">Project profile</div>
-          <h1 className="text-xl font-semibold">{person.name}</h1>
+      <h2 className="text-3xl font-bold text-blue-700 dark:text-blue-300 mb-2">
+        {project.title}
+      </h2>
+
+      <div className="space-y-1 text-sm text-gray-700 dark:text-gray-300 mb-5">
+        {project.lead && (
+          <div>
+            <span className="font-medium">Lead:</span> {project.lead}
+          </div>
+        )}
+        {partnersText && (
+          <div>
+            <span className="font-medium">Collaborating organisations:</span> {partnersText}
+          </div>
+        )}
+        {project.region && (
+          <div>
+            <span className="font-medium">Region:</span> {project.region}
+          </div>
+        )}
+      </div>
+
+      {/* Tabs: Description / Publications / Team Members */}
+      <div className="mt-2 mb-6">
+        <div className="inline-flex rounded-xl border border-gray-200 dark:border-gray-800 overflow-hidden">
+          <button
+            type="button"
+            onClick={() => setTab("description")}
+            className={`px-4 py-2 text-sm font-medium focus:outline-none ${
+              tab === "description"
+                ? "bg-blue-600 text-white dark:bg-blue-500"
+                : "bg-transparent text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-900"
+            }`}
+            aria-pressed={tab === "description"}
+          >
+            Description
+          </button>
+          <button
+            type="button"
+            onClick={() => setTab("publications")}
+            className={`px-4 py-2 text-sm font-medium focus:outline-none ${
+              tab === "publications"
+                ? "bg-blue-600 text-white dark:bg-blue-500"
+                : "bg-transparent text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-900"
+            }`}
+            aria-pressed={tab === "publications"}
+          >
+            Publications
+          </button>
+          <button
+            type="button"
+            onClick={() => setTab("team")}
+            className={`px-4 py-2 text-sm font-medium focus:outline-none ${
+              tab === "team"
+                ? "bg-blue-600 text-white dark:bg-blue-500"
+                : "bg-transparent text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-900"
+            }`}
+            aria-pressed={tab === "team"}
+          >
+            Team Members
+          </button>
         </div>
       </div>
 
-      {/* Project Details */}
-      <section>
-        <h2 className="text-3xl font-bold text-blue-700 dark:text-blue-300 mb-2">{proj.title}</h2>
-
-        <div className="text-sm text-gray-700 dark:text-gray-300 mb-3">
-          {proj.lead ? <span className="font-medium">Lead: {proj.lead}</span> : null}
-          {(proj.lead && (proj.start || proj.end)) ? <span> • </span> : null}
-          {proj.start || proj.end ? <span>{formatDuration(proj.start, proj.end)}</span> : null}
+      {/* Description */}
+      {tab === "description" && (
+        <div className="pt-2 border-t border-gray-200 dark:border-gray-800">
+          {project.abstract ? (
+            <p className="mt-4 text-base leading-relaxed text-gray-800 dark:text-gray-200">
+              {project.abstract}
+            </p>
+          ) : (
+            <p className="mt-4 text-gray-600 dark:text-gray-400">No description available.</p>
+          )}
         </div>
+      )}
 
-        {proj.domain && (
-          <div className="mb-4">
-            <span className="inline-flex items-center rounded-full px-2 py-0.5 bg-blue-50 dark:bg-blue-950/40 text-blue-700 dark:text-blue-200 text-xs">
-              {proj.domain}
-            </span>
-          </div>
-        )}
+      {/* Publications */}
+      {tab === "publications" && (
+        <div className="pt-2 border-t border-gray-200 dark:border-gray-800">
+          {matchedPubs.length ? (
+            <ul className="mt-4 space-y-4">
+              {matchedPubs.map((pub, i) => (
+                <li key={i} className="rounded-xl border border-gray-200 dark:border-gray-800 p-4">
+                  <div className="flex items-baseline gap-2">
+                    <div className="font-medium">{pub.title || `Publication ${i + 1}`}</div>
+                    {typeof pub.year !== "undefined" && (
+                      <span className="text-sm opacity-70">({pub.year})</span>
+                    )}
+                  </div>
+                  {pub.description && (
+                    <p className="mt-1 text-sm text-gray-700 dark:text-gray-300">{pub.description}</p>
+                  )}
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p className="mt-4 text-gray-600 dark:text-gray-400">
+              No publications listed for this project.
+            </p>
+          )}
+        </div>
+      )}
 
-        {proj.description && (
-          <p className="text-base leading-relaxed text-gray-800 dark:text-gray-200">{proj.description}</p>
-        )}
-
-        {/* Link for documentation */}
-        {proj.docUrl && (
-          <a
-            href={proj.docUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="mt-4 inline-flex items-center gap-2 px-3 py-2 rounded-md border border-gray-300 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-900 transition"
-            aria-label="Open project documentation in a new tab"
-          >
-            <span>📄 View documentation</span>
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4"
-                 fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 6H18m0 0v4.5M18 6l-7.5 7.5M6 18h6" />
-            </svg>
-          </a>
-        )}
-      </section>
+      {/* Team Members */}
+      {tab === "team" && (
+        <div className="pt-2 border-t border-gray-200 dark:border-gray-800">
+          {Array.isArray(staffTeam) && staffTeam.length ? (
+            <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {staffTeam.map((m) => (
+                <article
+                  key={m.slug}
+                  className="border border-gray-200 dark:border-gray-800 rounded-xl p-4 bg-white dark:bg-gray-900 hover:shadow-lg transition-shadow"
+                >
+                  <Link href={`/people/staff/${encodeURIComponent(m.slug)}`} className="block text-center">
+                    <Image
+                      src={m.image || "/people/Basic_avatar_image.png"}
+                      alt={m.name}
+                      width={150}
+                      height={150}
+                      className="rounded-full mx-auto object-cover"
+                    />
+                    <h3 className="mt-4 text-lg font-semibold">{m.name}</h3>
+                    {m.title && (
+                      <p className="text-sm text-gray-600 dark:text-gray-400">{m.title}</p>
+                    )}
+                    {m.email && <p className="text-sm mt-1">{m.email}</p>}
+                    {m.phone && (
+                      <p className="text-sm text-gray-600 dark:text-gray-400">Phone: {m.phone}</p>
+                    )}
+                  </Link>
+                </article>
+              ))}
+            </div>
+          ) : (
+            <p className="mt-4 text-gray-600 dark:text-gray-400">
+              No team members found in our directory.
+            </p>
+          )}
+        </div>
+      )}
     </main>
   );
 }

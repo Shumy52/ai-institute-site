@@ -22,5 +22,37 @@
     "kind": "Paperwork",
     "description": "In the context of the Covid-19 pandemic, many were quick to spread deceptive information. I investigate here how reasoning in Description Logics (DLs) can detect inconsistencies between trusted medical sources and not trusted ones. The not-trusted information comes in natural language (e.g. 'Covid-19 affects only the elderly'). To automatically convert into DLs, I used the FRED converter. Reasoning in Description Logics is then performed with the Racer tool.",
     "authors": ["AdrianPetru-Groza"]
+  },
+  {
+    "title": "Improving remote sensing crop classification by argumentation-based conflict resolution in ensemble learning",
+    "year": 2015,
+    "domain": "Software and Hardware Technologies for AI/Robotics for healthcare Rob Tech Med",
+    "kind": "Paperwork",
+    "description": "The acquisition of data through remote sensing has become of great importance in precision agriculture, as it covers large geographical areas faster and cheaper than ground inspections. The challenge is to develop technical solutions that can benefit from both huge amounts of raw data extracted from satellite images, but also from the robust amount of knowledge refined during centuries of agricultural practice. Aiming to accurately classify crops from satellite images, we developed a hybrid intelligent system that can exploit both agricultural expert knowledge and machine learning algorithms. As the crop raw data is characterized by heterogeneity, we drive our attention to ensemble learners, while expert knowledge is encapsulated within a rule-based system. Vote-based methods for solving conflicts between ensemble’s base learners have difficulties in classifying exceptional cases correctly and also to give the …",
+    "authors": ["AdrianPetru-Groza", "Marian-Ion"]
+  },
+  {
+    "title": "Improving conflict resolution in version spaces for precision agriculture",
+    "year": 2017,
+    "domain": "Microelectronics",
+    "kind": "Paperwork",
+    "description": "We developed a plant monitoring system that uses machine learning to classify environment conditions as favorable or not for plant development. The decision is taken based on six features whose values are measured from sensors: light, temperature, vibrations, soil humidity, rain quantity and vertical distance. Aiming to assure transparency in the classification decision, we used a modified version of the version space algorithm. We adapted the version space algorithm to deal with situations when hypotheses do not agree on a single decision. As a result, 20% from the instances unclassified by the version space were classified by our enhanced version space algorithm. The developed tool is available online as an open-source project.",
+    "authors": ["AdrianPetru-Groza"]
+  },
+  {
+    "title": "Assuring safety in air traffic control systems with argumentation and model checking",
+    "year": 2016,
+    "domain": "Intelligent and Autonomous Systems",
+    "kind": "Article",
+    "description": "Although the continuous safety technology advances in fields like air traffic control (ATC) systems or medical devices, the crux of safety assurance still comes down to human decision makers, which, within the context of having to define priorities while simultaneously considering different contextual criteria, present a constant high risk of erroneous decisions. We illustrate in this article a recommender framework for assisting flight controllers, which combines argumentation theory and model checking in the evaluation of trade-offs and compromises to be made in the presence of incomplete and potentially inconsistent information. We view a Hybrid Kripke model as a description of an ATC domain and we apply a rational decision strategy based on Hybrid Logics and Defeasible Reasoning to assist the process of model update when the system has to accommodate new properties or norm constraints. When the model fails to verify a property, a defeasible logic program is used to analyze the current state and perform updating operations on the model. The introduced decision making framework is tested on a recommender system in ATC and model update is demonstrated with respect to the verification and adaption of unmanned aerial vehicles routes in the air traffic space. The results show an important potential for the presented framework to be integrated directly into existing decision-making routines for achieving higher accuracy in recommender system methods.",
+    "authors": ["AdrianPetru-Groza"]
+  },
+  {
+    "title": "Deep Clustering for Blood Cell Classification and Quantification",
+    "year": 2024,
+    "domain": "Medical Technologies",
+    "kind": "Article",
+    "description": "Accurate classification of blood cells plays a key role in improving automated blood analysis for both medical and veterinary applications. This work presents a two-stage deep clustering method for classifying blood cells from high-dimensional signal data. In the first stage, red blood cells (RBCs) and platelets (PLTs) are separated using a combination of an improved autoencoder and the IDEC algorithm. The second stage further classifies RBC subtypes, pure RBCs, reticulocytes, and clumped RBCs, through a variational deep embedding (VaDE) approach. Due to the lack of detailed cell-level labels, soft classification probabilities are generated from sample-level data to approximate the true distributions. The aim is to contribute to the development of low-cost, automated blood analysis systems suitable for veterinary and biomedical use. Initial results indicate this method shows promise in effectively distinguishing different blood cell populations, even with limited supervision.",
+    "authors": ["AdrianPetru-Groza", "MihaelaMacarie-Ancau"]
   }
 ]

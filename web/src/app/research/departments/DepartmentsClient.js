@@ -1,4 +1,3 @@
-// src/app/departments/DepartmentsClient.jsx
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
@@ -424,7 +423,6 @@ export default function DepartmentsClient() {
       <p className="text-gray-500">No themes found.</p>
     );
 
-  // coordinator fields from JSON (supports multiple key variants)
   const coordinator = selectedUnit?.coordonator || selectedUnit?.coordinator || selectedUnit?.["coordonator"] || "";
   const coCoordinator = selectedUnit?.["co-coordonator"] || selectedUnit?.coCoordonator || selectedUnit?.co_coordinator || "";
   const elements = Array.isArray(selectedUnit?.elements) ? selectedUnit.elements : [];
@@ -541,7 +539,6 @@ export default function DepartmentsClient() {
 
                       {elements.length > 0 && (
                         <div className="mt-2">
-                          {/* New label before listing elements */}
                           <p className="text-sm font-semibold text-gray-900 dark:text-gray-100 mb-1">
                             Categories:
                           </p>

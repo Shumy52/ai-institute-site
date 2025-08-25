@@ -5,7 +5,7 @@
       "name": "Groza Adrian Petru",
       "title": "Professor",
       "phone": "0744444444",
-      "email": "adrian.groza@cs.utcluj.ro",
+      "email": "Adrian.Groza@cs.utcluj.ro",
       "image": "/people/AdrianGroza.png"
     },
     {
@@ -102,6 +102,14 @@
       "title": "Professor",
       "phone": "0716161616",
       "email": "dorina.pisla@cs.utcluj.ro",
+      "image": "/people/Basic_avatar_image.png"
+    },
+    {
+      "slug": "MihaelaMacarie-Ancau",
+      "name": "Ancau Mihaela Macarie",
+      "title": "Professor",
+      "phone": "0717171717",
+      "email": "Macarie.Io.Mihaela@cs.utcluj.ro",
       "image": "/people/Basic_avatar_image.png"
     }
   ],
