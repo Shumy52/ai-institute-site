@@ -22,7 +22,6 @@ export default function Client() {
         animate="visible"
       >
         <section className="p-6 md:p-10 space-y-6">
-          {/* Title */}
           <motion.h1
             className="text-2xl md:text-3xl font-extrabold text-gray-900 dark:text-gray-100 tracking-tight"
             variants={itemVariants}
@@ -30,7 +29,6 @@ export default function Client() {
             🖥️⚡ HPC-AI services
           </motion.h1>
 
-          {/* Intro paragraphs */}
           <motion.p className="text-gray-700 dark:text-gray-300" variants={itemVariants}>
             UTCN has designed, within AIRi@UTCN, a computing infrastructure consisting of 32 GPU Node
             servers (each with 8 GPUs), along with control servers, storage, and networking equipment, arranged
@@ -44,7 +42,6 @@ export default function Client() {
             developed at UTCN.
           </motion.p>
 
-          {/* Overview */}
           <motion.h2
             className="text-xl md:text-2xl font-bold pt-4 text-gray-900 dark:text-gray-100"
             variants={itemVariants}
@@ -69,7 +66,6 @@ export default function Client() {
             </p>
           </motion.div>
 
-          {/* Key Features */}
           <motion.h2
             className="text-xl md:text-2xl font-bold pt-4 text-gray-900 dark:text-gray-100"
             variants={itemVariants}
@@ -112,7 +108,6 @@ export default function Client() {
             />
           </div>
 
-          {/* Looking Ahead */}
           <motion.h2
             className="text-xl md:text-2xl font-bold pt-4 text-gray-900 dark:text-gray-100"
             variants={itemVariants}
