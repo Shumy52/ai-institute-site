@@ -33,6 +33,6 @@
     "kind": "Article",
     "description": "Accurate classification of blood cells plays a key role in improving automated blood analysis for both medical and veterinary applications. This work presents a two-stage deep clustering method for classifying blood cells from high-dimensional signal data. In the first stage, red blood cells (RBCs) and platelets (PLTs) are separated using a combination of an improved autoencoder and the IDEC algorithm. The second stage further classifies RBC subtypes, pure RBCs, reticulocytes, and clumped RBCs, through a variational deep embedding (VaDE) approach. Due to the lack of detailed cell-level labels, soft classification probabilities are generated from sample-level data to approximate the true distributions. The aim is to contribute to the development of low-cost, automated blood analysis systems suitable for veterinary and biomedical use. Initial results indicate this method shows promise in effectively distinguishing different blood cell populations, even with limited supervision.",
     "authors": ["AdrianPetru-Groza", "MihaelaMacarie-Ancau"],
-    "docUrl": "https://didatec-my.sharepoint.com/personal/szomiu_au_roxana_campus_utcluj_ro/_layouts/15/onedrive.aspx?id=%2Fpersonal%2Fszomiu%5Fau%5Froxana%5Fcampus%5Futcluj%5Fro%2FDocuments%2FMicrosoft%20Teams%20Chat%20Files%2FDeepFlow%2Epdf&parent=%2Fpersonal%2Fszomiu%5Fau%5Froxana%5Fcampus%5Futcluj%5Fro%2FDocuments%2FMicrosoft%20Teams%20Chat%20Files&ga=1"
+    "docUrl": "https://github.com/IliesiuRobert/ai-institute-site/blob/Iliesiu_Robert_Work/DeepFlow.pdf"
   }
 ]

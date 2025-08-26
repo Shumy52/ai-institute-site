@@ -57,6 +57,7 @@ function normalizeProject(p) {
     teams: Array.isArray(p?.teams) ? p.teams : [],
     region: p?.region,
     partners: p?.partners ?? p?.parteners ?? "",
+    docUrl: p?.docUrl || "",
   };
 }
 
@@ -193,9 +194,23 @@ export default function ProjectDetailPage() {
       {tab === "description" && (
         <div className="pt-2 border-t border-gray-200 dark:border-gray-800">
           {project.abstract ? (
-            <p className="mt-4 text-base leading-relaxed text-gray-800 dark:text-gray-200">
-              {project.abstract}
-            </p>
+            <>
+              <p className="mt-4 text-base leading-relaxed text-gray-800 dark:text-gray-200">
+                {project.abstract}
+              </p>
+
+              {project.docUrl ? (
+                <a
+                  href={project.docUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="mt-4 inline-flex items-center gap-2 px-3 py-2 rounded-md border border-gray-300 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-900 transition text-sm"
+                  aria-label="Open project presentation"
+                >
+                  Presentation
+                </a>
+              ) : null}
+            </>
           ) : (
             <p className="mt-4 text-gray-600 dark:text-gray-400">No description available.</p>
           )}
