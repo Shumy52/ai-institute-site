@@ -26,14 +26,14 @@ export default function Client() {
             variants={itemVariants}
           >
             <span className="inline-block mr-2">🔁</span>
-            Technology transfer & development unit
+            Technology Transfer & Development Unit
           </motion.h1>
 
           <motion.p
             className="text-gray-700 dark:text-gray-300 mb-6"
             variants={itemVariants}
           >
-            Sprijinim transferul tehnologic: identificare IP, licențiere, prototipare, spin‑offs.
+            We support technology transfer: IP identification, licensing, prototyping, and spin-offs.
           </motion.p>
 
           <motion.div
@@ -43,7 +43,7 @@ export default function Client() {
             <div className="px-4 md:px-6 py-4 border-b border-gray-200 dark:border-gray-800">
               <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
                 <span className="inline-block mr-2">🧰</span>
-                Servicii
+                Services
               </h2>
             </div>
             <div className="px-4 md:px-6 py-6">
@@ -53,9 +53,9 @@ export default function Client() {
                 initial="hidden"
                 animate="visible"
               >
-                <motion.li variants={itemVariants}>Evaluare TRL & roadmap</motion.li>
-                <motion.li variants={itemVariants}>Prototipare rapidă</motion.li>
-                <motion.li variants={itemVariants}>Matchmaking cu industrie</motion.li>
+                <motion.li variants={itemVariants}>TRL assessment & roadmap</motion.li>
+                <motion.li variants={itemVariants}>Rapid prototyping</motion.li>
+                <motion.li variants={itemVariants}>Industry matchmaking</motion.li>
               </motion.ul>
             </div>
           </motion.div>

@@ -33,7 +33,7 @@ export default function Client() {
             className="text-gray-700 dark:text-gray-300 mb-8"
             variants={item}
           >
-            Descriere <strong>Director Committee</strong> și{" "}
+            Description of the <strong>Director Committee</strong> and{" "}
             <strong>Scientific Committee</strong>
           </motion.p>
 
