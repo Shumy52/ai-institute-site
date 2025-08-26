@@ -27,21 +27,23 @@ const buildStaffLookup = (staffJson) => {
 };
 
 export default function DatasetsClient() {
-  const { bySlug: staffBySlug } = useMemo(() => buildStaffLookup(staffData), []);
+  const { byName: staffByName } = useMemo(() => buildStaffLookup(staffData), []);
 
   const allDatasets = useMemo(() => {
     const out = [];
-    const entries = Object.entries(dataverseMap || {});
-    for (const [authorSlug, list] of entries) {
-      const name = staffBySlug.get(authorSlug) || authorSlug;
-      const titles = Array.isArray(list) ? list : [];
-      for (const title of titles) {
-        const t = String(title || "").trim();
-        if (!t) continue;
+    const entries = Array.isArray(dataverseMap) ? dataverseMap : [];
+
+    for (const entry of entries) {
+      const authorName = staffByName.get(entry.name.toLowerCase()) || entry.name;
+      const list = Array.isArray(entry.elements) ? entry.elements : [];
+
+      for (const el of list) {
+        if (!el?.title) continue;
         out.push({
-          title: t,
-          authorSlug,
-          authorName: name,
+          title: el.title,
+          description: el.description || "",
+          authorName,
+          authorSlug: entry.name,
           year: undefined,
           kind: undefined,
           domain: undefined,
@@ -49,15 +51,15 @@ export default function DatasetsClient() {
       }
     }
     return out;
-  }, [staffBySlug]);
+  }, [staffByName]);
 
   /* --- State filtre --- */
   const [q, setQ] = useState("");
   const [authorFilter, setAuthorFilter] = useState("");
   const [yearFilter, setYearFilter] = useState("");
 
-  const { authorOptions, yearOptions, kindOptions, domainOptions } = useMemo(() => {
-    const authors = new Map(); 
+  const { authorOptions, yearOptions } = useMemo(() => {
+    const authors = new Map();
     const years = new Set();
 
     for (const d of allDatasets) {
@@ -71,13 +73,13 @@ export default function DatasetsClient() {
     };
   }, [allDatasets]);
 
-  // Filtrare
+  // Filtering
   const filtered = useMemo(() => {
     const query = q.trim().toLowerCase();
     return allDatasets.filter((d) => {
       const inSearch =
         !query ||
-        `${d.title} ${d.authorName}`.toLowerCase().includes(query);
+        `${d.title} ${d.description} ${d.authorName}`.toLowerCase().includes(query);
 
       const inAuthor = !authorFilter || d.authorSlug === authorFilter;
       const inYear = !yearFilter || String(d.year) === String(yearFilter);
@@ -110,7 +112,7 @@ export default function DatasetsClient() {
                 <input
                   value={q}
                   onChange={(e) => setQ(e.target.value)}
-                  placeholder="Search title, author…"
+                  placeholder="Search title, description, author…"
                   className="w-full rounded-md border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 px-3 py-2 text-sm"
                 />
 
@@ -166,8 +168,11 @@ export default function DatasetsClient() {
                         key={`${d.authorSlug}-${idx}-${d.title}`}
                         className="rounded-lg border border-gray-100 dark:border-gray-800 p-3"
                       >
-                        <div className="text-sm text-gray-900 dark:text-gray-100 font-medium">
+                        <div className="text-sm font-semibold text-gray-900 dark:text-gray-100">
                           {d.title}
+                        </div>
+                        <div className="mt-1 text-sm text-gray-700 dark:text-gray-300">
+                          {d.description}
                         </div>
                       </li>
                     ))}

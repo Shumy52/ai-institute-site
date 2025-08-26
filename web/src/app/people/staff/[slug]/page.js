@@ -7,7 +7,7 @@ import { useParams } from "next/navigation";
 import { allStaff } from "@/app/data/staffData";
 import { getPublicationsByAuthor } from "@/app/data/pubData";
 import { proData } from "@/app/data/proData";
-import { getDatasetsByAuthor } from "@/app/data/dataverseData";
+import dataverseMap from "@/app/data/staff/dataverseData.json";
 
 export default function StaffDetailPage() {
   const params = useParams();
@@ -192,18 +192,29 @@ export default function StaffDetailPage() {
     setPLeadFilter("");
   };
 
-  // ===== Dataverse =====
   const normalizedDatasets = useMemo(() => {
-    const list = getDatasetsByAuthor(person.slug) ?? [];
-    return (Array.isArray(list) ? list : []).map((title) => ({
-      title: String(title || ""),
-      year: undefined,
-      domain: undefined,
-      kind: undefined,
-      description: undefined,
-      doi: undefined,
-    }));
-  }, [person.slug]);
+    const arr = Array.isArray(dataverseMap) ? dataverseMap : [];
+    const meSlug = String(person.slug || "").toLowerCase();
+    const meName = String(person.name || "").toLowerCase();
+
+    const entry = arr.find((e) => {
+      const n = String(e?.name || "").toLowerCase();
+      return n === meSlug || n === meName;
+    });
+
+    const elements = Array.isArray(entry?.elements) ? entry.elements : [];
+
+    return elements
+      .filter((el) => el && typeof el.title === "string" && el.title.trim().length > 0)
+      .map((el) => ({
+        title: el.title,
+        description: typeof el.description === "string" ? el.description : "",
+        year: undefined,
+        domain: undefined,
+        kind: undefined,
+        doi: undefined,
+      }));
+  }, [person.slug, person.name]);
 
   const { dYearOptions, dKindOptions, dDomainOptions } = useMemo(() => {
     return { dYearOptions: [], dKindOptions: [], dDomainOptions: [] };
