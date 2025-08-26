@@ -1,6 +1,16 @@
 {
   "Personal": [
     {
+      "slug": "Marian-Ion",
+      "name": "Ion Marian",
+      "title": "Personal",
+      "phone": "0722222222",
+      "email": "marian.ion@cs.utcluj.ro",
+      "image": "/icia-staging/people/Basic_avatar_image.png"
+    }
+  ],
+  "Researchers": [
+  {
       "slug": "AdrianPetru-Groza",
       "name": "Groza Adrian Petru",
       "title": "Professor",
@@ -111,16 +121,6 @@
       "phone": "0717171717",
       "email": "Macarie.Io.Mihaela@cs.utcluj.ro",
       "image": "/icia-staging/people/Basic_avatar_image.png"
-    }
-  ],
-  "Students": [
-    {
-      "slug": "Marian-Ion",
-      "name": "Ion Marian",
-      "title": "Student",
-      "phone": "0722222222",
-      "email": "marian.ion@cs.utcluj.ro",
-      "image": "/icia-staging/people/Basic_avatar_image.png"
-    }
+    } 
   ]
 }
