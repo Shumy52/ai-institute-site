@@ -236,13 +236,15 @@ export default function ProjectDetailPage() {
                   className="border border-gray-200 dark:border-gray-800 rounded-xl p-4 bg-white dark:bg-gray-900 hover:shadow-lg transition-shadow"
                 >
                   <Link href={`/people/staff/${encodeURIComponent(m.slug)}`} className="block text-center">
-                    <Image
-                      src={m.image || "/people/Basic_avatar_image.png"}
-                      alt={m.name}
-                      width={150}
-                      height={150}
-                      className="rounded-full mx-auto object-cover"
-                    />
+                    <div className="relative w-36 h-36 mx-auto">
+                      <Image
+                        src={m.image || "/people/Basic_avatar_image.png"}
+                        alt={m.name}
+                        fill
+                        sizes="144px"
+                        className="rounded-full object-cover"
+                      />
+                    </div>
                     <h3 className="mt-4 text-lg font-semibold">{m.name}</h3>
                     {m.title && (
                       <p className="text-sm text-gray-600 dark:text-gray-400">{m.title}</p>

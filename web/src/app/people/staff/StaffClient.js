@@ -61,13 +61,15 @@ export default function StaffClient() {
               }}
             >
               <Link href={`/people/staff/${encodeURIComponent(person.slug)}`} className="block text-center">
-                <Image
-                  src={person.image || "/people/Basic_avatar_image.png"}
-                  alt={person.name}
-                  width={150}
-                  height={150}
-                  className="rounded-full mx-auto object-cover"
-                />
+                <div className="relative w-36 h-36 mx-auto">
+                  <Image
+                    src={person.image || "/people/Basic_avatar_image.png"}
+                    alt={person.name}
+                    fill
+                    sizes="144px"
+                    className="rounded-full object-cover"
+                  />
+                </div>
                 <h2 className="mt-4 text-lg font-semibold">{person.name}</h2>
                 {person.title && (
                   <p className="text-sm text-gray-600 dark:text-gray-400">{person.title}</p>

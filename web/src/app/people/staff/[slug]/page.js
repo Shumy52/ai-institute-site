@@ -243,13 +243,15 @@ export default function StaffDetailPage() {
     <main className="max-w-5xl mx-auto p-6 bg-white dark:bg-gray-950 text-black dark:text-white rounded-lg shadow-lg">
       {/* Header */}
       <div className="flex flex-col items-center text-center">
-        <Image
-          src={person.image || "/people/Basic_avatar_image.png"}
-          alt={person.name}
-          width={160}
-          height={160}
-          className="rounded-full object-cover mb-4"
-        />
+        <div className="relative w-36 h-36 mx-auto">
+          <Image
+            src={person.image || "/people/Basic_avatar_image.png"}
+            alt={person.name}
+            fill
+            sizes="144px"
+            className="rounded-full object-cover"
+          />
+        </div>
         <h1 className="text-3xl font-bold text-blue-700 dark:text-blue-300 mb-2">{person.name}</h1>
         {person.title && <p className="text-lg">{person.title}</p>}
         {person.email && <p>{person.email}</p>}
