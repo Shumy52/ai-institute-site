@@ -6,7 +6,7 @@ import { useMemo, useState } from "react";
 import { useParams } from "next/navigation";
 import { allStaff } from "@/app/data/staffData";
 import { getPublicationsByAuthor } from "@/app/data/pubData";
-import { getProjectsByMember } from "@/app/data/proData";
+import { proData } from "@/app/data/proData";
 import { getDatasetsByAuthor } from "@/app/data/dataverseData";
 
 export default function StaffDetailPage() {
@@ -15,7 +15,7 @@ export default function StaffDetailPage() {
 
   const person = allStaff.find((p) => p.slug === slug);
 
-  const [view, setView] = useState("publications"); 
+  const [view, setView] = useState("publications");
 
   // ----- utils -----
   const slugify = (s) =>
@@ -27,6 +27,13 @@ export default function StaffDetailPage() {
       .replace(/[^a-z0-9\s-]/g, "")
       .replace(/\s+/g, "-")
       .replace(/-+/g, "-");
+
+  const normalizeKey = (s) =>
+    String(s || "")
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .toLowerCase()
+      .replace(/[^a-z0-9]/g, "");
 
   // ----- state filtre Publications -----
   const [query, setQuery] = useState("");
@@ -41,48 +48,32 @@ export default function StaffDetailPage() {
 
   // ----- state filtre Dataverse -----
   const [dQuery, setDQuery] = useState("");
-  const [dYearFilter, setDYearFilter] = useState("");   
-  const [dKindFilter, setDKindFilter] = useState("");   
-  const [dDomainFilter, setDDomainFilter] = useState(""); 
+  const [dYearFilter, setDYearFilter] = useState("");
+  const [dKindFilter, setDKindFilter] = useState("");
+  const [dDomainFilter, setDDomainFilter] = useState("");
 
   if (!person) return <div className="p-6">Staff member not found.</div>;
 
-  // helper: for month
-  const toMonthName = (m) => {
-    if (m == null) return "";
-    const names = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-    const n = Number(m);
-    if (!Number.isNaN(n) && n >= 1 && n <= 12) return names[n - 1];
-    const s = String(m).trim();
-    return s || "";
-  };
-
-  // helper: for duration
-  const formatDuration = (start, end) => {
-    const mk = (v) => {
-      if (!v) return "";
-      const mm = v && v.month ? toMonthName(v.month) + " " : "";
-      const yy = v && v.year != null ? v.year : "";
-      return mm || yy ? `${mm}${yy}` : "";
-    };
-    const s = mk(start);
-    const e = mk(end);
-    if (!s && !e) return "";
-    return `${s}${s || e ? " – " : ""}${e || "present"}`;
-  };
-
-  // ===== Publications (pubData.js) =====
+  // ===== Publications =====
   const normalizedPubs = useMemo(() => {
     const pubs = getPublicationsByAuthor(person.slug) ?? [];
     return pubs.map((pub) =>
       typeof pub === "string"
-        ? { title: pub, year: undefined, domain: undefined, kind: undefined, description: undefined }
+        ? {
+            title: pub,
+            year: undefined,
+            domain: undefined,
+            kind: undefined,
+            description: undefined,
+            docUrl: undefined,
+          }
         : {
             title: pub.title ?? "",
             year: pub.year,
             domain: pub.domain,
             kind: pub.kind,
             description: pub.description,
+            docUrl: pub.docUrl || pub.url || pub.link || undefined,
           }
     );
   }, [person.slug]);
@@ -119,43 +110,78 @@ export default function StaffDetailPage() {
     setDomainFilter("");
   };
 
-  // ===== Projects (proData.js) =====
+  // ===== Projects =====
   const normalizedProjects = useMemo(() => {
-    const projs = getProjectsByMember(person.slug) ?? [];
-    return projs.map((proj) =>
-      typeof proj === "string"
-        ? {
-            title: proj,
-            lead: undefined,
-            domain: undefined,
-            description: undefined,
-            start: undefined,
-            end: undefined,
-          }
-        : {
-            title: proj.title ?? "",
-            lead: proj.lead,
-            domain: proj.domain,
-            description: proj.description,
-            start: proj.start,
-            end: proj.end,
-          }
-    );
-  }, [person.slug]);
+    const list = Array.isArray(proData) ? proData : [];
+
+    const meKey = normalizeKey(person.slug);
+    const meNameKey = normalizeKey(person.name);
+
+    const mine = list.filter((proj) => {
+      const teams = Array.isArray(proj?.teams) ? proj.teams : [];
+      const isInTeam = teams.some((t) => {
+        const teamKey = normalizeKey(t?.name);
+        return teamKey === meKey || teamKey === meNameKey;
+      });
+
+      const isLead = normalizeKey(proj?.lead) === meNameKey || normalizeKey(proj?.lead) === meKey;
+
+      return isInTeam || isLead;
+    });
+
+    return mine.map((proj) => {
+      const domains = Array.isArray(proj?.domain)
+        ? proj.domain.filter((d) => typeof d === "string" && d.trim().length > 0)
+        : proj?.domain
+        ? [String(proj.domain)]
+        : [];
+      const themes = Array.isArray(proj?.themes) ? proj.themes : [];
+
+      return {
+        title: proj?.title ?? "",
+        lead: proj?.lead ?? undefined,
+        domains,
+        abstract: proj?.abstract ?? "",
+        themes,
+        region: proj?.region,
+        partners: proj?.partners,
+        publication: proj?.publication,
+      };
+    });
+  }, [person.slug, person.name]);
 
   const { pDomainOptions, pLeadOptions } = useMemo(() => {
-    const domains = Array.from(new Set(normalizedProjects.map((p) => p.domain).filter(Boolean)));
-    const leads = Array.from(new Set(normalizedProjects.map((p) => p.lead).filter(Boolean)));
-    return { pDomainOptions: domains, pLeadOptions: leads };
+    const domainsSet = new Set();
+    const leadsSet = new Set();
+
+    normalizedProjects.forEach((p) => {
+      (Array.isArray(p.domains) ? p.domains : []).forEach((d) => domainsSet.add(d));
+      if (p.lead) leadsSet.add(p.lead);
+    });
+
+    return {
+      pDomainOptions: Array.from(domainsSet),
+      pLeadOptions: Array.from(leadsSet),
+    };
   }, [normalizedProjects]);
 
   const filteredProjects = useMemo(() => {
     const q = pQuery.trim().toLowerCase();
     return normalizedProjects.filter((p) => {
-      const matchesSearch =
-        !q || `${p.title ?? ""} ${p.lead ?? ""} ${p.domain ?? ""} ${p.description ?? ""}`.toLowerCase().includes(q);
-      const matchesDomain = !pDomainFilter || p.domain === pDomainFilter;
+      const haystack = [
+        p.title ?? "",
+        p.lead ?? "",
+        ...(Array.isArray(p.domains) ? p.domains : []),
+        p.abstract ?? "",
+        ...(Array.isArray(p.themes) ? p.themes : []),
+      ]
+        .join(" ")
+        .toLowerCase();
+
+      const matchesSearch = !q || haystack.includes(q);
+      const matchesDomain = !pDomainFilter || (Array.isArray(p.domains) && p.domains.includes(pDomainFilter));
       const matchesLead = !pLeadFilter || p.lead === pLeadFilter;
+
       return matchesSearch && matchesDomain && matchesLead;
     });
   }, [normalizedProjects, pQuery, pDomainFilter, pLeadFilter]);
@@ -166,7 +192,7 @@ export default function StaffDetailPage() {
     setPLeadFilter("");
   };
 
-  // ===== Dataverse (dataverseData.js) =====
+  // ===== Dataverse =====
   const normalizedDatasets = useMemo(() => {
     const list = getDatasetsByAuthor(person.slug) ?? [];
     return (Array.isArray(list) ? list : []).map((title) => ({
@@ -181,7 +207,7 @@ export default function StaffDetailPage() {
 
   const { dYearOptions, dKindOptions, dDomainOptions } = useMemo(() => {
     return { dYearOptions: [], dKindOptions: [], dDomainOptions: [] };
-  }, [normalizedDatasets]);
+  }, []);
 
   const filteredDatasets = useMemo(() => {
     const q = dQuery.trim().toLowerCase();
@@ -343,6 +369,28 @@ export default function StaffDetailPage() {
                       {pub.description && (
                         <p className="mt-1 text-sm text-gray-700 dark:text-gray-300">{pub.description}</p>
                       )}
+
+                      {pub.docUrl && (
+                        <a
+                          href={pub.docUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="mt-3 inline-flex items-center gap-2 px-3 py-2 rounded-md border border-gray-300 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-900 transition text-sm"
+                          aria-label="Open publication documentation in a new tab"
+                        >
+                          View documentation
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            className="h-4 w-4"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                            strokeWidth="1.5"
+                          >
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 6H18m0 0v4.5M18 6l-7.5 7.5M6 18h6" />
+                          </svg>
+                        </a>
+                      )}
                     </li>
                   ))}
                 </ul>
@@ -427,12 +475,11 @@ export default function StaffDetailPage() {
                           aria-label={`Open project ${p.title || `#${i + 1}`}`}
                         >
                           <div className="font-medium group-hover:underline">{p.title}</div>
-
-                          <div className="mt-1 text-sm text-gray-700 dark:text-gray-300">
-                            {p.lead ? <span>{p.lead}</span> : null}
-                            {p.lead && (p.start || p.end) ? <span> • </span> : null}
-                            {p.start || p.end ? <span>{formatDuration(p.start, p.end)}</span> : null}
-                          </div>
+                          {p.lead && (
+                            <div className="mt-1 text-sm text-gray-700 dark:text-gray-300">
+                              <span className="font-medium">Lead:</span> {p.lead}
+                            </div>
+                          )}
                         </Link>
                       </li>
                     );
@@ -445,7 +492,7 @@ export default function StaffDetailPage() {
           </div>
         </section>
       ) : (
-        // Dataverse View 
+        // Dataverse View
         <section className="mt-10">
           {/* GRID: sidebar + list */}
           <div className="mt-6 md:mt-8 grid grid-cols-1 md:grid-cols-[280px_minmax(0,1fr)] gap-8 items-start">

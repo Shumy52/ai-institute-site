@@ -5,104 +5,112 @@
       "name": "Groza Adrian Petru",
       "title": "Professor",
       "phone": "0744444444",
-      "email": "adrian.groza@cs.utcluj.ro",
-      "image": "/people/AdrianGroza.png"
+      "email": "Adrian.Groza@cs.utcluj.ro",
+      "image": "/icia-staging/people/AdrianGroza.png"
     },
     {
       "slug": "AncaNicoleta-Marginean",
       "name": "Mărginean Anca Nicoleta",
       "title": "Professor",
       "phone": "0733333333",
-      "email": "anca.marginean@cs.utcluj.ro",
-      "image": "/people/Basic_avatar_image.png"
+      "email": "Anca.Marginean@cs.utcluj.ro",
+      "image": "/icia-staging/people/AncaMarginean.png"
     },
     {
       "slug": "Rodica-Potolea",
       "name": "Potolea Rodica",
       "title": "Professor",
       "phone": "0722222222",
-      "email": "rodica.potolea@cs.utcluj.ro",
-      "image": "/people/Basic_avatar_image.png"
+      "email": "Rodica.Potolea@cs.utcluj.ro",
+      "image": "/icia-staging/people/Basic_avatar_image.png"
     },
     {
       "slug": "Sergiu-Nedevschi",
       "name": "Nedevschi Sergiu",
       "title": "Professor",
       "phone": "0711111111",
-      "email": "sergiu.nedevschi@cs.utcluj.ro",
-      "image": "/people/Basic_avatar_image.png"
+      "email": "Sergiu.Nedevschi@cs.utcluj.ro",
+      "image": "/icia-staging/people/SergiuNedevschi.png"
     },
     {
       "slug": "FlorinIoan-Oniga",
       "name": "Oniga Florin Ioan",
       "title": "Professor",
       "phone": "0766666666",
-      "email": "florin.oniga@cs.utcluj.ro",
-      "image": "/people/Basic_avatar_image.png"
+      "email": "Florin.Oniga@cs.utcluj.ro",
+      "image": "/icia-staging/people/FlorinOniga.png"
     },
     {
       "slug": "SorinAdrian-Hintea",
       "name": "Hintea Sorin Adrian",
       "title": "Professor",
       "phone": "0777777777",
-      "email": "sorin.hintea@cs.utcluj.ro",
-      "image": "/people/Basic_avatar_image.png"
+      "email": "Sorin.Hintea@cs.utcluj.ro",
+      "image": "/icia-staging/people/SorinHintea.png"
     },
     {
       "slug": "Marius-Neag",
       "name": "Neag Marius",
       "title": "Professor",
       "phone": "0788888888",
-      "email": "marius.neag@cs.utcluj.ro",
-      "image": "/people/Basic_avatar_image.png"
+      "email": "Marius.Neag@cs.utcluj.ro",
+      "image": "/icia-staging/people/Basic_avatar_image.png"
     },
     {
       "slug": "Lucian-Busoniu",
       "name": "Busoniu Lucian",
       "title": "Professor",
       "phone": "0799999999",
-      "email": "lucian.busoniu@cs.utcluj.ro",
-      "image": "/people/Basic_avatar_image.png"
+      "email": "Lucian.Busoniu@cs.utcluj.ro",
+      "image": "/icia-staging/people/LucianBusoniu.png"
     },
     {
       "slug": "RaduGabriel-Danescu",
       "name": "Dănescu Radu Gabriel",
       "title": "Professor",
       "phone": "0712121212",
-      "email": "radu.danescu@cs.utcluj.ro",
-      "image": "/people/Basic_avatar_image.png"
+      "email": "Radu.Danescu@cs.utcluj.ro",
+      "image": "/icia-staging/people/RaduDanescu.png"
     },
     {
       "slug": "Dorian-Gorgan",
       "name": "Gorgan Dorian",
       "title": "Professor",
       "phone": "0713131313",
-      "email": "dorian.gorgan@cs.utcluj.ro",
-      "image": "/people/Basic_avatar_image.png"
+      "email": "Dorian.Gorgan@cs.utcluj.ro",
+      "image": "/icia-staging/people/DorianGorgan.png"
     },
     {
       "slug": "Tiberiu-Marita",
       "name": "Marița Tiberiu",
       "title": "Professor",
       "phone": "0714141414",
-      "email": "tiberiu.marita@cs.utcluj.ro",
-      "image": "/people/Basic_avatar_image.png"
+      "email": "Tiberiu.Marita@cs.utcluj.ro",
+      "image": "/icia-staging/people/TiberiuMarita.png"
     },
     {
       "slug": "Mircea-Girgiu",
       "name": "Girgiu Mircea",
       "title": "Professor",
       "phone": "0715151515",
-      "email": "mircea.girgiu@cs.utcluj.ro",
-      "image": "/people/Basic_avatar_image.png"
+      "email": "Mircea.Girgiu@cs.utcluj.ro",
+      "image": "/icia-staging/people/Basic_avatar_image.png"
     },
     {
       "slug": "DorinaLiana-Pisla",
       "name": "Pisla Dorina Liana",
       "title": "Professor",
       "phone": "0716161616",
-      "email": "dorina.pisla@cs.utcluj.ro",
-      "image": "/people/Basic_avatar_image.png"
+      "email": "Dorina.Pisla@cs.utcluj.ro",
+      "image": "/icia-staging/people/DorinaPisla.png"
+    },
+    {
+      "slug": "MihaelaMacarie-Ancau",
+      "name": "Ancau Mihaela Macarie",
+      "title": "Professor",
+      "phone": "0717171717",
+      "email": "Macarie.Io.Mihaela@cs.utcluj.ro",
+      "image": "/icia-staging/people/Basic_avatar_image.png"
     }
   ],
   "Students": [
@@ -112,7 +120,7 @@
       "title": "Student",
       "phone": "0722222222",
       "email": "marian.ion@cs.utcluj.ro",
-      "image": "/people/Basic_avatar_image.png"
+      "image": "/icia-staging/people/Basic_avatar_image.png"
     }
   ]
 }

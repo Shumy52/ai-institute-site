@@ -3,38 +3,15 @@
 import { useMemo, useState } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import proData from "@/app/data/staff/proData.json";
+import { proData } from "@/app/data/proData"; 
 
 /* Animations */
 const containerVariants = {
-  hidden: { opacity: 0.9 },
-  visible: { opacity: 1, transition: { delayChildren: 0.1, staggerChildren: 0.08 } },
+  hidden: { opacity: 0.9 }, visible: { opacity: 1, transition: { delayChildren: 0.1, staggerChildren: 0.08 } },
 };
 const itemVariants = { hidden: { y: 10, opacity: 0 }, visible: { y: 0, opacity: 1 } };
 
 /* Helpers */
-const toMonthName = (m) => {
-  if (m == null) return "";
-  const names = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
-  const n = Number(m);
-  if (!Number.isNaN(n) && n >= 1 && n <= 12) return names[n - 1];
-  const s = String(m).trim();
-  return s || "";
-};
-
-const formatDuration = (start, end) => {
-  const mk = (v) => {
-    if (!v) return "";
-    const mm = v.month ? toMonthName(v.month) + " " : "";
-    const yy = v.year ?? "";
-    return (mm || yy) ? `${mm}${yy}` : "";
-  };
-  const s = mk(start);
-  const e = mk(end);
-  if (!s && !e) return "";
-  return `${s}${s || e ? " – " : ""}${e || "present"}`;
-};
-
 const slugify = (s) =>
   String(s || "")
     .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
@@ -44,59 +21,51 @@ const slugify = (s) =>
     .replace(/\s+/g, "-")
     .replace(/-+/g, "-");
 
-const normalizeMembers = (proj) => {
-  const list = Array.isArray(proj.members) ? proj.members : Array.isArray(proj.team) ? proj.team : [];
-  return list.map((m) => (typeof m === "string" ? m : m?.name || m?.slug || "")).filter(Boolean);
-};
+const normalizeTeams = (proj) =>
+  Array.isArray(proj?.teams)
+    ? proj.teams.map((t) => String(t?.name || "").trim()).filter(Boolean)
+    : [];
 
 const normalizeProject = (p) => {
-  const year =
-    (p.start && (p.start.year || p.start.month) && Number(p.start.year)) ||
-    (p.end && (p.end.year || p.end.month) && Number(p.end.year)) ||
-    undefined;
+  const domains = Array.isArray(p?.domain)
+    ? p.domain.filter((d) => typeof d === "string" && d.trim().length > 0)
+    : p?.domain
+    ? [String(p.domain)]
+    : [];
 
   return {
-    title: p.title || "",
-    lead: p.lead || "",
-    domain: p.domain || "",
-    start: p.start,
-    end: p.end,
-    members: normalizeMembers(p),
-    personSlug: "",                 
-    region: p.region || "",         
-    year,
+    title: p?.title || "",
+    lead: p?.lead || "",
+    regions: p?.region ? [String(p.region)] : [], 
+    domains,
+    members: normalizeTeams(p),
   };
 };
 
 export default function ProjectsClient() {
   // ---- State filtre ----
   const [q, setQ] = useState("");
-  const [regionFilter, setRegionFilter] = useState("");       
-  const [domainFilter, setDomainFilter] = useState("");       
-  const [leadFilter, setLeadFilter] = useState("");           
-  const [memberFilter, setMemberFilter] = useState("");       
-  const [yearFilter, setYearFilter] = useState("");          
+  const [regionFilter, setRegionFilter] = useState("");
+  const [domainFilter, setDomainFilter] = useState("");
+  const [leadFilter, setLeadFilter] = useState("");
+  const [memberFilter, setMemberFilter] = useState("");
 
   const projects = useMemo(() => {
     const src = Array.isArray(proData) ? proData : [];
     return src.map(normalizeProject).filter((p) => p.title);
   }, []);
 
-  const { regionOptions, domainOptions, leadOptions, memberOptions, yearOptions } = useMemo(() => {
+  const { regionOptions, domainOptions, leadOptions, memberOptions } = useMemo(() => {
     const regions = new Set();
     const domains = new Set();
     const leads = new Set();
     const members = new Set();
-    const years = new Set();
 
     for (const p of projects) {
-      if (p.region) regions.add(p.region);
-      if (p.domain) domains.add(p.domain);
+      p.regions.forEach((r) => r && regions.add(r));
+      p.domains.forEach((d) => d && domains.add(d));
       if (p.lead) leads.add(p.lead);
-      if (p.year) years.add(String(p.year));
-      if (Array.isArray(p.members)) {
-        p.members.forEach((m) => m && members.add(m));
-      }
+      p.members.forEach((m) => m && members.add(m));
     }
 
     return {
@@ -104,7 +73,6 @@ export default function ProjectsClient() {
       domainOptions: Array.from(domains).sort((a, b) => a.localeCompare(b)),
       leadOptions: Array.from(leads).sort((a, b) => a.localeCompare(b)),
       memberOptions: Array.from(members).sort((a, b) => a.localeCompare(b)),
-      yearOptions: Array.from(years).sort((a, b) => Number(b) - Number(a)),
     };
   }, [projects]);
 
@@ -112,21 +80,25 @@ export default function ProjectsClient() {
   const filtered = useMemo(() => {
     const query = q.trim().toLowerCase();
     return projects.filter((p) => {
-      const matchesQ =
-        !query ||
-        `${p.title} ${p.lead} ${p.domain} ${p.region} ${p.members.join(" ")}`
-          .toLowerCase()
-          .includes(query);
+      const haystack = [
+        p.title,
+        p.lead,
+        ...p.domains,
+        ...p.regions,
+        ...p.members,
+      ]
+        .join(" ")
+        .toLowerCase();
 
-      const matchesRegion = !regionFilter || p.region === regionFilter;
-      const matchesDomain = !domainFilter || p.domain === domainFilter;
-      const matchesLead   = !leadFilter   || p.lead === leadFilter;
-      const matchesMember = !memberFilter || (Array.isArray(p.members) && p.members.includes(memberFilter));
-      const matchesYear   = !yearFilter   || String(p.year) === String(yearFilter);
+      const matchesQ = !query || haystack.includes(query);
+      const matchesRegion = !regionFilter || p.regions.includes(regionFilter);
+      const matchesDomain = !domainFilter || p.domains.includes(domainFilter);
+      const matchesLead = !leadFilter || p.lead === leadFilter;
+      const matchesMember = !memberFilter || p.members.includes(memberFilter);
 
-      return matchesQ && matchesRegion && matchesDomain && matchesLead && matchesMember && matchesYear;
+      return matchesQ && matchesRegion && matchesDomain && matchesLead && matchesMember;
     });
-  }, [projects, q, regionFilter, domainFilter, leadFilter, memberFilter, yearFilter]);
+  }, [projects, q, regionFilter, domainFilter, leadFilter, memberFilter]);
 
   const clearFilters = () => {
     setQ("");
@@ -134,7 +106,6 @@ export default function ProjectsClient() {
     setDomainFilter("");
     setLeadFilter("");
     setMemberFilter("");
-    setYearFilter("");
   };
 
   return (
@@ -143,7 +114,7 @@ export default function ProjectsClient() {
         <motion.div variants={containerVariants} initial="hidden" animate="visible">
           <motion.h1
             variants={itemVariants}
-            className="text-2xl md:text-3xl font-extrabold mb-6 text-gray-900 dark:text-gray-100 text-center"
+            className="text-4xl font-extrabold text-center mb-8 text-blue-600 dark:text-yellow-400 text-center"
           >
             🗂️ Projects
           </motion.h1>
@@ -204,17 +175,6 @@ export default function ProjectsClient() {
                   ))}
                 </select>
 
-                <select
-                  value={yearFilter}
-                  onChange={(e) => setYearFilter(e.target.value)}
-                  className="w-full rounded-md border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 px-3 py-2 text-sm"
-                >
-                  <option value="">All years</option>
-                  {yearOptions.map((y) => (
-                    <option key={y} value={y}>{y}</option>
-                  ))}
-                </select>
-
                 <button
                   type="button"
                   onClick={clearFilters}
@@ -231,7 +191,6 @@ export default function ProjectsClient() {
                 <ul className="space-y-4">
                   {filtered.map((p, i) => {
                     const projectSlug = slugify(p.title);
-                    // Redirect by the first person in de members grup 
                     const personSlug = p.members.length ? p.members[0] : "";
 
                     const content = (
@@ -241,9 +200,12 @@ export default function ProjectsClient() {
                         </div>
                         <div className="mt-1 text-sm text-gray-800 dark:text-gray-200 space-y-0.5">
                           <div>{p.lead ? `Lead: ${p.lead}` : "Lead: —"}</div>
-                          <div>{p.domain ? `Department: ${p.domain}` : "Department: —"}</div>
-                          <div>{(p.start || p.end) ? `Duration: ${formatDuration(p.start, p.end)}` : "Duration: —"}</div>
-                          {p.region ? <div>Region: {p.region}</div> : null}
+                          <div>
+                            {p.domains.length
+                              ? `Department: ${p.domains.join(", ")}`
+                              : "Department: —"}
+                          </div>
+                          {p.regions.length ? <div>Region: {p.regions[0]}</div> : null}
                         </div>
                       </div>
                     );

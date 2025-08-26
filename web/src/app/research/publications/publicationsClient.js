@@ -7,8 +7,7 @@ import staffData from "@/app/data/staff/staffData.json";
 
 /* Animations */
 const containerVariants = {
-  hidden: { opacity: 0.9 },
-  visible: { opacity: 1, transition: { delayChildren: 0.1, staggerChildren: 0.08 } },
+  hidden: { opacity: 0.9 }, visible: { opacity: 1, transition: { delayChildren: 0.1, staggerChildren: 0.08 } },
 };
 const itemVariants = { hidden: { y: 10, opacity: 0 }, visible: { y: 0, opacity: 1 } };
 
@@ -56,7 +55,7 @@ const normalizePublication = (p, bySlugMap) => {
     kind: p.kind || "",
     description: p.description || "",
     authors: authorsToNames(p.authors, bySlugMap),
-    url: p.url || p.link || p.doi || "",
+    docUrl: p.docUrl || p.url || p.link || p.doi || "",   
   };
 };
 
@@ -94,7 +93,7 @@ const toBibEntry = (pub, idx = 0) => {
     ...(author ? { author: bibEscape(author) } : {}),
     ...(pub.description ? { abstract: bibEscape(pub.description) } : {}),
     ...(pub.domain || pub.kind ? { keywords: bibEscape([pub.domain, pub.kind].filter(Boolean).join(", ")) } : {}),
-    ...(pub.url ? { url: bibEscape(pub.url), howpublished: bibEscape(pub.url) } : {}),
+    ...(pub.docUrl ? { url: bibEscape(pub.docUrl), howpublished: bibEscape(pub.docUrl) } : {}),
     ...(pub.kind ? { note: bibEscape(pub.kind) } : {}),
     ...(pub.domain ? { institution: bibEscape(pub.domain) } : {}),
   };
@@ -186,7 +185,7 @@ export default function PublicationsClient() {
         <motion.div variants={containerVariants} initial="hidden" animate="visible">
           <motion.h1
             variants={itemVariants}
-            className="text-2xl md:text-3xl font-extrabold mb-6 text-gray-900 dark:text-gray-100 text-center"
+            className="text-4xl font-extrabold text-center mb-8 text-blue-600 dark:text-yellow-400 text-center"
           >
             📚 Publications
           </motion.h1>
@@ -293,6 +292,28 @@ export default function PublicationsClient() {
                               </p>
                             ) : null}
                           </div>
+
+                          {p.docUrl && (
+                            <a
+                              href={p.docUrl}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="mt-3 inline-flex items-center gap-2 px-3 py-2 rounded-md border border-gray-300 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-900 transition text-sm"
+                              aria-label="Open publication documentation in a new tab"
+                            >
+                              View documentation
+                              <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                className="h-4 w-4"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke="currentColor"
+                                strokeWidth="1.5"
+                              >
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 6H18m0 0v4.5M18 6l-7.5 7.5M6 18h6" />
+                              </svg>
+                            </a>
+                          )}
                         </div>
 
                         <div className="shrink-0">
@@ -302,7 +323,7 @@ export default function PublicationsClient() {
                             className="text-xs rounded-md border border-gray-300 dark:border-gray-700 px-3 py-2 hover:bg-gray-100 dark:hover:bg-gray-800"
                             title="Download .bib for this publication"
                           >
-                            ⬇️ .bib 
+                            ⬇️ .bib
                           </button>
                         </div>
                       </div>
