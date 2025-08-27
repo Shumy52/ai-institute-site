@@ -13,8 +13,7 @@ const researchUnits = Array.isArray(units) ? units : [];
 
 /* --- Animations --- */
 const containerVariants = {
-  hidden: { opacity: 0.9 },
-  visible: { opacity: 1, transition: { delayChildren: 0.1, staggerChildren: 0.1 } },
+  hidden: { opacity: 0.9 }, visible: { opacity: 1, transition: { delayChildren: 0.1, staggerChildren: 0.1 } },
 };
 const itemVariants = { hidden: { y: 12, opacity: 0.95 }, visible: { y: 0, opacity: 1 } };
 
