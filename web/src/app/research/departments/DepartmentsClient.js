@@ -386,13 +386,15 @@ export default function DepartmentsClient() {
             className="group rounded-xl border p-4 hover:shadow-md transition"
           >
             <div className="flex items-center gap-4">
-              <Image
-                src={m.image || "/people/Basic_avatar_image.png"}
-                alt={m.name}
-                width={64}
-                height={64}
-                className="rounded-full object-cover"
-              />
+              <div className="relative w-16 h-16">
+                <Image
+                  src={m.image || "/people/Basic_avatar_image.png"}
+                  alt={m.name}
+                  fill
+                  sizes="64px"
+                  className="rounded-full object-cover"
+                />
+              </div>
               <div>
                 <div className="font-semibold group-hover:underline text-gray-900 dark:text-gray-100">{m.name}</div>
                 {m.title && (

@@ -53,10 +53,11 @@ function normalizeProject(p) {
     abstract: p?.abstract ?? "",
     publication: p?.publication ?? "",
     domains,
-    themes: Array.isArray(p?.themes) ? p.themes : [],
+    themes: Array.isArray(p?.themes) ? p.themes : [], 
     teams: Array.isArray(p?.teams) ? p.teams : [],
     region: p?.region,
     partners: p?.partners ?? p?.parteners ?? "",
+    docUrl: p?.docUrl || "",
   };
 }
 
@@ -131,45 +132,61 @@ export default function ProjectDetailPage() {
         )}
       </div>
 
-      {/* Tabs: Description / Publications / Team Members */}
+      {/* Tabs: Description / Themes / Publications / Team Members */}
       <div className="mt-2 mb-6">
-        <div className="inline-flex rounded-xl border border-gray-200 dark:border-gray-800 overflow-hidden">
-          <button
-            type="button"
-            onClick={() => setTab("description")}
-            className={`px-4 py-2 text-sm font-medium focus:outline-none ${
-              tab === "description"
-                ? "bg-blue-600 text-white dark:bg-blue-500"
-                : "bg-transparent text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-900"
-            }`}
-            aria-pressed={tab === "description"}
-          >
-            Description
-          </button>
-          <button
-            type="button"
-            onClick={() => setTab("publications")}
-            className={`px-4 py-2 text-sm font-medium focus:outline-none ${
-              tab === "publications"
-                ? "bg-blue-600 text-white dark:bg-blue-500"
-                : "bg-transparent text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-900"
-            }`}
-            aria-pressed={tab === "publications"}
-          >
-            Publications
-          </button>
-          <button
-            type="button"
-            onClick={() => setTab("team")}
-            className={`px-4 py-2 text-sm font-medium focus:outline-none ${
-              tab === "team"
-                ? "bg-blue-600 text-white dark:bg-blue-500"
-                : "bg-transparent text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-900"
-            }`}
-            aria-pressed={tab === "team"}
-          >
-            Team Members
-          </button>
+        <div className="flex justify-center md:justify-start">
+          <div className="inline-flex rounded-xl border border-gray-200 dark:border-gray-800 overflow-hidden max-w-full overflow-x-auto whitespace-nowrap">
+            <button
+              type="button"
+              onClick={() => setTab("description")}
+              className={`px-4 py-2 text-sm font-medium focus:outline-none ${
+                tab === "description"
+                  ? "bg-blue-600 text-white dark:bg-blue-500"
+                  : "bg-transparent text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-900"
+              }`}
+              aria-pressed={tab === "description"}
+            >
+              Description
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setTab("themes")}
+              className={`px-4 py-2 text-sm font-medium focus:outline-none ${
+                tab === "themes"
+                  ? "bg-blue-600 text-white dark:bg-blue-500"
+                  : "bg-transparent text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-900"
+              }`}
+              aria-pressed={tab === "themes"}
+            >
+              Themes
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setTab("publications")}
+              className={`px-4 py-2 text-sm font-medium focus:outline-none ${
+                tab === "publications"
+                  ? "bg-blue-600 text-white dark:bg-blue-500"
+                  : "bg-transparent text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-900"
+              }`}
+              aria-pressed={tab === "publications"}
+            >
+              Publications
+            </button>
+            <button
+              type="button"
+              onClick={() => setTab("team")}
+              className={`px-4 py-2 text-sm font-medium focus:outline-none ${
+                tab === "team"
+                  ? "bg-blue-600 text-white dark:bg-blue-500"
+                  : "bg-transparent text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-900"
+              }`}
+              aria-pressed={tab === "team"}
+            >
+              Team Members
+            </button>
+          </div>
         </div>
       </div>
 
@@ -177,11 +194,45 @@ export default function ProjectDetailPage() {
       {tab === "description" && (
         <div className="pt-2 border-t border-gray-200 dark:border-gray-800">
           {project.abstract ? (
-            <p className="mt-4 text-base leading-relaxed text-gray-800 dark:text-gray-200">
-              {project.abstract}
-            </p>
+            <>
+              <p className="mt-4 text-base leading-relaxed text-gray-800 dark:text-gray-200">
+                {project.abstract}
+              </p>
+
+              {project.docUrl ? (
+                <a
+                  href={project.docUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="mt-4 inline-flex items-center gap-2 px-3 py-2 rounded-md border border-gray-300 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-900 transition text-sm"
+                  aria-label="Open project presentation"
+                >
+                  Presentation
+                </a>
+              ) : null}
+            </>
           ) : (
             <p className="mt-4 text-gray-600 dark:text-gray-400">No description available.</p>
+          )}
+        </div>
+      )}
+
+      {/* Themes */}
+      {tab === "themes" && (
+        <div className="pt-2 border-t border-gray-200 dark:border-gray-800">
+          {Array.isArray(project.themes) && project.themes.length ? (
+            <ul className="mt-4 space-y-2">
+              {project.themes.map((th, i) => (
+                <li
+                  key={`${th}-${i}`}
+                  className="px-3 py-2 rounded-md border border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-900 text-sm"
+                >
+                  {th}
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p className="mt-4 text-gray-600 dark:text-gray-400">No themes listed for this project.</p>
           )}
         </div>
       )}
@@ -236,13 +287,15 @@ export default function ProjectDetailPage() {
                   className="border border-gray-200 dark:border-gray-800 rounded-xl p-4 bg-white dark:bg-gray-900 hover:shadow-lg transition-shadow"
                 >
                   <Link href={`/people/staff/${encodeURIComponent(m.slug)}`} className="block text-center">
-                    <Image
-                      src={m.image || "/people/Basic_avatar_image.png"}
-                      alt={m.name}
-                      width={150}
-                      height={150}
-                      className="rounded-full mx-auto object-cover"
-                    />
+                    <div className="relative w-36 h-36 mx-auto">
+                      <Image
+                        src={m.image || "/people/Basic_avatar_image.png"}
+                        alt={m.name}
+                        fill
+                        sizes="144px"
+                        className="rounded-full object-cover"
+                      />
+                    </div>
                     <h3 className="mt-4 text-lg font-semibold">{m.name}</h3>
                     {m.title && (
                       <p className="text-sm text-gray-600 dark:text-gray-400">{m.title}</p>

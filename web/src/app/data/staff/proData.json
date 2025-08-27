@@ -79,7 +79,8 @@
 			"Medical Technologies"
 		],
 		"publication": "Deep Clustering for Blood Cell Classification and Quantification",
-		"partners": "Universitatea Tehnica din Cluj-Napoca"		
+		"partners": "Universitatea Tehnica din Cluj-Napoca",
+		"docUrl": "https://github.com/IliesiuRobert/ai-institute-site/blob/Iliesiu_Robert_Work/HRIA-UTCN_Cluj-Napoca_30.05.2025.pdf"	
 	},
 	{
 		"title": "5G Scalable Hubs for Accessible and Resilient Education - [5G-SHARE]",
@@ -113,6 +114,7 @@
 			"Vodafone Czech Republic",
 			"Vysoke Uceni Technicke V Brne CZ",
 			"ADAPTA studio srl IT"
-		]			
+		],
+		"docUrl": ""			
 	}
 ]

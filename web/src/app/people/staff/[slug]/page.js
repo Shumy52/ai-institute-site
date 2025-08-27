@@ -7,7 +7,7 @@ import { useParams } from "next/navigation";
 import { allStaff } from "@/app/data/staffData";
 import { getPublicationsByAuthor } from "@/app/data/pubData";
 import { proData } from "@/app/data/proData";
-import { getDatasetsByAuthor } from "@/app/data/dataverseData";
+import dataverseMap from "@/app/data/staff/dataverseData.json";
 
 export default function StaffDetailPage() {
   const params = useParams();
@@ -192,18 +192,29 @@ export default function StaffDetailPage() {
     setPLeadFilter("");
   };
 
-  // ===== Dataverse =====
   const normalizedDatasets = useMemo(() => {
-    const list = getDatasetsByAuthor(person.slug) ?? [];
-    return (Array.isArray(list) ? list : []).map((title) => ({
-      title: String(title || ""),
-      year: undefined,
-      domain: undefined,
-      kind: undefined,
-      description: undefined,
-      doi: undefined,
-    }));
-  }, [person.slug]);
+    const arr = Array.isArray(dataverseMap) ? dataverseMap : [];
+    const meSlug = String(person.slug || "").toLowerCase();
+    const meName = String(person.name || "").toLowerCase();
+
+    const entry = arr.find((e) => {
+      const n = String(e?.name || "").toLowerCase();
+      return n === meSlug || n === meName;
+    });
+
+    const elements = Array.isArray(entry?.elements) ? entry.elements : [];
+
+    return elements
+      .filter((el) => el && typeof el.title === "string" && el.title.trim().length > 0)
+      .map((el) => ({
+        title: el.title,
+        description: typeof el.description === "string" ? el.description : "",
+        year: undefined,
+        domain: undefined,
+        kind: undefined,
+        doi: undefined,
+      }));
+  }, [person.slug, person.name]);
 
   const { dYearOptions, dKindOptions, dDomainOptions } = useMemo(() => {
     return { dYearOptions: [], dKindOptions: [], dDomainOptions: [] };
@@ -232,13 +243,15 @@ export default function StaffDetailPage() {
     <main className="max-w-5xl mx-auto p-6 bg-white dark:bg-gray-950 text-black dark:text-white rounded-lg shadow-lg">
       {/* Header */}
       <div className="flex flex-col items-center text-center">
-        <Image
-          src={person.image || "/people/Basic_avatar_image.png"}
-          alt={person.name}
-          width={160}
-          height={160}
-          className="rounded-full object-cover mb-4"
-        />
+        <div className="relative w-36 h-36 mx-auto">
+          <Image
+            src={person.image || "/people/Basic_avatar_image.png"}
+            alt={person.name}
+            fill
+            sizes="144px"
+            className="rounded-full object-cover"
+          />
+        </div>
         <h1 className="text-3xl font-bold text-blue-700 dark:text-blue-300 mb-2">{person.name}</h1>
         {person.title && <p className="text-lg">{person.title}</p>}
         {person.email && <p>{person.email}</p>}

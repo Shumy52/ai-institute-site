@@ -7,7 +7,7 @@ import { staffData } from "@/app/data/staffData";
 
 export default function StaffClient() {
   const personal = Array.isArray(staffData?.Personal) ? staffData.Personal : [];
-  const professors = personal.filter((p) => /prof/i.test(String(p?.title ?? "")));
+  const people = [...personal];
 
   return (
     <main className="max-w-5xl mx-auto p-6 bg-white dark:bg-gray-950 text-black dark:text-white rounded-lg shadow-lg">
@@ -26,17 +26,17 @@ export default function StaffClient() {
         animate={{ opacity: 1 }}
         transition={{ delay: 0.15, duration: 0.6 }}
       >
-        Meet our teaching & research professors.
+        Meet our staff.
       </motion.p>
 
-      {professors.length === 0 ? (
+      {people.length === 0 ? (
         <motion.p
           className="mt-10 text-center text-gray-600 dark:text-gray-400"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.25, duration: 0.6 }}
         >
-          No professors available yet.
+          No staff available yet.
         </motion.p>
       ) : (
         <motion.div
@@ -51,7 +51,7 @@ export default function StaffClient() {
             },
           }}
         >
-          {professors.map((person) => (
+          {people.map((person) => (
             <motion.article
               key={person.slug}
               className="border border-gray-200 dark:border-gray-800 rounded-xl p-4 bg-white dark:bg-gray-900 hover:shadow-lg transition-shadow"
@@ -61,13 +61,15 @@ export default function StaffClient() {
               }}
             >
               <Link href={`/people/staff/${encodeURIComponent(person.slug)}`} className="block text-center">
-                <Image
-                  src={person.image || "/people/Basic_avatar_image.png"}
-                  alt={person.name}
-                  width={150}
-                  height={150}
-                  className="rounded-full mx-auto object-cover"
-                />
+                <div className="relative w-36 h-36 mx-auto">
+                  <Image
+                    src={person.image || "/people/Basic_avatar_image.png"}
+                    alt={person.name}
+                    fill
+                    sizes="144px"
+                    className="rounded-full object-cover"
+                  />
+                </div>
                 <h2 className="mt-4 text-lg font-semibold">{person.name}</h2>
                 {person.title && (
                   <p className="text-sm text-gray-600 dark:text-gray-400">{person.title}</p>

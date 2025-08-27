@@ -31,7 +31,7 @@ export default function CareerClient() {
         animate={{ opacity: 1 }}
         transition={{ delay: 0.15, duration: 0.6 }}
       >
-        Explore ways to work with ICIA across study levels and roles.
+        Explore ways to work with AIRI across study levels and roles.
       </motion.p>
 
       <motion.div
