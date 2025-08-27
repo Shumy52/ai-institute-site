@@ -22,20 +22,20 @@ export default function Client() {
       >
         <section className="p-6 md:p-10 space-y-6">
           <motion.h1
-            className="text-2xl md:text-3xl font-extrabold text-gray-900 dark:text-gray-100 text-center"
+            className="text-2xl md:text-3xl font-extrabold text-blue-600 dark:text-yellow-400 tracking-tight text-center"
             variants={itemVariants}
           >
             🖥️⚡ HPC-AI services
           </motion.h1>
 
-          <motion.p className="text-gray-700 dark:text-gray-300 max-w-3xl mx-auto text-center" variants={itemVariants}>
+          <motion.p className="text-gray-700 dark:text-gray-300" variants={itemVariants}>
             UTCN has designed, within AIRi@UTCN, a computing infrastructure consisting of 32 GPU Node
             servers (each with 8 GPUs), along with control servers, storage, and networking equipment, arranged
             in up to 6 racks with cooling based on RDHx (Rear Door Heat Exchanger) and DLC (Direct Liquid
             Cooling).
           </motion.p>
 
-          <motion.p className="text-gray-700 dark:text-gray-300 max-w-3xl mx-auto text-center" variants={itemVariants}>
+          <motion.p className="text-gray-700 dark:text-gray-300" variants={itemVariants}>
             The operationalization of this infrastructure will be carried out gradually, depending on the current
             stage of AI development in the local ecosystem and the progressive maturity of AI-based systems
             developed at UTCN.

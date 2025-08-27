@@ -96,7 +96,7 @@ export default function Client() {
         <motion.div variants={containerVariants} initial="hidden" animate="visible">
           <motion.h1
             variants={itemVariants}
-            className="text-2xl md:text-3xl font-extrabold mb-2 text-gray-900 dark:text-gray-100 text-center"
+            className="text-2xl md:text-3xl font-extrabold mb-2 text-blue-600 dark:text-yellow-400 tracking-tight text-center"
           >
             🏭 Industry engagement
           </motion.h1>

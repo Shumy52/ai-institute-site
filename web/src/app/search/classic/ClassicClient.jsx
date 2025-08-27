@@ -104,7 +104,7 @@ export default function ClassicClient() {
   const [ready, setReady] = useState(false);
 
   useEffect(() => {
-    const base = getBasePath(); 
+    const base = getBasePath();
     const url = `${base}/search-index.json`;
 
     fetch(url)
@@ -153,11 +153,10 @@ export default function ClassicClient() {
   return (
     <motion.div variants={container} initial="hidden" animate="visible">
       <motion.h1
-        className="text-3xl font-semibold mb-6 text-gray-900 dark:text-gray-100"
+        className="text-2xl md:text-3xl font-extrabold mb-6 text-blue-600 dark:text-yellow-400 tracking-tight text-center"
         variants={item}
       >
-        <span className="inline-block mr-2">🔎</span>
-        Search
+        🔎 Search
       </motion.h1>
 
       <motion.div
@@ -176,8 +175,7 @@ export default function ClassicClient() {
       {ready && q.trim() && (
         <>
           <motion.div className="text-sm text-slate-500 mb-3" variants={item}>
-            {results.length} result{results.length === 1 ? "" : "s"} for{" "}
-            <strong>“{q.trim()}”</strong>
+            {results.length} result{results.length === 1 ? "" : "s"} for <strong>“{q.trim()}”</strong>
           </motion.div>
 
           <motion.ul className="space-y-3" variants={container}>

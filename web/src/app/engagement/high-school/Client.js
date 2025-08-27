@@ -4,8 +4,12 @@ import { motion } from "framer-motion";
 
 const containerVariants = {
   hidden: { opacity: 0 },
-  visible: { opacity: 1, transition: { delayChildren: 0.2, staggerChildren: 0.15 } },
+  visible: {
+    opacity: 1,
+    transition: { delayChildren: 0.2, staggerChildren: 0.15 },
+  },
 };
+
 const itemVariants = {
   hidden: { y: 18, opacity: 0 },
   visible: { y: 0, opacity: 1, transition: { duration: 0.45, ease: "easeOut" } },
@@ -37,14 +41,15 @@ export default function HighSchoolClient() {
       >
         <section className="p-6 md:p-8">
           <motion.h1
-            className="text-2xl md:text-3xl font-extrabold mb-6 text-gray-900 dark:text-gray-100 text-center"
+            className="text-2xl md:text-3xl font-extrabold mb-3 text-blue-600 dark:text-yellow-400 tracking-tight text-center"
             variants={itemVariants}
           >
-            🎒 High-school engagement
+            <span className="inline-block mr-2">🎒</span>
+            High-school engagement
           </motion.h1>
 
           <motion.p
-            className="text-gray-700 dark:text-gray-300 mb-6 text-center max-w-3xl mx-auto"
+            className="text-gray-700 dark:text-gray-300 mb-6"
             variants={itemVariants}
           >
             Competitions, events, and AI literacy resources for students and teachers.

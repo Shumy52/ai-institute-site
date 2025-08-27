@@ -24,7 +24,7 @@ export default function Client() {
         animate="visible"
       >
         <motion.h1
-          className="text-2xl md:text-3xl font-extrabold mb-4 text-gray-900 dark:text-gray-100 text-center"
+          className="text-2xl md:text-3xl font-extrabold mb-4 text-blue-600 dark:text-yellow-400 tracking-tight text-center"
           variants={item}
         >
           📜 Procedures and Regulations

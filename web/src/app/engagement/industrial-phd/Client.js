@@ -22,14 +22,15 @@ export default function Client() {
       >
         <section className="p-6 md:p-8">
           <motion.h1
-            className="text-2xl md:text-3xl font-extrabold mb-6 text-gray-900 dark:text-gray-100 text-center"
+            className="text-2xl md:text-3xl font-extrabold mb-2 text-blue-600 dark:text-yellow-400 tracking-tight text-center"
             variants={itemVariants}
           >
-            🎓🏭 Industrial PhD
+            <span className="inline-block mr-2">🎓🏭</span>
+            Industrial PhD
           </motion.h1>
 
           <motion.p
-            className="text-gray-700 dark:text-gray-300 text-center max-w-3xl mx-auto"
+            className="text-gray-700 dark:text-gray-300"
             variants={itemVariants}
           >
             Framework for industrial PhDs, co-funding, and application-oriented topics with our partners.
