@@ -22,23 +22,20 @@ export default function Client() {
       >
         <section className="p-6 md:p-8">
           <motion.h1
-            className="text-2xl md:text-3xl font-extrabold mb-6 text-gray-900 dark:text-gray-100 tracking-tight"
+            className="text-2xl md:text-3xl font-extrabold mb-6 text-gray-900 dark:text-gray-100 text-center"
             variants={item}
           >
-            <span className="inline-block mr-2">🗂️</span>
-            Organigram
+            🗂️ Organigram
           </motion.h1>
 
           <motion.p
-            className="text-gray-700 dark:text-gray-300 mb-8"
+            className="text-gray-700 dark:text-gray-300 mb-8 text-center max-w-3xl mx-auto"
             variants={item}
           >
-            Description of the <strong>Director Committee</strong> and{" "}
-            <strong>Scientific Committee</strong>
+            Description of the <strong>Director Committee</strong> and <strong>Scientific Committee</strong>
           </motion.p>
 
           <motion.div className="grid gap-6 md:grid-cols-2" variants={container}>
-            {/* Director Committee */}
             <motion.section
               className="rounded-2xl border border-gray-200 dark:border-gray-800 overflow-hidden"
               variants={item}
@@ -78,7 +75,6 @@ export default function Client() {
               </div>
             </motion.section>
 
-            {/* Scientific Committee */}
             <motion.section
               className="rounded-2xl border border-gray-200 dark:border-gray-800 overflow-hidden"
               variants={item}

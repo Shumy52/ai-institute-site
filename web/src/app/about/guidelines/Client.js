@@ -7,14 +7,14 @@ import {
 } from "react-icons/fa";
 
 const ITEMS = [
-  { label: "Students",                href: "/engagement/academic",   icon: FaBookOpen },
-  { label: "Faculty & Researchers",   href: "/research",              icon: FaChalkboardTeacher },
-  { label: "Staff",                   href: "/people/staff",          icon: FaIdBadge },
+  { label: "Students",                href: "/icia-staging/engagement/academic",   icon: FaBookOpen },
+  { label: "Faculty & Researchers",   href: "/icia-staging/research/departments",              icon: FaChalkboardTeacher },
+  { label: "Staff",                   href: "/icia-staging/people/staff",          icon: FaIdBadge },
   { label: "IT Staff",                href: null,                     icon: FaServer },
-  { label: "Visitors",                href: "/about/virtual-tour",    icon: FaMapMarkedAlt },
-  { label: "Alumni",                  href: "/people/alumni",         icon: FaUserGraduate },
+  { label: "Visitors",                href: "/icia-staging/about/virtual-tour",    icon: FaMapMarkedAlt },
+  { label: "Alumni",                  href: "/icia-staging/people/alumni",         icon: FaUserGraduate },
   { label: "Retirees",                href: null,                     icon: FaUserAlt },
-  { label: "Sponsored Affiliates",    href: "/engagement/partners",   icon: FaProjectDiagram },
+  { label: "Sponsored Affiliates",    href: "/icia-staging/engagement/partners",   icon: FaProjectDiagram },
   { label: "Parents & Family",        href: null,                     icon: FaUsers },
   { label: "Former Staff & Affiliates", href: null,                   icon: FaSignOutAlt },
 ];
@@ -59,11 +59,10 @@ export default function Client() {
         animate="visible"
       >
         <motion.h1
-          className="text-2xl md:text-3xl font-extrabold mb-10 text-gray-900 dark:text-gray-100 tracking-tight"
+          className="text-2xl md:text-3xl font-extrabold mb-6 text-gray-900 dark:text-gray-100 text-center"
           variants={item}
         >
-          <span className="inline-block mr-2">🧭</span>
-          Just For You
+          🧭 Just For You
         </motion.h1>
 
         <motion.section
