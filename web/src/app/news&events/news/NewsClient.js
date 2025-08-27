@@ -6,7 +6,7 @@ import newsData from "@/app/data/news&events/newsData.json";
 
 /* Animations */
 const containerVariants = {
-  hidden: { opacity: 0.9 }, visible: { opacity: 1, transition: { delayChildren: 0.1, staggerChildren: 0.08 },},
+  hidden: { opacity: 0.9 }, visible: { opacity: 1, transition: { delayChildren: 0.1, staggerChildren: 0.08 } },
 };
 const itemVariants = {
   hidden: { y: 10, opacity: 0 },
@@ -22,7 +22,23 @@ function escapeXml(s) {
     .replace(/'/g, "&apos;");
 }
 
-// Generation function for XML file
+//  Format date  
+function formatNewsDate(date) {
+  if (!date || (typeof date !== "object")) return "";
+  const m = Number(date.month ?? date.mouth ?? 0); 
+  const d = Number(date.day ?? 0);
+  const y = Number(date.year ?? 0);
+  if (!m || !d || !y) return "";
+  const names = [
+    "", "January", "February", "March", "April", "May", "June",
+    "July", "August", "September", "October", "November", "December",
+  ];
+  const monthName = names[m] || "";
+  return `${monthName} ${d} ${y}`;
+}
+
+
+// Generation function for XML file 
 function generateAndDownloadRSS() {
   const groups = Array.isArray(newsData) ? newsData : [];
   const items = [];
@@ -114,70 +130,96 @@ export default function NewsClient() {
           </motion.p>
         ) : (
           <motion.div
-            className="mt-10 grid grid-cols-1 md:grid-cols-[280px_minmax(0,1fr)] gap-8 items-start"
+            className="mt-10"
             variants={containerVariants}
             initial="hidden"
             animate="visible"
           >
-            {/* Sidebar */}
-            <aside className="md:-ml-2">
-              <div className="rounded-xl p-4 space-y-2 bg-blue-100 dark:bg-blue-900">
-                {groups.map((g, idx) => (
-                  <button
-                    key={`${g.title}-${idx}`}
-                    type="button"
-                    onClick={() => setSelectedIdx(idx)}
-                    className={`w-full text-left px-3 py-2 rounded-md border border-gray-200 dark:border-gray-800 text-sm transition
-                      ${
-                        selectedIdx === idx
-                          ? "bg-gray-200 dark:bg-gray-700 font-semibold"
-                          : "hover:bg-gray-100 dark:hover:bg-gray-800"
-                      }
-                    `}
-                  >
-                    {g.title}
-                  </button>
-                ))}
+            <div className="mb-6 flex justify-center md:justify-start">
+              <div className="inline-flex rounded-xl border border-gray-200 dark:border-gray-800 overflow-hidden max-w-full overflow-x-auto whitespace-nowrap">
+                {groups.map((g, idx) => {
+                  const active = selectedIdx === idx;
+                  return (
+                    <button
+                      key={`${g.title}-${idx}`}
+                      type="button"
+                      onClick={() => setSelectedIdx(idx)}
+                      aria-pressed={active}
+                      className={`px-4 py-2 text-sm font-medium focus:outline-none transition
+                        ${
+                          active
+                            ? "bg-blue-600 text-white dark:bg-blue-500"
+                            : "bg-transparent text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-900"
+                        }`}
+                    >
+                      {g.title}
+                    </button>
+                  );
+                })}
               </div>
-            </aside>
+            </div>
 
-            {/* Content */}
-            <section>
-              <motion.div
-                key={selectedGroup.title}
-                variants={itemVariants}
-                initial="hidden"
-                animate="visible"
-                className="rounded-xl border border-gray-200 dark:border-gray-800 p-5"
-              >
-                {Array.isArray(selectedGroup.items) &&
-                selectedGroup.items.length > 0 ? (
-                  <ul className="space-y-4">
-                    {selectedGroup.items.map((it, i) => (
+            {/* Info card news */}
+            <motion.div
+              key={selectedGroup.title}
+              variants={itemVariants}
+              initial="hidden"
+              animate="visible"
+              className=""
+            >
+              {Array.isArray(selectedGroup.items) && selectedGroup.items.length > 0 ? (
+                <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                  {selectedGroup.items.map((it, i) => {
+                    const dateStr = formatNewsDate(it.date);
+                    return (
                       <li
                         key={`${it.text}-${i}`}
-                        className="border border-gray-200 dark:border-gray-800 rounded-lg bg-white dark:bg-gray-900 hover:shadow-md transition-shadow"
+                        className="border border-gray-200 dark:border-gray-800 rounded-xl bg-white dark:bg-gray-900 overflow-hidden hover:shadow-md transition-shadow"
                       >
-                        <div className="p-4">
+                        {it.image ? (
                           <a
                             href={it.url}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="text-base md:text-lg font-medium leading-snug transition-colors duration-200 hover:underline hover:text-blue-600 dark:hover:text-yellow-400"
+                            aria-label={`Open: ${it.text}`}
+                          >
+                            <img
+                              src={it.image}
+                              alt={it.text}
+                              className="w-full h-48 md:h-56 object-cover"
+                              loading="lazy"
+                            />
+                          </a>
+                        ) : (
+                          <div className="w-full h-48 md:h-56 bg-gray-100 dark:bg-gray-800" />
+                        )}
+
+                        <div className="p-4 border-t border-gray-100 dark:border-gray-800">
+                          <a
+                            href={it.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="block text-base md:text-lg font-medium leading-snug transition-colors duration-200 hover:underline hover:text-blue-600 dark:hover:text-yellow-400"
                           >
                             {it.text}
                           </a>
+
+                          {dateStr && (
+                            <div className="mt-1 text-sm text-gray-600 dark:text-gray-400">
+                              {dateStr}
+                            </div>
+                          )}
                         </div>
                       </li>
-                    ))}
-                  </ul>
-                ) : (
-                  <p className="text-sm text-gray-700 dark:text-gray-300">
-                    No items available in this section yet.
-                  </p>
-                )}
-              </motion.div>
-            </section>
+                    );
+                  })}
+                </ul>
+              ) : (
+                <p className="text-sm text-gray-700 dark:text-gray-300">
+                  No items available in this section yet.
+                </p>
+              )}
+            </motion.div>
           </motion.div>
         )}
       </main>
@@ -186,8 +228,8 @@ export default function NewsClient() {
       <button
         onClick={generateAndDownloadRSS}
         aria-label="Download RSS feed (XML)"
-         title="Download RSS feed (XML)"
-          className="fixed bottom-6 right-20 z-50 bg-blue-600 dark:bg-yellow-400 text-white dark:text-black rounded-full shadow-lg p-4 transition-transform duration-300 hover:scale-110"
+        title="Download RSS feed (XML)"
+        className="fixed bottom-6 right-20 z-50 bg-blue-600 dark:bg-yellow-400 text-white dark:text-black rounded-full shadow-lg p-4 transition-transform duration-300 hover:scale-110"
       >
         <svg viewBox="0 0 24 24" className="w-6 h-6" aria-hidden="true">
           <path d="M5 19a2 2 0 1 0 0-4 2 2 0 0 0 0 4zM3 5v3c7.18 0 13 5.82 13 13h3C19 12.4 11.6 5 3 5zm0 6v3a7 7 0 0 1 7 7h3c0-5.52-4.48-10-10-10z" />
