@@ -12,30 +12,11 @@ const TABS = [
   { key: "Mobility", label: "Co-tutoring & Mobility" },
 ];
 
-function Tabs({ value, onChange }) {
-  return (
-    <nav className="flex flex-wrap items-center gap-2">
-      {TABS.map((t) => {
-        const active = value === t.key;
-        return (
-          <button
-            key={t.key}
-            onClick={() => onChange(t.key)}
-            aria-current={active ? "page" : undefined}
-            className={
-              "rounded-lg px-3 py-1.5 text-sm font-medium transition " +
-              (active
-                ? "bg-gray-900 text-white dark:bg-gray-100 dark:text-gray-900"
-                : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800/70")
-            }
-          >
-            {t.label}
-          </button>
-        );
-      })}
-    </nav>
-  );
-}
+const containerVariants = {
+  hidden: { opacity: 0.9 },
+  visible: { opacity: 1, transition: { delayChildren: 0.1, staggerChildren: 0.08 } },
+};
+const itemVariants = { hidden: { y: 10, opacity: 0 }, visible: { y: 0, opacity: 1 } };
 
 function Feature({ emoji, title, desc }) {
   return (
@@ -53,26 +34,6 @@ function Feature({ emoji, title, desc }) {
     </motion.div>
   );
 }
-
-const containerVariants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: {
-      delayChildren: 0.2,
-      staggerChildren: 0.15,
-    },
-  },
-};
-
-const itemVariants = {
-  hidden: { y: 20, opacity: 0 },
-  visible: {
-    y: 0,
-    opacity: 1,
-    transition: { duration: 0.5, ease: "easeOut" },
-  },
-};
 
 export default function Client() {
   const router = useRouter();
@@ -149,41 +110,55 @@ export default function Client() {
 
   return (
     <main className="flex flex-col items-center justify-center bg-gray-50 dark:bg-gray-900 py-12">
-      <motion.div
-        className="container max-w-6xl mx-auto bg-white dark:bg-gray-950 rounded-2xl shadow-xl"
-        variants={containerVariants}
-        initial="hidden"
-        animate="visible"
-      >
-        <section className="p-6 md:p-8">
-          <motion.div className="md:flex md:items-center md:justify-between" variants={itemVariants}>
-            <div>
-              <h1 className="text-2xl md:text-3xl font-extrabold mb-1 text-gray-900 dark:text-gray-100 tracking-tight">
-                <span className="inline-block mr-2">🎓</span> Academic engagement
-              </h1>
-              <p className="text-gray-700 dark:text-gray-300">
-                Collaborations with universities and institutes: co-tutoring, joint courses, workshops, research visits, mobility.
-              </p>
-            </div>
-            <Link
-              href="/contact"
-              className="mt-4 md:mt-0 inline-flex items-center rounded-xl border border-gray-300 dark:border-gray-700 px-4 py-2 text-sm font-medium hover:bg-gray-50 dark:hover:bg-gray-900 transition"
-            >
-              Contact the academic team
-            </Link>
-          </motion.div>
-
-          <motion.div
-            className="mt-6 rounded-2xl border border-gray-200 dark:border-gray-800 overflow-hidden"
+      <div className="container max-w-6xl mx-auto bg-white dark:bg-gray-950 rounded-2xl shadow-xl p-6 md:p-10">
+        <motion.div variants={containerVariants} initial="hidden" animate="visible">
+          <motion.h1
             variants={itemVariants}
+            className="text-2xl md:text-3xl font-extrabold mb-2 text-blue-600 dark:text-yellow-400 tracking-tight text-center"
           >
-            <div className="px-4 md:px-6 py-3 border-b border-gray-200 dark:border-gray-800">
-              <Tabs value={tab} onChange={setTab} />
-            </div>
-            <div className="px-4 md:px-6 py-6">{content}</div>
-          </motion.div>
-        </section>
-      </motion.div>
+            🎓 Academic engagement
+          </motion.h1>
+          <motion.p
+            variants={itemVariants}
+            className="text-center text-gray-700 dark:text-gray-300 max-w-3xl mx-auto"
+          >
+            Collaborations with universities and institutes: co-tutoring, joint courses, workshops, research visits, mobility.
+          </motion.p>
+
+          <div className="mt-6 md:mt-8 grid grid-cols-1 md:grid-cols-[280px_minmax(0,1fr)] gap-8 items-start">
+            <aside className="md:-ml-6">
+              <div className="border border-gray-200 dark:border-gray-800 rounded-xl p-4 space-y-3">
+                {TABS.map((t) => {
+                  const active = tab === t.key;
+                  return (
+                    <button
+                      key={t.key}
+                      onClick={() => setTab(t.key)}
+                      aria-current={active ? "page" : undefined}
+                      className={
+                        "w-full text-left rounded-md px-3 py-2 text-sm font-medium transition " +
+                        (active
+                          ? "bg-gray-900 text-white dark:bg-gray-100 dark:text-gray-900"
+                          : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800/70")
+                      }
+                    >
+                      {t.label}
+                    </button>
+                  );
+                })}
+                <Link
+                  href="/contact"
+                  className="block text-center rounded-md border border-gray-300 dark:border-gray-700 px-3 py-2 text-sm font-medium hover:bg-gray-50 dark:hover:bg-gray-900 transition"
+                >
+                  Contact the academic team
+                </Link>
+              </div>
+            </aside>
+
+            <div>{content}</div>
+          </div>
+        </motion.div>
+      </div>
     </main>
   );
 }

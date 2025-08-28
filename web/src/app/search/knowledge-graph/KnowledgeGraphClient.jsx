@@ -15,11 +15,10 @@ export default function KnowledgeGraphClient() {
   return (
     <motion.div variants={container} initial="hidden" animate="visible">
       <motion.h1
-        className="text-3xl font-semibold mb-6 text-gray-900 dark:text-gray-100"
+        className="text-2xl md:text-3xl font-extrabold mb-6 text-blue-600 dark:text-yellow-400 tracking-tight text-center"
         variants={item}
       >
-        <span className="inline-block mr-2">📊</span>
-        Search
+        📊 AIRi Knowledge Graphs
       </motion.h1>
 
       <motion.div

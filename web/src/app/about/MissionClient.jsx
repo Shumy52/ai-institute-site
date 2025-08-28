@@ -15,14 +15,13 @@ export default function MissionClient() {
   return (
     <motion.section id="mission" className="mb-10" variants={container} initial="hidden" animate="visible">
       <motion.h1
-        className="text-2xl md:text-3xl font-extrabold mb-3 text-gray-900 dark:text-gray-100 tracking-tight"
+        className="text-2xl md:text-3xl font-extrabold mb-3 text-blue-600 dark:text-yellow-400 tracking-tight text-center"
         variants={item}
       >
-        <span className="inline-block mr-2">🎯</span>
-        Mission
+        🎯 Mission
       </motion.h1>
 
-      <motion.p className="text-gray-700 dark:text-gray-300" variants={item}>
+      <motion.p className="text-gray-700 dark:text-gray-300 text-center max-w-3xl mx-auto" variants={item}>
         Mission paragraph...
       </motion.p>
     </motion.section>

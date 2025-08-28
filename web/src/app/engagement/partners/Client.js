@@ -25,7 +25,7 @@ export default function PartnersClient({ partners, CollaboratorsClient }) {
         animate="visible"
       >
         <motion.h1
-          className="text-2xl md:text-3xl font-extrabold mb-8 text-gray-900 dark:text-gray-100 tracking-tight"
+          className="text-2xl md:text-3xl font-extrabold mb-8 text-blue-600 dark:text-yellow-400 tracking-tight text-center"
           variants={itemVariants}
         >
           <span className="inline-block mr-2">🤝</span>

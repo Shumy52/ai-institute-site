@@ -6,7 +6,6 @@ const containerVariants = {
   hidden: { opacity: 0 },
   visible: { opacity: 1, transition: { delayChildren: 0.2, staggerChildren: 0.12 } },
 };
-
 const itemVariants = {
   hidden: { y: 16, opacity: 0 },
   visible: { y: 0, opacity: 1, transition: { duration: 0.45, ease: "easeOut" } },
@@ -23,7 +22,7 @@ export default function Client() {
       >
         <section className="p-6 md:p-10 space-y-6">
           <motion.h1
-            className="text-2xl md:text-3xl font-extrabold text-gray-900 dark:text-gray-100 tracking-tight"
+            className="text-2xl md:text-3xl font-extrabold text-blue-600 dark:text-yellow-400 tracking-tight text-center"
             variants={itemVariants}
           >
             🖥️⚡ HPC-AI services

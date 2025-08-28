@@ -113,14 +113,13 @@ export default function Client() {
         animate="visible"
       >
         <motion.h1
-          className="text-2xl md:text-3xl font-extrabold mb-4 text-gray-900 dark:text-gray-100 tracking-tight"
+          className="text-2xl md:text-3xl font-extrabold mb-4 text-blue-600 dark:text-yellow-400 tracking-tight text-center"
           variants={item}
         >
-          <span className="inline-block mr-2">🗺️</span>
-          Sitemap
+          🗺️ Sitemap
         </motion.h1>
 
-        <motion.div className="mb-6 flex items-center gap-3" variants={item}>
+        <motion.div className="mb-6 flex items-center gap-3 justify-center" variants={item}>
           <input
             type="text"
             value={q}
@@ -180,7 +179,7 @@ export default function Client() {
         </motion.nav>
 
         {filtered.length === 0 && (
-          <motion.p className="mt-6 text-gray-600 dark:text-gray-300" variants={item}>
+          <motion.p className="mt-6 text-gray-600 dark:text-gray-300 text-center" variants={item}>
             No results for “{q}”.
           </motion.p>
         )}

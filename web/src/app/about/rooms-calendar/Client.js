@@ -21,14 +21,13 @@ export default function Client() {
         animate="visible"
       >
         <motion.h1
-          className="text-2xl md:text-3xl font-extrabold mb-4 text-gray-900 dark:text-gray-100 tracking-tight"
+          className="text-2xl md:text-3xl font-extrabold mb-4 text-blue-600 dark:text-yellow-400 tracking-tight text-center"
           variants={item}
         >
-          <span className="inline-block mr-2">📅</span>
-          Rooms & calendar
+          📅 Rooms & calendar
         </motion.h1>
 
-        <motion.p className="text-gray-700 dark:text-gray-300" variants={item}>
+        <motion.p className="text-gray-700 dark:text-gray-300 text-center" variants={item}>
           Content coming soon.
         </motion.p>
       </motion.div>
