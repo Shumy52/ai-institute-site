@@ -13,8 +13,7 @@ const researchUnits = Array.isArray(units) ? units : [];
 
 /* --- Animations --- */
 const containerVariants = {
-  hidden: { opacity: 0.9 },
-  visible: { opacity: 1, transition: { delayChildren: 0.1, staggerChildren: 0.1 } },
+  hidden: { opacity: 0.9 }, visible: { opacity: 1, transition: { delayChildren: 0.1, staggerChildren: 0.1 } },
 };
 const itemVariants = { hidden: { y: 12, opacity: 0.95 }, visible: { y: 0, opacity: 1 } };
 
@@ -130,6 +129,7 @@ function Chevron({ open }) {
     </svg>
   );
 }
+
 function SectionToggle({ label, children, defaultOpen = false }) {
   const [open, setOpen] = useState(defaultOpen);
   return (
@@ -182,7 +182,7 @@ export default function DepartmentsClient() {
   const [selectedUnit, setSelectedUnit] = useState(null);
   const [unitView, setUnitView] = useState("details");
 
-  const asideRef = useRef(null);
+  const titleRef = useRef(null);        
   const mobileBarRef = useRef(null);
 
   const handleUnitClick = (unit) => {
@@ -191,11 +191,7 @@ export default function DepartmentsClient() {
     if (typeof window !== "undefined") {
       window.history.pushState({ department: unit.name }, "", "");
       setTimeout(() => {
-        if (window.innerWidth < 768) {
-          mobileBarRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
-        } else {
-          asideRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
-        }
+        titleRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
       }, 0);
     }
   };
@@ -266,7 +262,7 @@ export default function DepartmentsClient() {
       for (const th of themes) {
         const t = String(th).trim();
         if (!t) continue;
-        if (seen.has(t)) continue;     
+        if (seen.has(t)) continue;
         seen.add(t);
         themesOut.push({ theme: t });
       }
@@ -412,20 +408,20 @@ export default function DepartmentsClient() {
     );
 
   const renderThemes = (rows) =>
-  rows.length ? (
-    <ul className="space-y-2">
-      {rows.map((t, idx) => (
-        <li
-          key={`${t.theme}-${idx}`}
-          className="px-3 py-2 rounded-md border border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-900 text-sm"
-        >
-          {t.theme}
-        </li>
-      ))}
-    </ul>
-  ) : (
-    <p className="text-gray-500">No themes found.</p>
-  );
+    rows.length ? (
+      <ul className="space-y-2">
+        {rows.map((t, idx) => (
+          <li
+            key={`${t.theme}-${idx}`}
+            className="px-3 py-2 rounded-md border border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-900 text-sm"
+          >
+            {t.theme}
+          </li>
+        ))}
+      </ul>
+    ) : (
+      <p className="text-gray-500">No themes found.</p>
+    );
 
   const coordinator =
     selectedUnit?.coordonator || selectedUnit?.coordinator || selectedUnit?.["coordonator"] || "";
@@ -439,92 +435,77 @@ export default function DepartmentsClient() {
   return (
     <main className="flex flex-col items-center justify-center bg-gray-50 dark:bg-gray-900 py-12">
       <div className="container max-w-6xl mx-auto bg-white dark:bg-gray-950 rounded-2xl shadow-xl">
-        {/* For desktop: sidebar + content; for mobile: content, hidden sidebar */}
-        <div className={`grid ${selectedUnit ? "grid-cols-1 md:grid-cols-[240px_minmax(0,1fr)]" : "grid-cols-1"}`}>
-          {selectedUnit && (
-            <aside
-              ref={asideRef}
-              className="hidden md:block bg-gray-100 dark:bg-gray-800 p-6 border-r md:sticky md:top-16 md:z-10"
-            >
-              <ul className="space-y-2">
-                {[
-                  { id: "details", label: "Details" },
-                  { id: "themes", label: "Themes" },
-                  { id: "projects", label: "Projects" },
-                  { id: "members", label: "Members" },
-                  { id: "publications", label: "Publications" },
-                ].map((it) => (
-                  <li key={it.id}>
-                    <button
-                      onClick={() => setUnitView(it.id)}
-                      className={`w-full text-left py-2 px-3 rounded-md transition ${
-                        unitView === it.id
-                          ? "bg-blue-600 text-white"
-                          : "bg-white dark:bg-gray-900 border text-gray-900 dark:text-gray-100"
-                      }`}
-                    >
-                      {it.label}
-                    </button>
-                  </li>
-                ))}
-              </ul>
-            </aside>
-          )}
-
+        <div className="grid grid-cols-1">
           <section className="p-6 md:p-8">
             {!selectedUnit && (
-              <motion.div variants={containerVariants} initial="hidden" animate="visible">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
-                  {researchUnits.map((unit, index) => (
-                    <motion.div
-                      key={index}
-                      variants={itemVariants}
-                      className="bg-white dark:bg-gray-900 rounded-lg shadow-md p-4 md:p-5 border cursor-pointer"
-                      onClick={() => handleUnitClick(unit)}
-                    >
-                      <h2 className="text-lg md:text-xl font-bold text-gray-900 dark:text-gray-100 flex items-center gap-3">
-                        {unit.icon || "🏷️"} {unit.name}
-                      </h2>
-                    </motion.div>
-                  ))}
-                </div>
-              </motion.div>
-            )}
+              <>
+                <motion.h1
+                  variants={itemVariants}
+                  className="text-4xl font-extrabold text-center mb-8 text-blue-600 dark:text-yellow-400 tracking-tight text-center"
+                >
+                  🧑‍🤝‍🧑 Departments
+                </motion.h1>
 
-            {selectedUnit && (
-              <div
-                ref={mobileBarRef}
-                className="md:hidden sticky top-0 z-20 -mx-6 mb-4 bg-gray-100 dark:bg-gray-800 border-b px-4 py-3"
-              >
-                <div className="flex gap-2 overflow-x-auto no-scrollbar">
-                  {[
-                    { id: "details", label: "Details" },
-                    { id: "themes", label: "Themes" },
-                    { id: "projects", label: "Projects" },
-                    { id: "members", label: "Members" },
-                    { id: "publications", label: "Publications" },
-                  ].map((it) => (
-                    <button
-                      key={it.id}
-                      onClick={() => setUnitView(it.id)}
-                      className={`shrink-0 px-3 py-1.5 rounded-lg text-sm transition ${
-                        unitView === it.id
-                          ? "bg-blue-600 text-white"
-                          : "bg-white dark:bg-gray-900 border text-gray-900 dark:text-gray-100"
-                      }`}
-                    >
-                      {it.label}
-                    </button>
-                  ))}
-                </div>
-              </div>
+                <motion.div variants={containerVariants} initial="hidden" animate="visible">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
+                    {researchUnits.map((unit, index) => (
+                      <motion.div
+                        key={index}
+                        variants={itemVariants}
+                        className="bg-white dark:bg-gray-900 rounded-lg shadow-md p-4 md:p-5 border cursor-pointer"
+                        onClick={() => handleUnitClick(unit)}
+                      >
+                        <h2 className="text-lg md:text-xl font-bold text-gray-900 dark:text-gray-100 flex items-center gap-3">
+                          {unit.icon || "🏷️"} {unit.name}
+                        </h2>
+                      </motion.div>
+                    ))}
+                  </div>
+                </motion.div>
+              </>
             )}
 
             {selectedUnit && (
               <>
-                <h2 className="text-xl md:text-2xl font-bold text-gray-900 dark:text-gray-100 mb-4">
+                <h2
+                  ref={titleRef}
+                  className="text-xl md:text-2xl font-bold text-gray-900 dark:text-gray-100 mb-4"
+                >
                   {selectedUnit.name}
                 </h2>
+
+                <div
+                  ref={mobileBarRef}
+                  className="sticky top-0 z-20 -mx-6 mb-4 bg-gray-100 dark:bg-gray-800 border-b px-4 py-3"
+                >
+                  <div className="flex justify-center md:justify-start">
+                    <div className="inline-flex rounded-xl border border-gray-200 dark:border-gray-800 overflow-hidden max-w-full overflow-x-auto whitespace-nowrap">
+                      {[
+                        { id: "details", label: "Details" },
+                        { id: "themes", label: "Themes" },
+                        { id: "projects", label: "Projects" },
+                        { id: "members", label: "Members" },
+                        { id: "publications", label: "Publications" },
+                      ].map((it) => {
+                        const active = unitView === it.id;
+                        return (
+                          <button
+                            key={it.id}
+                            onClick={() => setUnitView(it.id)}
+                            className={`px-4 py-2 text-sm font-medium focus:outline-none ${
+                              active
+                                ? "bg-blue-600 text-white dark:bg-blue-500"
+                                : "bg-transparent text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-900"
+                            }`}
+                            aria-pressed={active}
+                          >
+                            {it.label}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+                </div>
 
                 {unitView === "details" && (
                   <motion.div variants={containerVariants} initial="hidden" animate="visible">
