@@ -107,37 +107,42 @@ export default function Client() {
             We collaborate with companies on applied projects, consulting, and training.
           </motion.p>
 
-          <div className="mt-6 md:mt-8 grid grid-cols-1 md:grid-cols-[280px_minmax(0,1fr)] gap-8 items-start">
-            <aside className="md:-ml-6">
-              <div className="border border-gray-200 dark:border-gray-800 rounded-xl p-4 space-y-3">
+          <div className="mt-6 md:mt-8">
+            <div className="flex justify-start">
+              <div className="inline-flex rounded-xl border border-gray-200 dark:border-gray-800 overflow-hidden max-w-full overflow-x-auto whitespace-nowrap">
                 {TABS.map((t) => {
                   const active = tab === t.key;
                   return (
                     <button
                       key={t.key}
+                      type="button"
                       onClick={() => setTab(t.key)}
+                      aria-pressed={active}
                       className={
-                        "w-full text-left rounded-md px-3 py-2 text-sm font-medium transition " +
+                        "px-4 py-2 text-sm font-medium focus:outline-none " +
                         (active
-                          ? "bg-gray-900 text-white dark:bg-gray-100 dark:text-gray-900"
-                          : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800/70")
+                          ? "bg-blue-600 text-white dark:bg-blue-500"
+                          : "bg-transparent text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-900")
                       }
-                      aria-current={active ? "page" : undefined}
                     >
                       {t.label}
                     </button>
                   );
                 })}
-                <Link
-                  href="/contact"
-                  className="block text-center rounded-md border border-gray-300 dark:border-gray-700 px-3 py-2 text-sm font-medium hover:bg-gray-50 dark:hover:bg-gray-900 transition"
-                >
-                  Contact the industry team
-                </Link>
               </div>
-            </aside>
+            </div>
+            <div className="mt-2 border-b border-gray-200 dark:border-gray-800" />
+          </div>
 
-            <div>{content}</div>
+          <div className="mt-6">{content}</div>
+
+          <div className="mt-8 flex justify-center">
+            <Link
+              href="/contact"
+              className="inline-flex items-center rounded-xl border border-gray-300 dark:border-gray-700 px-4 py-2 text-sm font-medium hover:bg-gray-50 dark:hover:bg-gray-900 transition"
+            >
+              Contact the industry team
+            </Link>
           </div>
         </motion.div>
       </div>
