@@ -1,6 +1,6 @@
 [
     {
-        "name": "Software and Hardware Technologies for AI",
+        "name": "Software and Hardware for AI",
         "description": [
             "Our department is also active in the field of artificial intelligence, with applications in: robotics and nonlinear control, neuroscience, big data man-agement and analysis, energy transition and sustainability, agentic AI, and knowledge representation, also addressing challenges related to the deployment of AI models in distributed environments.",
             "In robotics and nonlinear control, research topics range from intelligent perception and control for robots; through AI-based methods for fundamental nonlinear optimal control, networked systems, and estimation; to fundamental algorithms and software for reinforcement learning and deep neural networks. These methods are applied in marine, ground, and aerial robotics, precision agriculture, medicine, rehabilitation robotics, and more.",
@@ -91,7 +91,7 @@
         ]
     },
     {
-        "name": "Intelligent and Autonomous Systems",
+        "name": "Autonomous Systems",
         "description": "Dedicated to the research and implementation of intelligent systems with autonomous capabilities.",
         "icon": "🤖",
         "coordonator": "Sergiu Nedevschi",
@@ -251,7 +251,7 @@
         ]
     },
     {
-        "name": "Intelligent Applications in Cybersecurity and Space",
+        "name": "Cybersecurity and Space",
         "description": [
             "The Department of Cybersecurity and Space Applications explores the wide-ranging applications of artificial intelligence in ensuring cybersecurity. The group includes members from the Department of Communications within the Faculty of Electronics, Telecommunications and Information Technology, as well as from the Department of Computer Science within the Faculty of Automation and Computer Science.",
             "Within each department, members typically come from research laboratories, such as:",
