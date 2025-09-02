@@ -121,6 +121,14 @@
       "phone": "0717171717",
       "email": "Macarie.Io.Mihaela@cs.utcluj.ro",
       "image": "/icia-staging/people/Basic_avatar_image.png"
-    } 
+    },
+    {
+      "slug": "Emanuel-Puschita",
+      "name": "Puschita Emanuel",
+      "title": "Professor",
+      "phone": "0718181818",
+      "email": "Puschita.Emanuel@cs.utcluj.ro",
+      "image": "/icia-staging/people/Basic_avatar_image.png"
+    }
   ]
 }
