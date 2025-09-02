@@ -432,6 +432,19 @@ export default function DepartmentsClient() {
     "";
   const elements = Array.isArray(selectedUnit?.elements) ? selectedUnit.elements : [];
 
+  const unitMembersSorted = useMemo(
+    () =>
+      Array.isArray(unitMembers)
+        ? [...unitMembers].sort((a, b) =>
+          (a?.name || "").localeCompare(b?.name || "", "ro", {
+            sensitivity: "base",
+            numeric: true,
+          })
+        )
+      : [],
+    [unitMembers]
+  );
+
   return (
     <main className="flex flex-col items-center justify-center bg-gray-50 dark:bg-gray-900 py-12">
       <div className="container max-w-6xl mx-auto bg-white dark:bg-gray-950 rounded-2xl shadow-xl">
@@ -554,7 +567,7 @@ export default function DepartmentsClient() {
 
                 {unitView === "themes" && renderThemes(unitThemes)}
                 {unitView === "projects" && renderProjects(unitProjects)}
-                {unitView === "members" && renderMembersCards(unitMembers)}
+                {unitView === "members" && renderMembersCards(unitMembersSorted)}
                 {unitView === "publications" && renderPublications(unitPublications)}
               </>
             )}
