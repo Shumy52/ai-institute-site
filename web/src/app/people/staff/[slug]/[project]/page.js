@@ -108,6 +108,19 @@ export default function ProjectDetailPage() {
     ? project.partners.filter(Boolean).join(", ")
     : (project.partners || "");
 
+  const staffTeamSorted = useMemo(
+    () =>
+      Array.isArray(staffTeam)
+        ? [...staffTeam].sort((a, b) =>
+          (a?.name || "").localeCompare(b?.name || "", "ro", {
+            sensitivity: "base",
+            numeric: true,
+          })
+        )
+      : [],
+    [staffTeam]
+  );
+
   return (
     <main className="max-w-4xl mx-auto p-6 bg-white dark:bg-gray-950 text-black dark:text-white rounded-lg shadow-lg">
       <h2 className="text-3xl font-bold text-blue-700 dark:text-blue-300 mb-2">
@@ -279,9 +292,9 @@ export default function ProjectDetailPage() {
       {/* Team Members */}
       {tab === "team" && (
         <div className="pt-2 border-t border-gray-200 dark:border-gray-800">
-          {Array.isArray(staffTeam) && staffTeam.length ? (
+          {Array.isArray(staffTeamSorted) && staffTeamSorted.length ? (
             <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {staffTeam.map((m) => (
+              {staffTeamSorted.map((m) => (
                 <article
                   key={m.slug}
                   className="border border-gray-200 dark:border-gray-800 rounded-xl p-4 bg-white dark:bg-gray-900 hover:shadow-lg transition-shadow"

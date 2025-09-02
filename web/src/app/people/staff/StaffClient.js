@@ -3,11 +3,23 @@
 import { motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
+import { useMemo } from "react";
 import { staffData } from "@/app/data/staffData";
 
 export default function StaffClient() {
   const personal = Array.isArray(staffData?.Personal) ? staffData.Personal : [];
   const people = [...personal];
+
+  const peopleSorted = useMemo(
+    () =>
+      [...people].sort((a, b) =>
+        (a?.name || "").localeCompare(b?.name || "", "ro", {
+          sensitivity: "base",
+          numeric: true,
+        })
+      ),
+    [people]
+  );
 
   return (
     <main className="max-w-5xl mx-auto p-6 bg-white dark:bg-gray-950 text-black dark:text-white rounded-lg shadow-lg">
@@ -29,7 +41,7 @@ export default function StaffClient() {
         Meet our staff.
       </motion.p>
 
-      {people.length === 0 ? (
+      {peopleSorted.length === 0 ? (
         <motion.p
           className="mt-10 text-center text-gray-600 dark:text-gray-400"
           initial={{ opacity: 0 }}
@@ -51,7 +63,7 @@ export default function StaffClient() {
             },
           }}
         >
-          {people.map((person) => (
+          {peopleSorted.map((person) => (
             <motion.article
               key={person.slug}
               className="border border-gray-200 dark:border-gray-800 rounded-xl p-4 bg-white dark:bg-gray-900 hover:shadow-lg transition-shadow"
