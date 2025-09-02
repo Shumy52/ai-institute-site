@@ -49,7 +49,7 @@
     {
         "name": "Robotics for healthcare",
         "description": "The research program focuses on four major directions addressing critical needs for innovation across multiple medical specialties.",
-        "icon": "🦾",
+        "icon": "⚕️",
         "coordonator": "Doina Pisla",
         "co-coordonator": "Roxana Both",
         "elements": [
@@ -119,6 +119,72 @@
                 "text": "Multisensory and multimodal perception, representation, and environment understanding systems for cyber-physical systems",
                 "content": [
                     "More information coming soon"
+                ]
+            }
+        ]
+    },
+    {
+        "name": "Robotics and IoT",
+        "description": "The Robotics & IoT Department of ICIA offers an extensive range of RDI services (Research–Development–Innovation) tailored to the needs of SMEs in industry, public administration, and services, with a strong focus on applied artificial intelligence, intelligent robotics, and industrial digitalization. ",
+        "icon": "🏭",
+        "coordonator": "Stelian Brad",
+        "co-coordonator": "Valentin Sita,",
+        "elements": [
+            {
+                "text": "Applied Research and Experimental Development Services",
+                "content": [
+                    "AI modeling and development for industrial applications: defect detection, predictive maintenance, energy optimization, adapted to real industrial use cases.",
+                    "Design and validation of robotic systems: collaborative, mobile, or autonomous robots with inte-grated algorithms for adaptive control, navigation, and human–robot interaction.",
+                    "Edge AI and Industrial IoT (I-IoT) for smart factories: developing modules for data collection,local processing, and integration into hybrid PLC/SCADA networks.",
+                    "Prototyping and functional testing with digital twins: behavioral simulation, ergonomic-functional testing, validation before investment."
+                ]
+            },
+            {
+                "text": "Industrial Testing, Validation, and Optimization Services",
+                "content": [
+                    "Intelligent visual inspection systems: industrial cameras + AI for defect detection, mounted on collaborative robots or inspection cells.",
+                    "Navigation and robotic collaboration testing in semi-structured environments: validation of obstacle avoidance algorithms, object recognition, adaptive motion planning based on context.",
+                    "Validation of AI models on in-house and client-side infrastructure (“Zero-Data Lab”): real-condition testing with federated learning, without raw data transfer."
+                ]
+            },
+            {
+                "text": "Digitalization and Smart Transformation Services",
+                "content": [
+                    "Digital Twin-as-a-Service: operational data upload, automated twin generation, scenario execution, and personalized simulations.",
+                    "Process simulation and optimization with LLM + RoboDK/Anylogic: the operator describes the problem, AI proposes and tests optimization scenarios.",
+                    "Cloud platforms for SMEs (AI Factory): execution environment for AI models, training and inter-preting results without programming knowledge."
+                ]
+            },
+            {
+                "text": "Software/Hardware Development Services",
+                "content": [
+                    "Integrated AI + robotics systems for decentralized micro-manufacturing: plug-and-play platforms with industrial connectivity and real-time AI control.",
+                    "Industrial AI appliances (“AI on a pallet”): preconfigured edge devices for quality control or energy management.",
+                    "Retrofit kits for industrial vision: camera + AI + lighting, installed in one day, result-based pricing model."
+                ]
+            },
+            {
+                "text": "AI-Assisted Invention Services (AI-Inventor Lab)",
+                "content": [
+                    "Product and process design with AI + TRIZ: idea generation, simulations, optimizations, documentation for patenting or industrialization.",
+                    "Prompt Engineering for SMEs: generation of business plans, operating models, financial simulations, marketing optimization.",
+                    "Testing disruptive technologies and ideas through AI simulations and “white space” concept exploration."
+                ]
+            },
+            {
+                "text": "Support and Consulting Services for Scaling and Implementation",
+                "content": [
+                    "AI audit for industrial processes: robustness and compliance analysis with the AI Act, including the in-house “AI Wind Tunnel” service.",
+                    "Patent and technology licensing services: for prototypes, AI modules, and robotic applications developed in collaboration with SMEs.",
+                    "Training & education through the AI Academy for Industry: certified courses, bootcamps, digital onboarding via social robots."
+                ]
+            },
+            {
+                "text": "Support Services for Funded Projects and Grants",
+                "content": [
+                    "AI for Grants – transforming digitalization plans into eligible applications for Horizon Europe, Digital Europe, etc",
+                    "Consulting and implementation services for smart city strategies, administration digitalization, and intelligent micro-factory networks.",
+                    "Most of these services will be offered as RDI projects, technology transfer contracts, SaaS packages, pilot services, or subscriptions. Priority will be given to SMEs collaborating directly with the department during 2025–2027, under the subsidiary contracts of the project."
                 ]
             }
         ]
@@ -226,87 +292,6 @@
                 "text": "Vulnerability detection at code level using artificial intelligence",
                 "content": [
                     ""
-                ]
-            }
-        ]
-    },
-    {
-        "name": "Robotics and IoT",
-        "description": "The Robotics & IoT Department of ICIA offers an extensive range of RDI services (Research–Development–Innovation) tailored to the needs of SMEs in industry, public administration, and services, with a strong focus on applied artificial intelligence, intelligent robotics, and industrial digitalization. ",
-        "icon": "🏭",
-        "coordonator": "Stelian Brad",
-        "co-coordonator": "Valentin Sita,",
-        "elements": [
-            {
-                "text": "Applied Research and Experimental Development Services",
-                "content": [
-                    "AI modeling and development for industrial applications: defect detection, predictive maintenance, energy optimization, adapted to real industrial use cases.",
-                    "Design and validation of robotic systems: collaborative, mobile, or autonomous robots with inte-grated algorithms for adaptive control, navigation, and human–robot interaction.",
-                    "Edge AI and Industrial IoT (I-IoT) for smart factories: developing modules for data collection,local processing, and integration into hybrid PLC/SCADA networks.",
-                    "Prototyping and functional testing with digital twins: behavioral simulation, ergonomic-functional testing, validation before investment."
-                ]
-            },
-            {
-                "text": "Industrial Testing, Validation, and Optimization Services",
-                "content": [
-                    "Intelligent visual inspection systems: industrial cameras + AI for defect detection, mounted on collaborative robots or inspection cells.",
-                    "Navigation and robotic collaboration testing in semi-structured environments: validation of obstacle avoidance algorithms, object recognition, adaptive motion planning based on context.",
-                    "Validation of AI models on in-house and client-side infrastructure (“Zero-Data Lab”): real-condition testing with federated learning, without raw data transfer."
-                ]
-            },
-            {
-                "text": "Digitalization and Smart Transformation Services",
-                "content": [
-                    "Digital Twin-as-a-Service: operational data upload, automated twin generation, scenario execution, and personalized simulations.",
-                    "Process simulation and optimization with LLM + RoboDK/Anylogic: the operator describes the problem, AI proposes and tests optimization scenarios.",
-                    "Cloud platforms for SMEs (AI Factory): execution environment for AI models, training and inter-preting results without programming knowledge."
-                ]
-            },
-            {
-                "text": "Software/Hardware Development Services",
-                "content": [
-                    "Integrated AI + robotics systems for decentralized micro-manufacturing: plug-and-play platforms with industrial connectivity and real-time AI control.",
-                    "Industrial AI appliances (“AI on a pallet”): preconfigured edge devices for quality control or energy management.",
-                    "Retrofit kits for industrial vision: camera + AI + lighting, installed in one day, result-based pricing model."
-                ]
-            },
-            {
-                "text": "AI-Assisted Invention Services (AI-Inventor Lab)",
-                "content": [
-                    "Product and process design with AI + TRIZ: idea generation, simulations, optimizations, documentation for patenting or industrialization.",
-                    "Prompt Engineering for SMEs: generation of business plans, operating models, financial simulations, marketing optimization.",
-                    "Testing disruptive technologies and ideas through AI simulations and “white space” concept exploration."
-                ]
-            },
-            {
-                "text": "Support and Consulting Services for Scaling and Implementation",
-                "content": [
-                    "AI audit for industrial processes: robustness and compliance analysis with the AI Act, including the in-house “AI Wind Tunnel” service.",
-                    "Patent and technology licensing services: for prototypes, AI modules, and robotic applications developed in collaboration with SMEs.",
-                    "Training & education through the AI Academy for Industry: certified courses, bootcamps, digital onboarding via social robots."
-                ]
-            },
-            {
-                "text": "Support Services for Funded Projects and Grants",
-                "content": [
-                    "AI for Grants – transforming digitalization plans into eligible applications for Horizon Europe, Digital Europe, etc",
-                    "Consulting and implementation services for smart city strategies, administration digitalization, and intelligent micro-factory networks.",
-                    "Most of these services will be offered as RDI projects, technology transfer contracts, SaaS packages, pilot services, or subscriptions. Priority will be given to SMEs collaborating directly with the department during 2025–2027, under the subsidiary contracts of the project."
-                ]
-            }
-        ]
-    }, 
-    {
-        "name": "Medical Technologies",
-        "description": "Advances medical procedures with robotics, AI diagnostics, and personalized healthcare.",
-        "icon": "⚕️",
-        "coordonator": "More information coming soon",
-        "co-coordonator": "More information coming soon",
-        "elements": [
-            {
-                "text": "More information coming soon",
-                "content": [
-                    "More information coming soon"
                 ]
             }
         ]
