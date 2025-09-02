@@ -27,7 +27,7 @@ export default function Client() {
           className="text-2xl md:text-3xl font-extrabold mb-4 text-blue-600 dark:text-yellow-400 tracking-tight text-center"
           variants={item}
         >
-          📜 Procedures and Regulations
+          📜 Regulations
         </motion.h1>
 
         <motion.p className="text-gray-700 dark:text-gray-300 text-center" variants={item}>

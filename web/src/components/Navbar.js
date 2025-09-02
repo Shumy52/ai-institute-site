@@ -48,17 +48,17 @@ const newsMenu = [
   { href: '/news&events/news', label: 'News' },
   { href: '/news&events/events', label: 'Events' },
   { href: '/news&events/seminars', label: 'Seminars' },
-  { href: '/news&events/open-project-calls', label: 'Open Project calls' },
+  { href: '/news&events/open-project-calls', label: 'Calls for Projects' },
   { href: '/news&events/awards', label: 'Awards' },
-  { href: '/news&events/careers', label: 'Career/Job Opportunities' },
+  { href: '/news&events/careers', label: 'Career Opportunities' },
 ];
 
 const aboutMenu = [
-  { href: '/about#mission', label: 'Mission, History(timeline)' },
+  { href: '/about#mission', label: 'Mission' },
   { href: '/about/organigram', label: 'Organigram' },
   { href: '/about/sitemap', label: 'Sitemap' },
-  { href: '/about/reports', label: 'Reports Self-assessment reports' },
-  { href: '/about/procedures-regulations', label: 'Procedures & Regulations' },
+  { href: '/about/reports', label: 'Reports' },
+  { href: '/about/procedures-regulations', label: 'Regulations' },
   { href: '/about/guidelines', label: 'Guidelines' },
   { href: '/about/virtual-tour', label: 'Virtual Tour' },
   { href: '/about/rooms-calendar', label: 'Rooms & calendar' },
@@ -68,7 +68,7 @@ const aboutMenu = [
 const searchMenu = [
   { href: '/search', label: 'Classic search' },
   { href: '/search/chatbot', label: 'AIRi chatbot (LLM-based)' },
-  { href: '/search/knowledge-graph', label: 'AIRi Knowledge graphs navigator' },
+  { href: '/search/knowledge-graph', label: 'Knowledge graphs navigator' },
 ];
 
 function DesktopDropdown({ link, open, setOpen, items, alignRight = false }) {

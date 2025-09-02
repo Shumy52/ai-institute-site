@@ -1,22 +1,13 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { 
-  FaBookOpen, FaChalkboardTeacher, FaIdBadge, FaServer, FaMapMarkedAlt,
-  FaUserGraduate, FaUserAlt, FaProjectDiagram, FaUsers, FaSignOutAlt 
-} from "react-icons/fa";
+import { FaBookOpen, FaChalkboardTeacher, FaFlask, FaIdBadge } from "react-icons/fa";
 
 const ITEMS = [
-  { label: "Students",                href: "/icia-staging/engagement/academic",   icon: FaBookOpen },
-  { label: "Faculty & Researchers",   href: "/icia-staging/research/departments",              icon: FaChalkboardTeacher },
-  { label: "Staff",                   href: "/icia-staging/people/staff",          icon: FaIdBadge },
-  { label: "IT Staff",                href: null,                     icon: FaServer },
-  { label: "Visitors",                href: "/icia-staging/about/virtual-tour",    icon: FaMapMarkedAlt },
-  { label: "Alumni",                  href: "/icia-staging/people/alumni",         icon: FaUserGraduate },
-  { label: "Retirees",                href: null,                     icon: FaUserAlt },
-  { label: "Sponsored Affiliates",    href: "/icia-staging/engagement/partners",   icon: FaProjectDiagram },
-  { label: "Parents & Family",        href: null,                     icon: FaUsers },
-  { label: "Former Staff & Affiliates", href: null,                   icon: FaSignOutAlt },
+  { label: "Students",    href: "/icia-staging/engagement/academic",  icon: FaBookOpen },
+  { label: "Faculty",     href: "/icia-staging/people/alumni",       icon: FaChalkboardTeacher },
+  { label: "Researchers", href: "/icia-staging/research/departments", icon: FaFlask },
+  { label: "Staff",       href: "/icia-staging/people/staff",         icon: FaIdBadge },
 ];
 
 function Tile({ label, href, icon: Icon }) {
@@ -67,7 +58,7 @@ export default function Client() {
         </motion.h1>
 
         <motion.section
-          className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-x-12 gap-y-10"
+          className="grid grid-cols-2 md:grid-cols-4 gap-x-12 gap-y-10"
           variants={container}
         >
           {ITEMS.map((it) => (

@@ -20,20 +20,29 @@ export default function Client() {
         initial="hidden"
         animate="visible"
       >
-        <section className="p-6 md:p-8">
+        <section className="p-6 md:p-8 space-y-4">
           <motion.h1
-            className="text-2xl md:text-3xl font-extrabold mb-2 text-blue-600 dark:text-yellow-400 tracking-tight text-center"
+            className="text-2xl md:text-3xl font-extrabold mb-4 text-blue-600 dark:text-yellow-400 tracking-tight text-center"
             variants={itemVariants}
           >
             <span className="inline-block mr-2">🎓🏭</span>
             Industrial PhD
           </motion.h1>
 
-          <motion.p
-            className="text-gray-700 dark:text-gray-300"
-            variants={itemVariants}
-          >
-            Framework for industrial PhDs, co-funding, and application-oriented topics with our partners.
+          <motion.p className="text-gray-700 dark:text-gray-300" variants={itemVariants}>
+            An Industrial PhD is known as a university training program that qualifies for the award of a doctorate
+            through an industrial research or experimental development project, that was created collaboratively between
+            a company and an academic environment, which will become the subject of a doctoral thesis by a doctoral
+            student.
+          </motion.p>
+
+          <motion.p className="text-gray-700 dark:text-gray-300" variants={itemVariants}>
+            If you are a company and are interested in carrying out an industrial PhD, contact us via email.
+          </motion.p>
+
+          <motion.p className="text-gray-700 dark:text-gray-300" variants={itemVariants}>
+            If you want to come and do an Industrial Doctorate in Artificial Intelligence with us in any of the proposed
+            topics, get in touch via email.
           </motion.p>
         </section>
       </motion.div>
