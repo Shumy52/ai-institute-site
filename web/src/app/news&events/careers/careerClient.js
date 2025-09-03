@@ -22,7 +22,7 @@ export default function CareerClient() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 1 }}
       >
-        💼 Careers / Job Opportunities
+        💼 Career Opportunities
       </motion.h1>
 
       <motion.p

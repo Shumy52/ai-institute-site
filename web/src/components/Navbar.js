@@ -54,11 +54,11 @@ const newsMenu = [
 ];
 
 const aboutMenu = [
-  { href: '/about#mission', label: 'Mission, History(timeline)' },
+  { href: '/about#mission', label: 'Mission' },
   { href: '/about/organigram', label: 'Organigram' },
   { href: '/about/sitemap', label: 'Sitemap' },
-  { href: '/about/reports', label: 'Reports Self-assessment reports' },
-  { href: '/about/procedures-regulations', label: 'Procedures & Regulations' },
+  { href: '/about/reports', label: 'Reports' },
+  { href: '/about/procedures-regulations', label: 'Regulations' },
   { href: '/about/guidelines', label: 'Guidelines' },
   { href: '/about/virtual-tour', label: 'Virtual Tour' },
   { href: '/about/rooms-calendar', label: 'Rooms & calendar' },
@@ -68,7 +68,7 @@ const aboutMenu = [
 const searchMenu = [
   { href: '/search', label: 'Classic search' },
   { href: '/search/chatbot', label: 'AIRi chatbot (LLM-based)' },
-  { href: '/search/knowledge-graph', label: 'AIRi Knowledge graphs navigator' },
+  { href: '/search/knowledge-graph', label: 'Knowledge graphs navigator' },
 ];
 
 function DesktopDropdown({ link, open, setOpen, items, alignRight = false }) {
