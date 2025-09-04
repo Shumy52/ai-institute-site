@@ -303,12 +303,13 @@ export default function DepartmentsClient() {
 
   const unitMembers = useMemo(() => {
     if (!selectedUnit) return [];
-    const unitName = selectedUnit.name;
-    const setSlugs = new Set();
-    for (const row of globalProjects) if (row.domain === unitName) setSlugs.add(row.personSlug);
-    for (const row of globalPublications) if (row.domain === unitName) setSlugs.add(row.personSlug);
-    return allStaff.filter((p) => setSlugs.has(p.slug));
-  }, [selectedUnit, globalProjects, globalPublications]);
+    const unitName = String(selectedUnit.name || "").trim().toLowerCase();
+
+    return (Array.isArray(allStaff) ? allStaff : []).filter((p) => {
+      const dep = String(p?.department || "").trim();
+      return dep && dep.toLowerCase() === unitName;
+    });
+  }, [selectedUnit]);
 
   /* --- Render helpers --- */
   const renderProjects = (rows) =>

@@ -6,6 +6,7 @@
       "title": "Personal",
       "phone": "0722222222",
       "email": "marian.ion@cs.utcluj.ro",
+      "department": "",
       "image": "/icia-staging/people/Basic_avatar_image.png"
     }
   ],
@@ -16,6 +17,7 @@
       "title": "Professor",
       "phone": "0744444444",
       "email": "Adrian.Groza@cs.utcluj.ro",
+      "department": "Software and Hardware for AI",
       "image": "/icia-staging/people/AdrianGroza.png"
     },
     {
@@ -24,6 +26,7 @@
       "title": "Professor",
       "phone": "0733333333",
       "email": "Anca.Marginean@cs.utcluj.ro",
+      "department": "Robotics for healthcare",
       "image": "/icia-staging/people/AncaMarginean.png"
     },
     {
@@ -32,6 +35,7 @@
       "title": "Professor",
       "phone": "0722222222",
       "email": "Rodica.Potolea@cs.utcluj.ro",
+      "department": "Software and Hardware for AI",
       "image": "/icia-staging/people/Basic_avatar_image.png"
     },
     {
@@ -40,6 +44,7 @@
       "title": "Professor",
       "phone": "0711111111",
       "email": "Sergiu.Nedevschi@cs.utcluj.ro",
+      "department": "Autonomous Systems",
       "image": "/icia-staging/people/SergiuNedevschi.png"
     },
     {
@@ -48,6 +53,7 @@
       "title": "Professor",
       "phone": "0766666666",
       "email": "Florin.Oniga@cs.utcluj.ro",
+      "department": "Autonomous Systems",
       "image": "/icia-staging/people/FlorinOniga.png"
     },
     {
@@ -56,6 +62,7 @@
       "title": "Professor",
       "phone": "0777777777",
       "email": "Sorin.Hintea@cs.utcluj.ro",
+      "department": "Robotics and IoT",
       "image": "/icia-staging/people/SorinHintea.png"
     },
     {
@@ -64,6 +71,7 @@
       "title": "Professor",
       "phone": "0788888888",
       "email": "Marius.Neag@cs.utcluj.ro",
+      "department": "Microelectronics",
       "image": "/icia-staging/people/Basic_avatar_image.png"
     },
     {
@@ -72,6 +80,7 @@
       "title": "Professor",
       "phone": "0799999999",
       "email": "Lucian.Busoniu@cs.utcluj.ro",
+      "department": "Software and Hardware for AI",
       "image": "/icia-staging/people/LucianBusoniu.png"
     },
     {
@@ -80,6 +89,7 @@
       "title": "Professor",
       "phone": "0712121212",
       "email": "Radu.Danescu@cs.utcluj.ro",
+      "department": "Microelectronics",
       "image": "/icia-staging/people/RaduDanescu.png"
     },
     {
@@ -88,6 +98,7 @@
       "title": "Professor",
       "phone": "0713131313",
       "email": "Dorian.Gorgan@cs.utcluj.ro",
+      "department": "Robotics and IoT",
       "image": "/icia-staging/people/DorianGorgan.png"
     },
     {
@@ -96,6 +107,7 @@
       "title": "Professor",
       "phone": "0714141414",
       "email": "Tiberiu.Marita@cs.utcluj.ro",
+      "department": "Robotics for healthcare",
       "image": "/icia-staging/people/TiberiuMarita.png"
     },
     {
@@ -104,6 +116,7 @@
       "title": "Professor",
       "phone": "0715151515",
       "email": "Mircea.Girgiu@cs.utcluj.ro",
+      "department": "Software and Hardware for AI",
       "image": "/icia-staging/people/Basic_avatar_image.png"
     },
     {
@@ -112,6 +125,7 @@
       "title": "Professor",
       "phone": "0716161616",
       "email": "Dorina.Pisla@cs.utcluj.ro",
+      "department": "Robotics for healthcare",
       "image": "/icia-staging/people/DorinaPisla.png"
     },
     {
@@ -120,6 +134,7 @@
       "title": "Professor",
       "phone": "0717171717",
       "email": "Macarie.Io.Mihaela@cs.utcluj.ro",
+      "department": "",
       "image": "/icia-staging/people/Basic_avatar_image.png"
     },
     {
@@ -128,6 +143,7 @@
       "title": "Professor",
       "phone": "0718181818",
       "email": "emanuel.puschita@com.utcluj.ro",
+      "department": "",
       "image": "/icia-staging/people/PuschitaEmanuel.png"
     },
     {
@@ -136,6 +152,7 @@
       "title": "Professor",
       "phone": "0719191919",
       "email": "Lemanru.Camelia@cs.utcluj.ro",
+      "department": "Software and Hardware for AI",
       "image": "/icia-staging/people/Basic_avatar_image.png"
     },
     {
@@ -144,6 +161,7 @@
       "title": "Professor",
       "phone": "0720202020",
       "email": "Purcar.Marius@cs.utcluj.ro",
+      "department": "Microelectronics",
       "image": "/icia-staging/people/Basic_avatar_image.png"
     },
     {
@@ -152,6 +170,7 @@
       "title": "Professor",
       "phone": "0721212121",
       "email": "Brad.Stelian@cs.utcluj.ro",
+      "department": "Robotics and IoT",
       "image": "/icia-staging/people/Basic_avatar_image.png"
     },
     {
@@ -160,6 +179,7 @@
       "title": "Professor",
       "phone": "0723232323",
       "email": "Sita.Valentin@cs.utcluj.ro",
+      "department": "Robotics and IoT",
       "image": "/icia-staging/people/Basic_avatar_image.png"
     },
     {
@@ -168,6 +188,7 @@
       "title": "Professor",
       "phone": "0724242424",
       "email": "Daniel.Zinca@cs.utcluj.ro",
+      "department": "Cybersecurity and Space",
       "image": "/icia-staging/people/Basic_avatar_image.png"
     },
     {
@@ -176,6 +197,7 @@
       "title": "Professor",
       "phone": "0725252525",
       "email": "Adrian.Colesa@cs.utcluj.ro",
+      "department": "Cybersecurity and Space",
       "image": "/icia-staging/people/AdrianColesa.png"
     }
   ]
