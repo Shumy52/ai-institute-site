@@ -80,7 +80,8 @@
 		],
 		"publication": "Deep Clustering for Blood Cell Classification and Quantification",
 		"partners": "Universitatea Tehnica din Cluj-Napoca",
-		"docUrl": " https://hria.upb.ro"	
+		"docUrl": "https://github.com/IliesiuRobert/ai-institute-site/blob/Iliesiu_Robert_Work/HRIA-UTCN_Cluj-Napoca_30.05.2025.pdf",
+		"oficialUrl": "https://hria.upb.ro/"	
 	},
 	{
 		"title": "5G Scalable Hubs for Accessible and Resilient Education - [5G-SHARE]",
@@ -112,6 +113,7 @@
 			"Vysoke Uceni Technicke V Brne CZ",
 			"ADAPTA studio srl IT"
 		],
-		"docUrl": ""			
+		"docUrl": "",
+		"oficialUrl": ""			
 	}
 ]
