@@ -58,6 +58,7 @@ function normalizeProject(p) {
     region: p?.region,
     partners: p?.partners ?? p?.parteners ?? "",
     docUrl: p?.docUrl || "",
+    oficialUrl: p?.oficialUrl || p?.officialUrl || "",
   };
 }
 
@@ -141,6 +142,20 @@ export default function ProjectDetailPage() {
         {project.region && (
           <div>
             <span className="font-medium">Region:</span> {project.region}
+          </div>
+        )}
+        {project.oficialUrl && (
+          <div>
+            <span className="font-medium">Official page:</span>{" "}
+              <a
+                href={project.oficialUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="underline hover:opacity-80"
+                aria-label="Open official project page"
+              >
+                Click here 
+              </a>
           </div>
         )}
       </div>
