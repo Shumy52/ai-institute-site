@@ -534,7 +534,7 @@ export default function DepartmentsClient() {
                       )}
                       {!!coCoordinator && (
                         <p className="text-sm text-gray-800 dark:text-gray-200">
-                          <span className="font-semibold">Co-coordinator:</span> {coCoordinator}
+                          <span className="font-semibold">Deputy:</span> {coCoordinator}
                         </p>
                       )}
 

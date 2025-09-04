@@ -129,6 +129,54 @@
       "phone": "0718181818",
       "email": "emanuel.puschita@com.utcluj.ro",
       "image": "/icia-staging/people/PuschitaEmanuel.png"
+    },
+    {
+      "slug": "Camelia-Lemnaru",
+      "name": "Lemnaru Camelia",
+      "title": "Professor",
+      "phone": "0719191919",
+      "email": "Lemanru.Camelia@cs.utcluj.ro",
+      "image": "/icia-staging/people/Basic_avatar_image.png"
+    },
+    {
+      "slug": "Marius-Purcar",
+      "name": "Purcar Marius",
+      "title": "Professor",
+      "phone": "0720202020",
+      "email": "Purcar.Marius@cs.utcluj.ro",
+      "image": "/icia-staging/people/Basic_avatar_image.png"
+    },
+    {
+      "slug": "Stelian-Brad",
+      "name": "Brad Stelian",
+      "title": "Professor",
+      "phone": "0721212121",
+      "email": "Brad.Stelian@cs.utcluj.ro",
+      "image": "/icia-staging/people/Basic_avatar_image.png"
+    },
+    {
+      "slug": "Valentin-Sita",
+      "name": "Sita Valentin",
+      "title": "Professor",
+      "phone": "0723232323",
+      "email": "Sita.Valentin@cs.utcluj.ro",
+      "image": "/icia-staging/people/Basic_avatar_image.png"
+    },
+    {
+      "slug": "Daniel-Zinca",
+      "name": "Zinca Daniel",
+      "title": "Professor",
+      "phone": "0724242424",
+      "email": "Daniel.Zinca@cs.utcluj.ro",
+      "image": "/icia-staging/people/Basic_avatar_image.png"
+    },
+    {
+      "slug": "Adrian-Colesa",
+      "name": "Coleșa Adrian",
+      "title": "Professor",
+      "phone": "0725252525",
+      "email": "Adrian.Colesa@cs.utcluj.ro",
+      "image": "/icia-staging/people/AdrianColesa.png"
     }
   ]
 }

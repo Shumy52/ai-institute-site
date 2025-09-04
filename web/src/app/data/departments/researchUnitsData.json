@@ -11,8 +11,8 @@
             "Agent-based technologies target:"
         ],
         "icon": "💻",
-        "coordonator": "More information coming soon",
-        "co-coordonator": "More information coming soon",
+        "coordonator": "Lucian Busoniu",
+        "co-coordonator": "Camelia Lemnaru",
         "elements": [
             {
                 "text": "Simulations for training autonomous agents (reinforcement learning for agents acting in complex environments such as industrial robots, autonomous vehicles, drones)",
@@ -51,7 +51,7 @@
         "description": "The research program focuses on four major directions addressing critical needs for innovation across multiple medical specialties.",
         "icon": "⚕️",
         "coordonator": "Doina Pisla",
-        "co-coordonator": "Roxana Both",
+        "co-coordonator": "",
         "elements": [
             {
                 "text": "Artificial Intelligence & Robotics in Cancer Diagnosis and Treatment",
@@ -95,7 +95,7 @@
         "description": "Dedicated to the research and implementation of intelligent systems with autonomous capabilities.",
         "icon": "🤖",
         "coordonator": "Sergiu Nedevschi",
-        "co-coordonator": "More information coming soon",
+        "co-coordonator": "Florin Oniga",
         "elements": [
             {
                 "text": "Autonomous drones for data collection and processing in various application domains",
@@ -128,7 +128,7 @@
         "description": "The Robotics & IoT Department of ICIA offers an extensive range of RDI services (Research–Development–Innovation) tailored to the needs of SMEs in industry, public administration, and services, with a strong focus on applied artificial intelligence, intelligent robotics, and industrial digitalization. ",
         "icon": "🏭",
         "coordonator": "Stelian Brad",
-        "co-coordonator": "Valentin Sita,",
+        "co-coordonator": "Valentin Sita",
         "elements": [
             {
                 "text": "Applied Research and Experimental Development Services",
@@ -193,8 +193,8 @@
         "name": "Microelectronics",
         "description": "The Microelectronics Department within PICIA aims to address eight research themes. Each of these themes highlights how artificial intelligence (AI) can facilitate and improve the 2 design, analysis, and manufacturing processes in the field of integrated circuits, thus contributing to the development of more advanced and efficient technologies.",
         "icon": "💡",
-        "coordonator": "More information coming soon",
-        "co-coordonator": "More information coming soon",
+        "coordonator": "Marius Purcar",
+        "co-coordonator": "Marius Neag",
         "elements": [
             {
                 "text": "AI Applications in the Optimal Design of Integrated Systems and Circuits",
@@ -262,7 +262,7 @@
         ],
         "icon": "🚀",
         "coordonator": "Daniel Zinca",
-        "co-coordonator": "Adrian Viorel Coleșa",
+        "co-coordonator": "Adrian Coleșa",
         "elements": [
             {
                 "text": "Development of intrusion detection and prevention systems using artificial intelligence algorithms",
