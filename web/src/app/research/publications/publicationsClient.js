@@ -118,13 +118,17 @@ const downloadBibSingle = (pub, idx = 0) => {
   URL.revokeObjectURL(url);
 };
 
-export default function PublicationsClient() {
-  const staffBySlug = useMemo(() => buildStaffLookup(staffData), []);
+export default function PublicationsClient({ publications: propPublications, staff: propStaff }) {
+  // Use prop data if available (from Strapi), otherwise fallback to static data
+  const usePubData = propPublications && propPublications.length > 0 ? propPublications : pubData;
+  const useStaffData = propStaff && propStaff.length > 0 ? propStaff : staffData;
+  
+  const staffBySlug = useMemo(() => buildStaffLookup(useStaffData), [useStaffData]);
 
   const pubs = useMemo(() => {
-    const src = Array.isArray(pubData) ? pubData : [];
+    const src = Array.isArray(usePubData) ? usePubData : [];
     return src.map((p) => normalizePublication(p, staffBySlug)).filter((p) => p.title);
-  }, [staffBySlug]);
+  }, [usePubData, staffBySlug]);
 
   /* State filters */
   const [q, setQ] = useState("");

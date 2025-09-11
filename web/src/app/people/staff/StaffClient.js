@@ -6,8 +6,11 @@ import Link from "next/link";
 import { useMemo } from "react";
 import { staffData } from "@/app/data/staffData";
 
-export default function StaffClient() {
-  const personal = Array.isArray(staffData?.Personal) ? staffData.Personal : [];
+export default function StaffClient({ staffData: propStaffData }) {
+  // Use prop data if available (from Strapi), otherwise fallback to static data
+  const personal = propStaffData 
+    ? propStaffData 
+    : Array.isArray(staffData?.Personal) ? staffData.Personal : [];
   const people = [...personal];
 
   const peopleSorted = useMemo(
