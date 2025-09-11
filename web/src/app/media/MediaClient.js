@@ -19,13 +19,13 @@ import {
 const mediaItems = [
   {
     type: "image",
-    src: "/icia-staging/media/Construction1.png",
+    src: "/media/Construction1.png",
     alt: "ICIA Construction Site",
     title: "Construction Progress",
   },
   {
     type: "image",
-    src: "/icia-staging/media/Construction2.png",
+    src: "/media/Construction2.png",
     alt: "ICIA Research Team",
     title: "Research Team at Work",
   },
@@ -39,7 +39,7 @@ const mediaItems = [
   // TESTING
   {
     type: "pdf",
-    src: "/icia-staging/media/Brosura Prezentare ICIA.pdf",
+    src: "/media/Brosura Prezentare ICIA.pdf",
     alt: "ICIA Document",
     title: "Presentation brochure",
   },

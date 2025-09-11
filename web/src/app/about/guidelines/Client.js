@@ -4,10 +4,10 @@ import { motion } from "framer-motion";
 import { FaBookOpen, FaChalkboardTeacher, FaFlask, FaIdBadge } from "react-icons/fa";
 
 const ITEMS = [
-  { label: "Students",    href: "/icia-staging/engagement/academic",  icon: FaBookOpen },
-  { label: "Faculty",     href: "/icia-staging/people/alumni",       icon: FaChalkboardTeacher },
-  { label: "Researchers", href: "/icia-staging/research/departments", icon: FaFlask },
-  { label: "Staff",       href: "/icia-staging/people/staff",         icon: FaIdBadge },
+  { label: "Students",    href: "/engagement/academic",  icon: FaBookOpen },
+  { label: "Faculty",     href: "/people/alumni",       icon: FaChalkboardTeacher },
+  { label: "Researchers", href: "/research/departments", icon: FaFlask },
+  { label: "Staff",       href: "/people/staff",         icon: FaIdBadge },
 ];
 
 function Tile({ label, href, icon: Icon }) {

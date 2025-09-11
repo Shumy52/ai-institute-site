@@ -12,7 +12,7 @@ export default function Home() {
       {/* Hero Section */}
         <section className="relative h-[60vh] flex items-center justify-center bg-gradient-to-br from-blue-600 to-indigo-800 dark:from-gray-900 dark:to-gray-800 overflow-hidden">
           <img
-          src="/icia-staging/homepage/hero5.png"
+          src="/homepage/hero5.png"
           alt="AI Research Hero"
           className="absolute inset-0 w-full h-full object-cover opacity-60"
         />
@@ -32,7 +32,7 @@ export default function Home() {
           </Link>
         </div>
         <img
-          src="/icia-staging/homepage/qrSignup.jpg"
+          src="/homepage/qrSignup.jpg"
           alt="Sign Up QR Code"
           className="absolute bottom-8 left-8 w-32 h-32 md:w-48 md:h-48 object-contain rounded-xl shadow-xl border-4 border-white dark:border-gray-800"
         />
@@ -103,7 +103,7 @@ export default function Home() {
       <section className="container mx-auto px-4 pb-16 max-w-3xl">
         <div className="bg-yellow-50 dark:bg-gray-800 border-l-4 border-yellow-400 dark:border-yellow-600 rounded-lg p-6 flex items-center gap-6 shadow">
           <img
-            src="/icia-staging/homepage/hero4.jpg"
+            src="/homepage/hero4.jpg"
             alt="Construction Site"
             className="w-32 h-32 object-cover rounded-lg border border-gray-200 dark:border-gray-700"
           />
