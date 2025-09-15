@@ -2,7 +2,7 @@
 
 const nextConfig = {
   trailingSlash: false,
-  basePath: "/icia-staging",
+  // basePath: "/icia-staging",
   ...(process.env.STATIC_BUILD === 'true'
     ? { output: 'export', images: { unoptimized: true } }
     : {}
