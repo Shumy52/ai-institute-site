@@ -457,7 +457,7 @@ export default function DepartmentsClient() {
                   variants={itemVariants}
                   className="text-4xl font-extrabold text-center mb-8 text-blue-600 dark:text-yellow-400 tracking-tight text-center"
                 >
-                  🧑‍🤝‍🧑 Departments
+                   Departments
                 </motion.h1>
 
                 <motion.div variants={containerVariants} initial="hidden" animate="visible">
@@ -470,7 +470,7 @@ export default function DepartmentsClient() {
                         onClick={() => handleUnitClick(unit)}
                       >
                         <h2 className="text-lg md:text-xl font-bold text-gray-900 dark:text-gray-100 flex items-center gap-3">
-                          {unit.icon || "🏷️"} {unit.name}
+                          {unit.name}
                         </h2>
                       </motion.div>
                     ))}

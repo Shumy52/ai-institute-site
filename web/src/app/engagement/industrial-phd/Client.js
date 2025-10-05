@@ -25,7 +25,6 @@ export default function Client() {
             className="text-2xl md:text-3xl font-extrabold mb-4 text-blue-600 dark:text-yellow-400 tracking-tight text-center"
             variants={itemVariants}
           >
-            <span className="inline-block mr-2">🎓🏭</span>
             Industrial PhD
           </motion.h1>
 

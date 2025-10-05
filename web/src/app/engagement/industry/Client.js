@@ -18,14 +18,13 @@ const containerVariants = {
 };
 const itemVariants = { hidden: { y: 10, opacity: 0 }, visible: { y: 0, opacity: 1 } };
 
-function Feature({ emoji, title, desc }) {
+function Feature({ title, desc }) {
   return (
     <motion.div
       className="rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 p-5 shadow-sm hover:bg-gray-50 dark:hover:bg-gray-800/70 transition"
       variants={itemVariants}
     >
       <div className="flex items-start gap-3">
-        <div className="text-2xl" aria-hidden>{emoji}</div>
         <div>
           <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">{title}</h3>
           <p className="mt-1 text-sm text-gray-700 dark:text-gray-300">{desc}</p>
@@ -50,8 +49,8 @@ export default function Client() {
       case "Projects":
         return (
           <motion.div className="grid gap-4 md:grid-cols-2" variants={containerVariants} initial="hidden" animate="visible">
-            <Feature emoji="⚙️" title="Applied R&D" desc="Applied projects with companies for AI solutions." />
-            <Feature emoji="🔬" title="Joint labs" desc="Shared labs for testing and development." />
+            <Feature title="Applied R&D" desc="Applied projects with companies for AI solutions." />
+            <Feature title="Joint labs" desc="Shared labs for testing and development." />
           </motion.div>
         );
       case "Consulting":
@@ -75,16 +74,16 @@ export default function Client() {
       case "Training":
         return (
           <motion.div className="grid gap-4 md:grid-cols-2" variants={containerVariants} initial="hidden" animate="visible">
-            <Feature emoji="📊" title="AI for managers" desc="Short training programs for decision-makers." />
-            <Feature emoji="💻" title="Hands-on workshops" desc="Practical workshops for employees and R&D teams." />
+            <Feature title="AI for managers" desc="Short training programs for decision-makers." />
+            <Feature title="Hands-on workshops" desc="Practical workshops for employees and R&D teams." />
           </motion.div>
         );
       default:
         return (
           <motion.div className="grid gap-4 md:grid-cols-3" variants={containerVariants} initial="hidden" animate="visible">
-            <Feature emoji="🤝" title="Partnerships" desc="We collaborate with industry for applied AI." />
-            <Feature emoji="📈" title="Consulting" desc="AI audits and technical support for companies." />
-            <Feature emoji="🎓" title="Training" desc="Training programs and workshops for industry." />
+            <Feature title="Partnerships" desc="We collaborate with industry for applied AI." />
+            <Feature title="Consulting" desc="AI audits and technical support for companies." />
+            <Feature title="Training" desc="Training programs and workshops for industry." />
           </motion.div>
         );
     }
@@ -98,7 +97,7 @@ export default function Client() {
             variants={itemVariants}
             className="text-2xl md:text-3xl font-extrabold mb-2 text-blue-600 dark:text-yellow-400 tracking-tight text-center"
           >
-            🏭 Industry engagement
+            Industry engagement
           </motion.h1>
           <motion.p
             variants={itemVariants}

@@ -25,7 +25,6 @@ export default function Client() {
             className="text-2xl md:text-3xl font-extrabold mb-6 text-blue-600 dark:text-yellow-400 tracking-tight text-center"
             variants={item}
           >
-            <span className="inline-block mr-2">🗂️</span>
             Organigram
           </motion.h1>
 
@@ -43,7 +42,6 @@ export default function Client() {
             >
               <div className="px-4 md:px-6 py-4 border-b border-gray-200 dark:border-gray-800">
                 <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
-                  <span className="inline-block mr-2">👔</span>
                   Director Committee
                 </h2>
                 <p className="text-sm text-gray-600 dark:text-gray-400">
@@ -82,7 +80,6 @@ export default function Client() {
             >
               <div className="px-4 md:px-6 py-4 border-b border-gray-200 dark:border-gray-800">
                 <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
-                  <span className="inline-block mr-2">🔬</span>
                   Scientific Committee
                 </h2>
                 <p className="text-sm text-gray-600 dark:text-gray-400">

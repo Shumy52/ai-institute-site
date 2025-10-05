@@ -18,7 +18,7 @@ export default function ChatbotClient() {
         className="text-2xl md:text-3xl font-extrabold mb-6 text-blue-600 dark:text-yellow-400 tracking-tight text-center"
         variants={item}
       >
-        🤖 AIRi Chatbot
+        AIRi Chatbot
       </motion.h1>
 
       <motion.div

@@ -25,7 +25,6 @@ export default function Client() {
             className="text-2xl md:text-3xl font-extrabold mb-2 text-blue-600 dark:text-yellow-400 tracking-tight text-center"
             variants={itemVariants}
           >
-            <span className="inline-block mr-2">🔁</span>
             Technology Transfer & Development Unit
           </motion.h1>
 
@@ -42,7 +41,6 @@ export default function Client() {
           >
             <div className="px-4 md:px-6 py-4 border-b border-gray-200 dark:border-gray-800">
               <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
-                <span className="inline-block mr-2">🧰</span>
                 Services
               </h2>
             </div>

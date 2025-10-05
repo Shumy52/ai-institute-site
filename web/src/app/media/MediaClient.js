@@ -95,7 +95,7 @@ export default function MediaClient() {
               className="text-5xl font-extrabold text-center text-blue-700 dark:text-yellow-400 mb-6"
               variants={itemVariants}
             >
-              <span className="inline-block mr-2">📸</span> ICIA Media Gallery
+              ICIA Media Gallery
             </motion.h1>
             <motion.p
               className="text-lg text-center text-gray-700 dark:text-gray-200 mb-10"
@@ -137,7 +137,7 @@ export default function MediaClient() {
                   ) : (
                     <div className="relative w-full aspect-video bg-gray-200 flex items-center justify-center">
                       <span className="text-blue-600 font-semibold">
-                        🎥 {item.title}
+                        {item.title}
                       </span>
                     </div>
                   )}
