@@ -102,7 +102,7 @@ export default function DatasetsClient() {
             variants={itemVariants}
             className="text-4xl font-extrabold text-center mb-8 text-blue-600 dark:text-yellow-400 text-center"
           >
-            💾 Datasets
+            Datasets
           </motion.h1>
 
           {/* GRID: sidebar (filters) + content */}

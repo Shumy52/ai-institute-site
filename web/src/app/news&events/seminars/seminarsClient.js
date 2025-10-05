@@ -76,7 +76,7 @@ export default function SeminarsClient() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 1 }}
       >
-        🎓 Seminars
+        Seminars
       </motion.h1>
 
       <motion.p

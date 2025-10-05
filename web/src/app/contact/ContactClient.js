@@ -25,7 +25,7 @@ export default function ContactClient() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 1 }}
       >
-        📞 Contact Us
+        Contact Us
       </motion.h1>
       <section className="mb-8">
         <h2 className="text-2xl font-semibold mb-4 text-yellow-600 dark:text-yellow-400">Get in Touch</h2>

@@ -11,7 +11,7 @@ export default function AlumniClient() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 1 }}
       >
-        🎓 Alumni
+        Alumni
       </motion.h1>
       <p className="text-gray-800 dark:text-gray-200">
         Since our institute has just started, we do not have any alumni yet. However, we are committed to building a strong community of graduates in the coming years.

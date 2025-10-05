@@ -35,7 +35,7 @@ export default function ThesisClient() {
             variants={itemVariants}
             className="text-4xl font-extrabold text-center mb-8 text-blue-600 dark:text-yellow-400 text-center"
           >
-            🎓 Thesis
+            Thesis
           </motion.h1>
 
           <div className="mb-6 flex justify-center md:justify-start">
