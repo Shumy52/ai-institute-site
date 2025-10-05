@@ -457,7 +457,7 @@ export default function DepartmentsClient() {
                   variants={itemVariants}
                   className="text-4xl font-extrabold text-center mb-8 text-blue-600 dark:text-yellow-400 tracking-tight text-center"
                 >
-                   Departments
+                   Research departments
                 </motion.h1>
 
                 <motion.div variants={containerVariants} initial="hidden" animate="visible">
