@@ -16,7 +16,6 @@ const item = {
 const SECTIONS = [
   {
     title: "Research",
-    icon: "🧪",
     links: [
       { label: "Departments", href: "/research/departments" },
       { label: "Themes", href: "/research/themes" },
@@ -29,7 +28,6 @@ const SECTIONS = [
   },
   {
     title: "Engagement",
-    icon: "🤝",
     links: [
       { label: "Public engagement", href: "/engagement/public" },
       { label: "Academic engagement", href: "/engagement/academic" },
@@ -43,7 +41,6 @@ const SECTIONS = [
   },
   {
     title: "People",
-    icon: "👥",
     links: [
       { label: "Researchers", href: "/people/researchers" },
       { label: "Staff", href: "/people/staff" },
@@ -53,7 +50,6 @@ const SECTIONS = [
   },
   {
     title: "News & Events",
-    icon: "🗞️",
     links: [
       { label: "News", href: "/news&events/news" },
       { label: "Events", href: "/news&events/events" },
@@ -65,7 +61,6 @@ const SECTIONS = [
   },
   {
     title: "About",
-    icon: "ℹ️",
     links: [
       { label: "Mission, History(timeline)", href: "/about#mission" },
       { label: "Organigram", href: "/about/organigram" },
@@ -80,7 +75,6 @@ const SECTIONS = [
   },
   {
     title: "Search",
-    icon: "🔎",
     links: [
       { label: "Classic search", href: "/search" },
       { label: "AIRi chatbot (LLM-based)", href: "/search/chatbot" },
@@ -116,7 +110,7 @@ export default function Client() {
           className="text-2xl md:text-3xl font-extrabold mb-4 text-blue-600 dark:text-yellow-400 tracking-tight text-center"
           variants={item}
         >
-          🗺️ Sitemap
+          Sitemap
         </motion.h1>
 
         <motion.div className="mb-6 flex items-center gap-3 justify-center" variants={item}>

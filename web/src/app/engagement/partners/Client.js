@@ -28,7 +28,6 @@ export default function PartnersClient({ partners, CollaboratorsClient }) {
           className="text-2xl md:text-3xl font-extrabold mb-8 text-blue-600 dark:text-yellow-400 tracking-tight text-center"
           variants={itemVariants}
         >
-          <span className="inline-block mr-2">🤝</span>
           Partners
         </motion.h1>
 
@@ -53,7 +52,6 @@ export default function PartnersClient({ partners, CollaboratorsClient }) {
 
         <motion.section className="mt-12" variants={itemVariants}>
           <h2 className="text-2xl font-semibold mb-4 text-gray-900 dark:text-gray-100">
-            <span className="inline-block mr-2">🗺️</span>
             Partners map
           </h2>
           <CollaboratorsClient partners={partners} />

@@ -18,7 +18,7 @@ export default function KnowledgeGraphClient() {
         className="text-2xl md:text-3xl font-extrabold mb-6 text-blue-600 dark:text-yellow-400 tracking-tight text-center"
         variants={item}
       >
-        📊 Knowledge Graphs Navigator
+        Knowledge Graphs Navigator
       </motion.h1>
 
       <motion.div

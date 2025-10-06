@@ -72,10 +72,10 @@ export default function Client() {
               Courses & Workshops
             </motion.h2>
             <motion.div className="grid gap-4 md:grid-cols-2" variants={containerVariants}>
-              <Feature emoji="🧠" title="Machine Learning" desc="Joint courses, applied modules, projects." />
-              <Feature emoji="🤖" title="Robotics & Vision" desc="Labs, projects, mixed teams." />
-              <Feature emoji="🖥️" title="HPC for AI" desc="Hands-on modules on the HPC infrastructure." />
-              <Feature emoji="🔐" title="AI Ethics & Safety" desc="Workshops on responsible AI & regulation." />
+              <Feature title="Machine Learning" desc="Joint courses, applied modules, projects." />
+              <Feature title="Robotics & Vision" desc="Labs, projects, mixed teams." />
+              <Feature title="HPC for AI" desc="Hands-on modules on the HPC infrastructure." />
+              <Feature title="AI Ethics & Safety" desc="Workshops on responsible AI & regulation." />
             </motion.div>
           </motion.section>
         );
@@ -100,9 +100,9 @@ export default function Client() {
       default:
         return (
           <motion.div className="grid gap-4 md:grid-cols-3" variants={containerVariants} initial="hidden" animate="visible">
-            <Feature emoji="🤝" title="Academic partnerships" desc="A network of collaborations and joint activities." />
-            <Feature emoji="🏫" title="Teaching & training" desc="Courses, summer schools, workshops." />
-            <Feature emoji="🌍" title="Mobility" desc="Co-tutoring, visits, internships, exchanges." />
+            <Feature title="Academic partnerships" desc="A network of collaborations and joint activities." />
+            <Feature title="Teaching & training" desc="Courses, summer schools, workshops." />
+            <Feature title="Mobility" desc="Co-tutoring, visits, internships, exchanges." />
           </motion.div>
         );
     }
@@ -116,7 +116,7 @@ export default function Client() {
             variants={itemVariants}
             className="text-2xl md:text-3xl font-extrabold mb-2 text-blue-600 dark:text-yellow-400 tracking-tight text-center"
           >
-            🎓 Academic engagement
+            Academic engagement
           </motion.h1>
           <motion.p
             variants={itemVariants}

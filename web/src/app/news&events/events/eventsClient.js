@@ -28,7 +28,7 @@ export default function EventsClient() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 1 }}
       >
-        🗓️ Events
+        Events
       </motion.h1>
 
       <motion.p

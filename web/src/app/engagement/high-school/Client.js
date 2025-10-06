@@ -16,13 +16,12 @@ const itemVariants = {
 };
 
 export default function HighSchoolClient() {
-  const Feature = ({ emoji, title, desc }) => (
+  const Feature = ({ title, desc }) => (
     <motion.div
       className="rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 p-5 shadow-sm hover:bg-gray-50 dark:hover:bg-gray-800/70 transition"
       variants={itemVariants}
     >
       <div className="flex items-start gap-3">
-        <div className="text-2xl" aria-hidden>{emoji}</div>
         <div>
           <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">{title}</h3>
           <p className="mt-1 text-sm text-gray-700 dark:text-gray-300">{desc}</p>
@@ -44,7 +43,6 @@ export default function HighSchoolClient() {
             className="text-2xl md:text-3xl font-extrabold mb-3 text-blue-600 dark:text-yellow-400 tracking-tight text-center"
             variants={itemVariants}
           >
-            <span className="inline-block mr-2">🎒</span>
             High-school engagement
           </motion.h1>
 
@@ -59,9 +57,9 @@ export default function HighSchoolClient() {
             className="grid gap-4 md:grid-cols-3 mb-8"
             variants={containerVariants}
           >
-            <Feature emoji="🏆" title="Competitions" desc="AI and programming competitions for high-school students." />
-            <Feature emoji="🎓" title="Events" desc="Workshops, lab visits, and sessions with experts." />
-            <Feature emoji="📚" title="Educational resources" desc="Guides and materials for AI literacy." />
+            <Feature title="Competitions" desc="AI and programming competitions for high-school students." />
+            <Feature title="Events" desc="Workshops, lab visits, and sessions with experts." />
+            <Feature title="Educational resources" desc="Guides and materials for AI literacy." />
           </motion.div>
 
           <motion.a
@@ -71,7 +69,7 @@ export default function HighSchoolClient() {
             className="inline-flex items-center rounded-xl border border-gray-300 dark:border-gray-700 px-4 py-2 text-sm font-medium hover:bg-gray-50 dark:hover:bg-gray-900 transition"
             variants={itemVariants}
           >
-            📖 AILIT Framework – Resources
+            AILIT Framework – Resources
           </motion.a>
         </section>
       </motion.div>

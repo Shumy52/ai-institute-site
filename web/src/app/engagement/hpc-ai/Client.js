@@ -25,7 +25,7 @@ export default function Client() {
             className="text-2xl md:text-3xl font-extrabold text-blue-600 dark:text-yellow-400 tracking-tight text-center"
             variants={itemVariants}
           >
-            🖥️⚡ HPC-AI services
+            HPC-AI services
           </motion.h1>
 
           <motion.p className="text-gray-700 dark:text-gray-300" variants={itemVariants}>
@@ -45,7 +45,7 @@ export default function Client() {
             className="text-xl md:text-2xl font-bold pt-4 text-gray-900 dark:text-gray-100"
             variants={itemVariants}
           >
-            📊 Overview
+            Overview
           </motion.h2>
 
           <motion.div className="space-y-4" variants={itemVariants}>
@@ -69,7 +69,7 @@ export default function Client() {
             className="text-xl md:text-2xl font-bold pt-4 text-gray-900 dark:text-gray-100"
             variants={itemVariants}
           >
-            🔑 Key Features of the Initial 4-Server Setup
+            Key Features of the Initial 4-Server Setup
           </motion.h2>
 
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
@@ -111,7 +111,7 @@ export default function Client() {
             className="text-xl md:text-2xl font-bold pt-4 text-gray-900 dark:text-gray-100"
             variants={itemVariants}
           >
-            🔮 Looking Ahead
+            Looking Ahead
           </motion.h2>
           <motion.p className="text-gray-700 dark:text-gray-300" variants={itemVariants}>
             This modular architecture will be expanded with 8 additional GPU servers, boosting computing
@@ -130,9 +130,6 @@ function FeatureCard({ title, body }) {
       className="h-full bg-white dark:bg-gray-900 border border-gray-200 dark:border-white/10 rounded-xl p-5 shadow-sm hover:shadow-md transition-shadow"
     >
       <div className="flex items-start gap-3">
-        <div className="shrink-0 mt-1 h-9 w-9 rounded-lg ring-1 ring-gray-200 dark:ring-white/10 bg-gradient-to-br from-indigo-200 to-sky-200 dark:from-indigo-700/40 dark:to-sky-700/40 grid place-items-center">
-          <span className="text-base">⚡</span>
-        </div>
         <div>
           <h3 className="font-semibold text-gray-900 dark:text-gray-100">{title}</h3>
           <p className="mt-2 text-sm text-gray-700 dark:text-gray-300">{body}</p>

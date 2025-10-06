@@ -21,7 +21,7 @@ export default function AwardsClient() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 1 }}
       >
-        🏆 Awards
+        Awards
       </motion.h1>
 
       <motion.p

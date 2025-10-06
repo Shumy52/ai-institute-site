@@ -10,7 +10,6 @@
             "Research themes also include the development of explainable AI models, by creating algorithms capable of explaining decisions—a crucial area in the application of AI in sensitive sectors.",
             "Agent-based technologies target:"
         ],
-        "icon": "💻",
         "coordonator": "Lucian Busoniu",
         "co-coordonator": "Camelia Lemnaru",
         "elements": [
@@ -49,7 +48,6 @@
     {
         "name": "Robotics for healthcare",
         "description": "The research program focuses on four major directions addressing critical needs for innovation across multiple medical specialties.",
-        "icon": "⚕️",
         "coordonator": "Doina Pisla",
         "co-coordonator": "",
         "elements": [
@@ -93,7 +91,6 @@
     {
         "name": "Autonomous Systems",
         "description": "Dedicated to the research and implementation of intelligent systems with autonomous capabilities.",
-        "icon": "🤖",
         "coordonator": "Sergiu Nedevschi",
         "co-coordonator": "Florin Oniga",
         "elements": [
@@ -126,7 +123,6 @@
     {
         "name": "Robotics and IoT",
         "description": "The Robotics & IoT Department of ICIA offers an extensive range of RDI services (Research–Development–Innovation) tailored to the needs of SMEs in industry, public administration, and services, with a strong focus on applied artificial intelligence, intelligent robotics, and industrial digitalization. ",
-        "icon": "🏭",
         "coordonator": "Stelian Brad",
         "co-coordonator": "Valentin Sita",
         "elements": [
@@ -192,7 +188,6 @@
     {
         "name": "Microelectronics",
         "description": "The Microelectronics Department within PICIA aims to address eight research themes. Each of these themes highlights how artificial intelligence (AI) can facilitate and improve the 2 design, analysis, and manufacturing processes in the field of integrated circuits, thus contributing to the development of more advanced and efficient technologies.",
-        "icon": "💡",
         "coordonator": "Marius Purcar",
         "co-coordonator": "Marius Neag",
         "elements": [
@@ -260,7 +255,6 @@
             "Cybersecurity for Defense and Attack Resilience (CYDAR), coordinated by Assoc. Prof. Dr. Eng. Adrian-Viorel Coles, a, within the Department of Computer Science",
             "Reseach themes:"
         ],
-        "icon": "🚀",
         "coordonator": "Daniel Zinca",
         "co-coordonator": "Adrian Coleșa",
         "elements": [

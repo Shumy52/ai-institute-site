@@ -53,7 +53,6 @@ export default function Client() {
           className="text-2xl md:text-3xl font-extrabold mb-10 text-blue-600 dark:text-yellow-400 tracking-tight text-center"
           variants={item}
         >
-          <span className="inline-block mr-2">🧭</span>
           Just For You
         </motion.h1>
 

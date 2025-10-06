@@ -11,7 +11,7 @@ export default function VisitingResearchersClient() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 1 }}
       >
-        🌍 Visiting Researchers
+        Visiting Researchers
       </motion.h1>
       <p className="text-gray-800 dark:text-gray-200">
         We are eager for our first visiting researcher, who will mark the beginning of our tradition of collaboration and knowledge exchange. At our institute, visiting scholars will find cutting-edge infrastructure, a collaborative culture, and strong ties with industry and society.
