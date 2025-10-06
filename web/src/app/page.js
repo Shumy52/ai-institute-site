@@ -38,6 +38,18 @@ export default function Home() {
         />
       </section>
 
+      <section
+          id="about"
+          className="container mx-auto px-4 py-16 max-w-5xl"
+        >
+          <h2 className="text-3xl md:text-4xl font-bold text-blue-700 dark:text-yellow-400 mb-4 text-center">
+            Under Construction
+          </h2>
+          <p className="text-gray-800 dark:text-gray-200 text-lg md:text-xl mb-6 text-center">
+            Our site is currently under construction.
+          </p>
+        </section>
+
       {/* About Section */}
       <section
         id="about"
@@ -47,18 +59,13 @@ export default function Home() {
           About Us
         </h2>
         <p className="text-gray-800 dark:text-gray-200 text-lg md:text-xl mb-6 text-center">
-          The Artificial Intelligence Research Institute (AIRi) within the
-          Technical University of Cluj-Napoca assumes a catalytic role in
-          advancing research, innovation, and exploration in the field of
-          artificial intelligence. AIRi contributes to the development of an
-          ecosystem of excellence that generates a significant impact on society,
-          the economy, and the academic environment. By integrating expertise from
-          various constituent departments, ICIA aims to surpass individual results
-          by promoting interdisciplinary collaboration, knowledge transfer, and
-          the implementation of AI-based solutions in key sectors such as
-          healthcare, industry, energy, or education. ICIA will also serve as a
-          space for interaction between researchers, as well as between AI and
-          human intelligence.
+          The Artificial Intelligence Research Institute (AIRi) is a nexus for collaborative research 
+          at the Technical University of Cluj-Napoca. AIRi@UTCN promotes excellence in AI theory and 
+          practice. AIRi brings together researchers across UTCN around the vision of open collaboration 
+          across AI boundaries. To pursue its mission, AIRi@UTCN articulates its vision around two pillars: 
+          research and external engagement. Collectively, AIRi promotes: (i) excellence in AI-powered 
+          interdisciplinary research; (ii) AI literacy within UTCN in consideration of the diversity of 
+          needs across disciplines, (iii) impact of UTCN research through business and public co-creation partnerships
         </p>
       </section>
 
