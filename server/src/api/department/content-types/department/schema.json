@@ -1,0 +1,33 @@
+{
+  "kind": "collectionType",
+  "collectionName": "departments",
+  "info": {
+    "singularName": "department",
+    "pluralName": "departments",
+    "displayName": "Department"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "name": {
+      "type": "string",
+      "required": true,
+      "unique": true
+    },
+    "slug": {
+      "type": "uid",
+      "targetField": "name"
+    },
+    "Description": {
+      "type": "richtext"
+    },
+    "people": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::person.person",
+      "mappedBy": "department"
+    }
+  }
+}
