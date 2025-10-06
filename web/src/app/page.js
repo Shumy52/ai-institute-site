@@ -38,6 +38,18 @@ export default function Home() {
         />
       </section>
 
+      <section
+          id="about"
+          className="container mx-auto px-4 py-16 max-w-5xl"
+        >
+          <h2 className="text-3xl md:text-4xl font-bold text-blue-700 dark:text-yellow-400 mb-4 text-center">
+            Under Construction
+          </h2>
+          <p className="text-gray-800 dark:text-gray-200 text-lg md:text-xl mb-6 text-center">
+            Our site is currently under construction.
+          </p>
+        </section>
+
       {/* About Section */}
       <section
         id="about"
