@@ -75,15 +75,6 @@
       "image": "/people/Basic_avatar_image.png"
     },
     {
-      "slug": "Lucian-Busoniu",
-      "name": "Busoniu Lucian",
-      "title": "Professor",
-      "phone": "0799999999",
-      "email": "Lucian.Busoniu@cs.utcluj.ro",
-      "department": "Software and Hardware for AI",
-      "image": "/people/LucianBusoniu.png"
-    },
-    {
       "slug": "RaduGabriel-Danescu",
       "name": "Dănescu Radu Gabriel",
       "title": "Professor",
@@ -264,13 +255,13 @@
       "image": ""
     },
     {
-      "slug": "IoanLucian-Busoniu",
-      "name": "Bușoniu Ioan Lucian",
+      "slug": "Lucian-Busoniu",
+      "name": "Bușoniu Lucian",
       "title": "Professor",
       "phone": "0725252525",
       "email": "Lucian.Busoniu@aut.utcluj.ro",
       "department": "Software and Hardware for AI",
-      "image": ""
+      "image": "/people/LucianBusoniu.png"
     },
     {
       "slug": "Alexandru-Codrean",
