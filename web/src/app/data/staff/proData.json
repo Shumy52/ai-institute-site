@@ -116,7 +116,7 @@
 		],
 		"docUrl": "",
 		"oficialUrl": ""			
-	}
+	},
 	{
 		"title": "RO AI Factory",
 		"lead": "Adrian Groza",
@@ -129,6 +129,7 @@
 				"name": "Adrian Groza"
 			}
 		],
+		
 		"region": "national",
 		"domain": [
 			"Software and Hardware Technologies for AI",
