@@ -4,14 +4,9 @@ import { motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
 import { useMemo } from "react";
-import { staffData } from "@/app/data/staffData";
 
-export default function StaffClient({ staffData: propStaffData }) {
-  // Use prop data if available (from Strapi), otherwise fallback to static data
-  const personal = propStaffData 
-    ? propStaffData 
-    : Array.isArray(staffData?.Personal) ? staffData.Personal : [];
-  const people = [...personal];
+export default function StaffClient({ staffData = [] }) {
+  const people = Array.isArray(staffData) ? staffData : [];
 
   const peopleSorted = useMemo(
     () =>

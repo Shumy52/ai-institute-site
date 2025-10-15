@@ -2,9 +2,13 @@
 
 import { useMemo, useState } from "react";
 import { motion } from "framer-motion";
+import { getStaff } from "@/lib/strapi";
 
-import staffData from "@/app/data/staff/staffData.json";
+// import staffData from "@/app/data/staff/staffData.json";
 import dataverseMap from "@/app/data/staff/dataverseData.json";
+
+// TODO: When migrating to Strapi, the logic on sorting and displaying datasets should be moved to the server side (getDatasets function in strapi.js)
+// For now, Migrate staff only and use old json processing logic
 
 /* Animations */
 const containerVariants = {
@@ -26,7 +30,7 @@ const buildStaffLookup = (staffJson) => {
   return { bySlug, byName };
 };
 
-export default function DatasetsClient() {
+export default function DatasetsClient({ staffData = [] }) {
   const { byName: staffByName } = useMemo(() => buildStaffLookup(staffData), []);
 
   const allDatasets = useMemo(() => {

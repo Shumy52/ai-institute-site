@@ -5,7 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import units from "@/app/data/departments/researchUnitsData.json";
-import { allStaff } from "@/app/data/staffData";
+// import { staffData } from "@/app/data/staffData";
 import { proData } from "@/app/data/proData";
 import { pubData } from "@/app/data/pubData";
 
@@ -165,12 +165,12 @@ function pickPersonSlugForProject(project) {
   const team = Array.isArray(project?.teams) ? project.teams : [];
   for (const t of team) {
     const slug = String(t?.name || "").trim();
-    if (slug && allStaff.some((s) => s.slug === slug)) return slug;
+    if (slug && staffData.some((s) => s.slug === slug)) return slug;
   }
   const lead = String(project?.lead || "");
   if (lead) {
     const leadKey = normalizeKey(lead);
-    const found = allStaff.find(
+    const found = staffData.find(
       (s) => normalizeKey(s.slug) === leadKey || normalizeKey(s.name) === leadKey
     );
     if (found) return found.slug;
@@ -178,7 +178,7 @@ function pickPersonSlugForProject(project) {
   return null;
 }
 
-export default function DepartmentsClient() {
+export default function DepartmentsClient({ staffData = [] }) {
   const [selectedUnit, setSelectedUnit] = useState(null);
   const [unitView, setUnitView] = useState("details");
 
@@ -208,7 +208,7 @@ export default function DepartmentsClient() {
   /* --- Global aggregates --- */
   const globalProjects = useMemo(() => {
     const rows = [];
-    for (const person of allStaff) {
+    for (const person of staffData) {
       const projs = projectsForPersonSlug(person.slug, person.name).map(normalizeProject);
       for (const p of projs) {
         if (!p?.title) continue;
@@ -228,7 +228,7 @@ export default function DepartmentsClient() {
 
   const globalPublications = useMemo(() => {
     const rows = [];
-    for (const person of allStaff) {
+    for (const person of staffData) {
       const pubs = publicationsForPersonSlug(person.slug, person.name).map(normalizePublication);
       for (const pb of pubs) {
         if (!pb?.title) continue;
@@ -305,7 +305,7 @@ export default function DepartmentsClient() {
     if (!selectedUnit) return [];
     const unitName = String(selectedUnit.name || "").trim().toLowerCase();
 
-    return (Array.isArray(allStaff) ? allStaff : []).filter((p) => {
+    return (Array.isArray(staffData) ? staffData : []).filter((p) => {
       const dep = String(p?.department || "").trim();
       return dep && dep.toLowerCase() === unitName;
     });

@@ -2,8 +2,9 @@
 
 import { useMemo, useState } from "react";
 import { motion } from "framer-motion";
-import pubData from "@/app/data/staff/pubData.json";
-import staffData from "@/app/data/staff/staffData.json";
+
+// TODO: Same as in dataSetsClient.js, data logic should be reviewed if
+// it can't be replaced with functionalities from Strapi
 
 /* Animations */
 const containerVariants = {
@@ -118,17 +119,15 @@ const downloadBibSingle = (pub, idx = 0) => {
   URL.revokeObjectURL(url);
 };
 
-export default function PublicationsClient({ publications: propPublications, staff: propStaff }) {
-  // Use prop data if available (from Strapi), otherwise fallback to static data
-  const usePubData = propPublications && propPublications.length > 0 ? propPublications : pubData;
-  const useStaffData = propStaff && propStaff.length > 0 ? propStaff : staffData;
-  
-  const staffBySlug = useMemo(() => buildStaffLookup(useStaffData), [useStaffData]);
+export default function PublicationsClient({ publications: pubData, staff: staffData }) {
+
+  // TODO: This can be replaced with Strapi function
+  const staffBySlug = useMemo(() => buildStaffLookup(staffData), [staffData]);
 
   const pubs = useMemo(() => {
-    const src = Array.isArray(usePubData) ? usePubData : [];
+    const src = Array.isArray(pubData) ? pubData : [];
     return src.map((p) => normalizePublication(p, staffBySlug)).filter((p) => p.title);
-  }, [usePubData, staffBySlug]);
+  }, [pubData, staffBySlug]);
 
   /* State filters */
   const [q, setQ] = useState("");

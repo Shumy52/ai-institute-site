@@ -5,16 +5,12 @@ export const metadata = {
 import { getStaff, transformStaffData } from "@/lib/strapi";
 import StaffClient from "./StaffClient";
 
+export const revalidate = 600; // Revalidate every 10 minutes
+export const dynamic = "force-dynamic"; // The data is fetched at runtime instead of docker build 
+
 export default async function StaffPage() {
-  // Fetch staff data from Strapi
-  const strapiStaff = await getStaff();
-  const staff = transformStaffData(strapiStaff);
-  
-  // If Strapi is not available, fallback to static data
-  if (staff.length === 0) {
-    console.warn('Strapi data not available, using StaffClient with static data');
-    return <StaffClient />;
-  }
-  
+  const staffData = await getStaff();
+  const staff = transformStaffData(staffData);
+
   return <StaffClient staffData={staff} />;
 }

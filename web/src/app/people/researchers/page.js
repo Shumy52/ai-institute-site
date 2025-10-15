@@ -2,8 +2,15 @@ export const metadata = {
   title: "ICIA - Researchers",
 };
 
+import { getStaff, transformStaffData } from "@/lib/strapi";
 import ResearchersClient from "./ResearchersClient";
 
-export default function ResearchersPage() {
-  return <ResearchersClient />;
+export const dynamic = "force-dynamic";
+export const revalidate = 600; 
+
+export default async function ResearchersPage() {
+  const staffData = await getStaff();
+  const staff = transformStaffData(staffData);
+  
+  return <ResearchersClient staff={staff} />;
 }
