@@ -83,6 +83,7 @@
 		"docUrl": "/projects/HRIA-UTCN_Cluj-Napoca_30.05.2025.pdf#toolbar=1",
 		"oficialUrl": "https://hria.upb.ro/"	
 	},
+	
 	{
 		"title": "5G Scalable Hubs for Accessible and Resilient Education - [5G-SHARE]",
 		"lead": "Puschita Emanuel Dumitru",
@@ -116,4 +117,38 @@
 		"docUrl": "",
 		"oficialUrl": ""			
 	}
+	{
+		"title": "RO AI Factory",
+		"lead": "Adrian Groza",
+		"abstract": "RO AI Factory",
+		"themes": [
+		],
+		"teams": [
+			{
+				"title": "",
+				"name": "Adrian Groza"
+			}
+		],
+		"region": "national",
+		"domain": [
+			"Software and Hardware Technologies for AI",
+			"Microelectronics",
+			"Intelligent Applications in Cybersecurity and Space",
+			"Robotics and IoT"
+		],
+		"publication": "",
+		"partners": [
+			"",
+			"UPB",
+			"", 
+			"",
+			"",
+			"",
+			"",
+			""
+		],
+		"docUrl": "",
+		"oficialUrl": ""			
+	}
+]
 ]
