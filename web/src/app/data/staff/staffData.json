@@ -1,11 +1,11 @@
 {
   "Personal": [
     {
-      "slug": "Marian-Ion",
-      "name": "Ion Marian",
+      "slug": "Claudiu-Iakkel",
+      "name": "Claudiu Iakkel",
       "title": "Personal",
       "phone": "0722222222",
-      "email": "marian.ion@cs.utcluj.ro",
+      "email": "claudiu.iakkeln@net.utcluj.ro",
       "department": "",
       "image": "/people/Basic_avatar_image.png"
     }
@@ -21,12 +21,22 @@
       "image": "/people/AdrianGroza.png"
     },
     {
+      "slug": "Cristina-Feier",
+      "name": "Feier Cristina",
+      "title": "Senior Lecturer",
+      "phone": "0733333333",
+      "email": "Cristina.Feier@cs.utcluj.ro",
+      "department": "Software and Hardware for AI",
+      "image": "/people/Basic_avatar_image.png"
+    },
+
+    {
       "slug": "AncaNicoleta-Marginean",
       "name": "Mărginean Anca Nicoleta",
       "title": "Associated Professor",
       "phone": "0733333333",
       "email": "Anca.Marginean@cs.utcluj.ro",
-      "department": "Robotics for healthcare",
+      "department": "Software and Hardware for AI",
       "image": "/people/AncaMarginean.png"
     },
     {
@@ -62,7 +72,7 @@
       "title": "Professor",
       "phone": "0777777777",
       "email": "Sorin.Hintea@cs.utcluj.ro",
-      "department": "Robotics and IoT",
+      "department": "Microelectronics",
       "image": "/people/SorinHintea.png"
     },
     {
@@ -80,7 +90,7 @@
       "title": "Professor",
       "phone": "0712121212",
       "email": "Radu.Danescu@cs.utcluj.ro",
-      "department": "Microelectronics",
+      "department": "Autonomous Systems",
       "image": "/people/RaduDanescu.png"
     },
     {
@@ -89,7 +99,7 @@
       "title": "Professor",
       "phone": "0713131313",
       "email": "Dorian.Gorgan@cs.utcluj.ro",
-      "department": "Robotics and IoT",
+      "department": "",
       "image": "/people/DorianGorgan.png"
     },
     {
@@ -134,7 +144,7 @@
       "title": "Professor",
       "phone": "0718181818",
       "email": "emanuel.puschita@com.utcluj.ro",
-      "department": "",
+      "department": "Software and Hardware for AI",
       "image": "/people/PuschitaEmanuel.png"
     },
     {
