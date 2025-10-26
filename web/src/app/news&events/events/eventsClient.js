@@ -13,7 +13,7 @@ const itemVariants = {
 };
 
 const CALENDAR_EMBED_URL_RAW =
-  "https://outlook.office365.com/owa/calendar/3296e40953174aeeb38ec0e133e40e92@student.utcluj.ro/f44ab11fa5e7466aaceacd6421b716e417198495480556630512/calendar.ics";
+  "https://outlook.office365.com/owa/calendar/03fcfa83c4ac48e1ba0031c55a958c35@campus.utcluj.ro/4deb95cb924d4d80ae21dd1a539599a014540741905280907663/calendar.ics";
 
 const CALENDAR_EMBED_URL = CALENDAR_EMBED_URL_RAW.replace(/calendar\.ics(\?.*)?$/i, "calendar.html$1");
 

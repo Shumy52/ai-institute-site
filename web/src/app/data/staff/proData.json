@@ -74,15 +74,15 @@
 			"Intelligent and Autonomous Systems",
 			"Microelectronics",
 			"Intelligent Applications in Cybersecurity and Space",
-			"Robotics and IoT",
-			"Robotics for healthcare",
-			"Medical Technologies"
+			"Robotics for healthcare"
+			
 		],
 		"publication": "Deep Clustering for Blood Cell Classification and Quantification",
 		"partners": "Universitatea Tehnica din Cluj-Napoca",
 		"docUrl": "/projects/HRIA-UTCN_Cluj-Napoca_30.05.2025.pdf#toolbar=1",
 		"oficialUrl": "https://hria.upb.ro/"	
 	},
+	
 	{
 		"title": "5G Scalable Hubs for Accessible and Resilient Education - [5G-SHARE]",
 		"lead": "Puschita Emanuel Dumitru",
@@ -97,10 +97,7 @@
 		],
 		"region": "international",
 		"domain": [
-			"Software and Hardware Technologies for AI",
-			"Microelectronics",
-			"Intelligent Applications in Cybersecurity and Space",
-			"Robotics and IoT"
+			"Software and Hardware Technologies for AI"
 		],
 		"publication": "",
 		"partners": [
@@ -115,5 +112,39 @@
 		],
 		"docUrl": "",
 		"oficialUrl": ""			
+	},
+	{
+		"title": "RO AI Factory",
+		"lead": "Adrian Groza",
+		"abstract": "RO AI Factory",
+		"themes": [
+		],
+		"teams": [
+			{
+				"title": "",
+				"name": "AdrianPetru-Groza"
+			}
+		],
+		
+		"region": "national",
+		"domain": [
+			"Software and Hardware Technologies for AI",
+			"Microelectronics",
+			"Intelligent Applications in Cybersecurity and Space"
+		],
+		"publication": "",
+		"partners": [
+			"The National Institute for Research & Development in Informatics - ICI Bucharest",
+			"National University of Science and Technology Politehnica Bucharest",
+			"Technical University of Cluj-Napoca (UTCN)", 
+			"National Institute of Research and Development for Biological Sciences (INCDSB)",
+			"Transilvania IT Association (ATIT)",
+			"Romanian Academy Research Institute for Artificial Intelligence “Mihai Drăgănescu",
+			"National Council of Small and Medium Sized Private Enterprises in Romania (CNIPMMR)",
+			"Association of Romanian Digital Innovation Hubs (RoDIH)."
+		],
+		"docUrl": "",
+		"oficialUrl": ""			
 	}
+
 ]
