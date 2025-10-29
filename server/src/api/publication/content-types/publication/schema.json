@@ -1,0 +1,60 @@
+{
+	"kind": "collectionType",
+	"collectionName": "publications",
+	"info": {
+		"singularName": "publication",
+		"pluralName": "publications",
+		"displayName": "Publication"
+	},
+	"options": {
+		"draftAndPublish": true
+	},
+	"pluginOptions": {},
+	"attributes": {
+		"title": {
+			"type": "string",
+			"required": true,
+			"unique": true
+		},
+		"slug": {
+			"type": "uid",
+			"targetField": "title"
+		},
+		"year": {
+			"type": "integer"
+		},
+		"kind": {
+			"type": "string"
+		},
+		"description": {
+			"type": "richtext"
+		},
+		"doc_url": {
+			"type": "string"
+		},
+		"external_url": {
+			"type": "string"
+		},
+		"metadata": {
+			"type": "json"
+		},
+		"domain": {
+			"type": "relation",
+			"relation": "manyToOne",
+			"target": "api::department.department",
+			"inversedBy": "publications"
+		},
+		"authors": {
+			"type": "relation",
+			"relation": "manyToMany",
+			"target": "api::person.person",
+			"inversedBy": "publications"
+		},
+		"projects": {
+			"type": "relation",
+			"relation": "manyToMany",
+			"target": "api::project.project",
+			"inversedBy": "publications"
+		}
+	}
+}

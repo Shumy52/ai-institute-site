@@ -32,6 +32,9 @@
     "role": {
       "type": "string"
     },
+    "bio": {
+      "type": "richtext"
+    },
     "image": {
       "type": "media",
       "multiple": false,
@@ -50,6 +53,30 @@
     },
     "category": {
       "type": "string"
+    },
+    "projects": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::project.project",
+      "mappedBy": "members"
+    },
+    "leading_projects": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::project.project",
+      "mappedBy": "lead"
+    },
+    "publications": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::publication.publication",
+      "mappedBy": "authors"
+    },
+    "datasets": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::dataset.dataset",
+      "mappedBy": "authors"
     }
   }
 }

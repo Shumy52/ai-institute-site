@@ -20,7 +20,7 @@
       "type": "uid",
       "targetField": "name"
     },
-    "Description": {
+    "description": {
       "type": "richtext"
     },
     "people": {
@@ -28,6 +28,30 @@
       "relation": "oneToMany",
       "target": "api::person.person",
       "mappedBy": "department"
+    },
+    "projects": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::project.project",
+      "mappedBy": "domains"
+    },
+    "publications": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::publication.publication",
+      "mappedBy": "domain"
+    },
+    "datasets": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::dataset.dataset",
+      "mappedBy": "department"
+    },
+    "research_units": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::research-unit.research-unit",
+      "mappedBy": "departments"
     }
   }
 }
