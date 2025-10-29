@@ -1,10 +1,11 @@
 import Image from "next/image";
-import Link from "next/link";
 import { notFound } from "next/navigation";
-import { getStaffMember, getPublicationsByAuthor, getProjectsByMember } from "@/lib/strapi";
-import { allStaff } from "@/app/data/staffData";
-import { getPublicationsByAuthor as getStaticPubs } from "@/app/data/pubData";
-import { getProjectsByMember as getStaticProjects } from "@/app/data/proData";
+import {
+  getStaffMember,
+  transformStaffData,
+  transformPublicationData,
+  transformProjectData,
+} from "@/lib/strapi";
 import StaffDetailClient from "./StaffDetailClient";
 
 export default async function StaffDetailPage({ params }) {
@@ -14,70 +15,82 @@ export default async function StaffDetailPage({ params }) {
     notFound();
   }
 
-  let person = null;
-  let publications = [];
-  let projects = [];
+  const strapiPerson = await getStaffMember(slug);
 
-  // Try to get data from Strapi first
-  try {
-    const strapiPerson = await getStaffMember(slug);
-    if (strapiPerson) {
-      person = {
-        id: strapiPerson.id,
-        slug: strapiPerson.attributes?.slug || slug,
-        name: strapiPerson.attributes?.name || '',
-        title: strapiPerson.attributes?.title || '',
-        phone: strapiPerson.attributes?.phone || '',
-        email: strapiPerson.attributes?.email || '',
-        department: strapiPerson.attributes?.department || '',
-        image: strapiPerson.attributes?.image?.data?.attributes?.url || strapiPerson.attributes?.image || '',
-        bio: strapiPerson.attributes?.bio || '',
-      };
-
-      // Get publications and projects from Strapi
-      const strapiPubs = await getPublicationsByAuthor(slug);
-      const strapiProjects = await getProjectsByMember(slug);
-
-      publications = strapiPubs.map(pub => ({
-        id: pub.id,
-        title: pub.attributes?.title || '',
-        year: pub.attributes?.year || new Date().getFullYear(),
-        domain: pub.attributes?.domain || '',
-        kind: pub.attributes?.kind || '',
-        description: pub.attributes?.description || '',
-        authors: pub.attributes?.authors || [],
-        docUrl: pub.attributes?.docUrl || '',
-      }));
-
-      projects = strapiProjects.map(project => ({
-        id: project.id,
-        title: project.attributes?.title || '',
-        lead: project.attributes?.lead || '',
-        abstract: project.attributes?.abstract || '',
-        themes: project.attributes?.themes || [],
-        teams: project.attributes?.teams || [],
-        region: project.attributes?.region || '',
-        domain: project.attributes?.domain || [],
-        partners: project.attributes?.partners || [],
-        docUrl: project.attributes?.docUrl || '',
-        oficialUrl: project.attributes?.oficialUrl || '',
-      }));
-    }
-  } catch (error) {
-    console.warn('Failed to fetch from Strapi, falling back to static data:', error);
+  if (!strapiPerson) {
+    notFound();
   }
 
-  // Fallback to static data if Strapi data not available
-  if (!person) {
-    person = allStaff.find((p) => p.slug === slug);
-    if (!person) {
-      notFound();
-    }
+  const [personEntry] = transformStaffData([strapiPerson]);
 
-    // Get static publications and projects
-    publications = getStaticPubs(slug);
-    projects = getStaticProjects(slug);
+  if (!personEntry) {
+    notFound();
   }
+
+  const publicationsRaw = transformPublicationData(
+    strapiPerson.attributes?.publications?.data ?? []
+  );
+
+  const leadingProjectsRaw = transformProjectData(
+    strapiPerson.attributes?.leading_projects?.data ?? []
+  );
+
+  const memberProjectsRaw = transformProjectData(
+    strapiPerson.attributes?.projects?.data ?? []
+  );
+
+  const normalizePublication = (pub) => ({
+    id: pub.id ?? null,
+    title: pub.title || "",
+    year: pub.year ?? null,
+    domain: pub.domain || "",
+    kind: pub.kind || "",
+    description: pub.description || "",
+    authors: Array.isArray(pub.authors)
+      ? pub.authors.map((author) => author?.name).filter(Boolean)
+      : [],
+    docUrl: pub.docUrl || "",
+  });
+
+  const publications = publicationsRaw.map(normalizePublication);
+
+  const projectMap = new Map();
+
+  const mergeProject = (project) => {
+    if (!project?.slug && !project?.title) return;
+    const key = project.slug || project.title;
+    if (projectMap.has(key)) return;
+
+    const leadName =
+      typeof project.lead === "string"
+        ? project.lead
+        : project.lead?.name || project.leadName || "";
+
+    projectMap.set(key, {
+      id: project.id ?? null,
+      slug: project.slug || key,
+      title: project.title || "",
+      lead: leadName,
+      abstract: project.abstract || "",
+      themes: Array.isArray(project.themes) ? project.themes : [],
+      teams: Array.isArray(project.teams) ? project.teams : [],
+      region: project.region || "",
+      domain: Array.isArray(project.domain) ? project.domain : [],
+      partners: Array.isArray(project.partners) ? project.partners : [],
+      docUrl: project.docUrl || "",
+      oficialUrl: project.oficialUrl || project.officialUrl || "",
+    });
+  };
+
+  leadingProjectsRaw.forEach(mergeProject);
+  memberProjectsRaw.forEach(mergeProject);
+
+  const projects = Array.from(projectMap.values());
+
+  const person = {
+    ...personEntry,
+    department: personEntry.department || personEntry.departmentInfo?.name || "",
+  };
 
   return (
     <main className="max-w-5xl mx-auto p-6 bg-white dark:bg-gray-950 text-black dark:text-white rounded-lg shadow-lg">

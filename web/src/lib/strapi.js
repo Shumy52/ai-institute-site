@@ -1,4 +1,29 @@
-const STRAPI_URL = process.env.NEXT_PUBLIC_STRAPI_URL || 'http://localhost:1337';
+const STRAPI_URL = (process.env.NEXT_PUBLIC_STRAPI_URL || 'http://strapi:1337').replace(/\/$/, '');
+
+const isServer = typeof window === 'undefined';
+
+const toArray = (value) => (Array.isArray(value) ? value : value ? [value] : []);
+
+const stripHtml = (value) =>
+  typeof value === 'string'
+    ? value
+        .replace(/<[^>]*>/g, ' ')
+        .replace(/\s+/g, ' ')
+        .trim()
+    : '';
+
+const resolveMediaUrl = (media) => {
+  if (!media) return '';
+
+  const data = Array.isArray(media?.data) ? media.data[0] : media?.data ?? media;
+  if (!data) return '';
+
+  const url = data?.attributes?.url || data?.url;
+  if (!url) return '';
+
+  if (/^https?:\/\//i.test(url)) return url;
+  return `${STRAPI_URL}${url.startsWith('/') ? url : `/${url}`}`;
+};
 
 /**
  * Helper function to make API calls to Strapi
@@ -8,23 +33,42 @@ const STRAPI_URL = process.env.NEXT_PUBLIC_STRAPI_URL || 'http://localhost:1337'
  */
 export async function fetchAPI(endpoint, options = {}) {
   const url = `${STRAPI_URL}/api${endpoint}`;
-  
+
+  // Server-only token. Do NOT use NEXT_PUBLIC_ prefix for this value.
+  const token = process.env.STRAPI_API_TOKEN || null;
+
+  const headers = {
+    'Content-Type': 'application/json',
+    ...(options.headers || {}),
+  };
+
+  // Only attach the token on the server to avoid exposing it to client bundles
+  if (token && isServer) {
+    headers['Authorization'] = `Bearer ${token}`;
+  }
+
   try {
     const response = await fetch(url, {
-      headers: {
-        'Content-Type': 'application/json',
-        ...options.headers,
-      },
+      headers,
       ...options,
     });
-    
+
     if (!response.ok) {
-      throw new Error(`Strapi API call failed: ${response.status} ${response.statusText}`);
+      // try to capture response body for better diagnostics
+      let bodyText = '';
+      try { bodyText = await response.text(); } catch (e) { /* ignore */ }
+      throw new Error(`Strapi API call failed: ${response.status} ${response.statusText} - ${url} - ${bodyText}`);
     }
-    
+
     return await response.json();
   } catch (error) {
-    console.error('Strapi API Error:', error);
+    console.error('Strapi API Error:', {
+      message: error.message,
+      url,
+  tokenAttached: !!(token && isServer),
+      stack: error.stack,
+    });
+
     // Return empty data structure instead of throwing to prevent crashes
     return { data: [], meta: {} };
   }
@@ -36,7 +80,26 @@ export async function fetchAPI(endpoint, options = {}) {
  */
 export async function getStaff() {
   try {
-    const data = await fetchAPI('/staff?populate=*&sort=name:asc');
+    // The person content-type uses `full_name` as the field, not `name`.
+    const params = new URLSearchParams({
+      populate: [
+        'department',
+        'image',
+        'projects',
+        'projects.domains',
+        'projects.lead',
+        'projects.members',
+        'publications',
+        'publications.domain',
+        'publications.projects',
+        'leading_projects',
+        'leading_projects.domains',
+        'leading_projects.members',
+        'leading_projects.publications',
+      ].join(','),
+      sort: 'full_name:asc',
+    });
+    const data = await fetchAPI(`/people?${params.toString()}`);
     return data.data || [];
   } catch (error) {
     console.error('Failed to fetch staff:', error);
@@ -52,7 +115,28 @@ export async function getStaff() {
 export async function getStaffMember(slug) {
   try {
     if (!slug) return null;
-    const data = await fetchAPI(`/staff?filters[slug][$eq]=${slug}&populate=*`);
+    // Single person lookup - collection is `people` in Strapi
+    const params = new URLSearchParams({
+      'filters[slug][$eq]': slug,
+      populate: [
+        'department',
+        'image',
+        'projects',
+        'projects.domains',
+        'projects.lead',
+        'projects.members',
+        'projects.publications',
+        'leading_projects',
+        'leading_projects.domains',
+        'leading_projects.members',
+        'leading_projects.publications',
+        'publications',
+        'publications.domain',
+        'publications.projects',
+      ].join(','),
+    });
+
+    const data = await fetchAPI(`/people?${params.toString()}`);
     return data.data?.[0] || null;
   } catch (error) {
     console.error('Failed to fetch staff member:', error);
@@ -66,7 +150,20 @@ export async function getStaffMember(slug) {
  */
 export async function getProjects() {
   try {
-    const data = await fetchAPI('/projects?populate=*&sort=title:asc');
+    const params = new URLSearchParams({
+      populate: [
+        'lead',
+        'lead.department',
+        'members',
+        'members.department',
+        'domains',
+        'publications',
+        'publications.authors',
+        'publications.domain',
+      ].join(','),
+      sort: 'title:asc',
+    });
+    const data = await fetchAPI(`/projects?${params.toString()}`);
     return data.data || [];
   } catch (error) {
     console.error('Failed to fetch projects:', error);
@@ -82,7 +179,20 @@ export async function getProjects() {
 export async function getProject(slug) {
   try {
     if (!slug) return null;
-    const data = await fetchAPI(`/projects?filters[slug][$eq]=${slug}&populate=*`);
+    const params = new URLSearchParams({
+      'filters[slug][$eq]': slug,
+      populate: [
+        'lead',
+        'lead.department',
+        'members',
+        'members.department',
+        'domains',
+        'publications',
+        'publications.authors',
+        'publications.domain',
+      ].join(','),
+    });
+    const data = await fetchAPI(`/projects?${params.toString()}`);
     return data.data?.[0] || null;
   } catch (error) {
     console.error('Failed to fetch project:', error);
@@ -96,7 +206,18 @@ export async function getProject(slug) {
  */
 export async function getPublications() {
   try {
-    const data = await fetchAPI('/publications?populate=*&sort=year:desc');
+    const params = new URLSearchParams({
+      populate: [
+        'authors',
+        'authors.department',
+        'projects',
+        'projects.domains',
+        'projects.lead',
+        'domain',
+      ].join(','),
+      sort: 'year:desc',
+    });
+    const data = await fetchAPI(`/publications?${params.toString()}`);
     return data.data || [];
   } catch (error) {
     console.error('Failed to fetch publications:', error);
@@ -112,7 +233,19 @@ export async function getPublications() {
 export async function getPublicationsByAuthor(authorSlug) {
   try {
     if (!authorSlug) return [];
-    const data = await fetchAPI(`/publications?filters[authors][$contains]=${authorSlug}&populate=*&sort=year:desc`);
+    const params = new URLSearchParams({
+      'filters[authors][slug][$eq]': authorSlug,
+      populate: [
+        'authors',
+        'authors.department',
+        'projects',
+        'projects.domains',
+        'projects.lead',
+        'domain',
+      ].join(','),
+      sort: 'year:desc',
+    });
+    const data = await fetchAPI(`/publications?${params.toString()}`);
     return data.data || [];
   } catch (error) {
     console.error('Failed to fetch publications by author:', error);
@@ -128,10 +261,49 @@ export async function getPublicationsByAuthor(authorSlug) {
 export async function getProjectsByMember(memberSlug) {
   try {
     if (!memberSlug) return [];
-    const data = await fetchAPI(`/projects?filters[$or][0][lead][$contains]=${memberSlug}&filters[$or][1][members][$contains]=${memberSlug}&populate=*&sort=title:asc`);
+    const params = new URLSearchParams({
+      populate: [
+        'lead',
+        'lead.department',
+        'members',
+        'members.department',
+        'domains',
+        'publications',
+        'publications.authors',
+        'publications.domain',
+      ].join(','),
+      sort: 'title:asc',
+      'filters[$or][0][lead][slug][$eq]': memberSlug,
+      'filters[$or][1][members][slug][$eq]': memberSlug,
+    });
+    const data = await fetchAPI(`/projects?${params.toString()}`);
     return data.data || [];
   } catch (error) {
     console.error('Failed to fetch projects by member:', error);
+    return [];
+  }
+}
+
+export async function getDepartments() {
+  try {
+    const params = new URLSearchParams({
+      populate: [
+        'people',
+        'people.projects',
+        'people.leading_projects',
+        'people.publications',
+        'projects',
+        'projects.lead',
+        'projects.members',
+        'projects.publications',
+        'publications',
+      ].join(','),
+      sort: 'name:asc',
+    });
+    const data = await fetchAPI(`/departments?${params.toString()}`);
+    return data.data || [];
+  } catch (error) {
+    console.error('Failed to fetch departments:', error);
     return [];
   }
 }
@@ -141,62 +313,167 @@ export async function getProjectsByMember(memberSlug) {
  * This helps reduce the changes needed in existing components
  */
 export function transformStaffData(strapiStaff) {
-  if (!Array.isArray(strapiStaff)) return [];
-  
-  return strapiStaff.map(person => ({
-    id: person.id,
-    slug: person.attributes?.slug || '',
-    name: person.attributes?.name || '',
-    title: person.attributes?.title || '',
-    phone: person.attributes?.phone || '',
-    email: person.attributes?.email || '',
-    department: person.attributes?.department || '',
-    image: person.attributes?.image?.data?.attributes?.url || person.attributes?.image || '',
-    bio: person.attributes?.bio || '',
-    // Keep original Strapi structure for advanced usage
-    _strapi: person
-  }));
+  const list = Array.isArray(strapiStaff) ? strapiStaff : strapiStaff ? [strapiStaff] : [];
+
+  return list.map((person) => {
+    const attributes = person?.attributes ?? {};
+    const departmentEntry = attributes.department?.data;
+    const departmentAttributes = departmentEntry?.attributes ?? {};
+
+    const department = departmentEntry
+      ? {
+          id: departmentEntry.id,
+          slug: departmentAttributes.slug || '',
+          name: departmentAttributes.name || '',
+          description: stripHtml(
+            departmentAttributes.description ||
+              departmentAttributes.markdown ||
+              departmentAttributes.content ||
+              ''
+          ),
+        }
+      : null;
+
+    const leadingProjects = toArray(attributes.leading_projects?.data).map((project) => ({
+      id: project?.id ?? null,
+      slug: project?.attributes?.slug || '',
+      title: project?.attributes?.title || '',
+    }));
+
+    const memberProjects = toArray(attributes.projects?.data).map((project) => ({
+      id: project?.id ?? null,
+      slug: project?.attributes?.slug || '',
+      title: project?.attributes?.title || '',
+    }));
+
+    const publications = toArray(attributes.publications?.data).map((pub) => ({
+      id: pub?.id ?? null,
+      slug: pub?.attributes?.slug || '',
+      title: pub?.attributes?.title || '',
+      year: pub?.attributes?.year ?? null,
+    }));
+
+    const image = resolveMediaUrl(attributes.image) || attributes.image || '';
+
+    return {
+      id: person?.id ?? null,
+      slug: attributes.slug || '',
+      name: attributes.full_name || attributes.name || '',
+      title: attributes.title || '',
+      phone: attributes.phone || '',
+      email: attributes.email || '',
+      role: attributes.role || '',
+      category: attributes.category || '',
+      department: department?.name || '',
+      departmentInfo: department,
+      image,
+      bio: stripHtml(attributes.bio) || '',
+      leadingProjects,
+      memberProjects,
+      publications,
+      _strapi: person,
+    };
+  });
 }
 
 /**
  * Helper function to transform publication data
  */
 export function transformPublicationData(strapiPubs) {
-  if (!Array.isArray(strapiPubs)) return [];
-  
-  return strapiPubs.map(pub => ({
-    id: pub.id,
-    title: pub.attributes?.title || '',
-    year: pub.attributes?.year || new Date().getFullYear(),
-    domain: pub.attributes?.domain || '',
-    kind: pub.attributes?.kind || '',
-    description: pub.attributes?.description || '',
-    authors: pub.attributes?.authors || [],
-    docUrl: pub.attributes?.docUrl || '',
-    // Keep original Strapi structure
-    _strapi: pub
-  }));
+  const list = Array.isArray(strapiPubs) ? strapiPubs : strapiPubs ? [strapiPubs] : [];
+
+  return list.map((pub) => {
+    const attributes = pub?.attributes ?? {};
+
+    const authors = toArray(attributes.authors?.data).map((author) => ({
+      id: author?.id ?? null,
+      slug: author?.attributes?.slug || '',
+      name: author?.attributes?.full_name || author?.attributes?.name || '',
+    }));
+
+    const projects = toArray(attributes.projects?.data).map((project) => ({
+      id: project?.id ?? null,
+      slug: project?.attributes?.slug || '',
+      title: project?.attributes?.title || '',
+    }));
+
+    const domainEntry = attributes.domain?.data;
+    const domain = domainEntry?.attributes?.name || attributes.domain || '';
+
+    return {
+      id: pub?.id ?? null,
+      slug: attributes.slug || '',
+      title: attributes.title || '',
+      year: attributes.year ?? null,
+      domain,
+      kind: attributes.kind || '',
+      description: stripHtml(attributes.description) || '',
+      authors,
+      docUrl: attributes.doc_url || attributes.docUrl || attributes.external_url || attributes.externalUrl || '',
+      projects,
+      _strapi: pub,
+    };
+  });
 }
 
 /**
  * Helper function to transform project data
  */
 export function transformProjectData(strapiProjects) {
-  if (!Array.isArray(strapiProjects)) return [];
-  
-  return strapiProjects.map(project => ({
-    id: project.id,
-    title: project.attributes?.title || '',
-    lead: project.attributes?.lead || '',
-    abstract: project.attributes?.abstract || '',
-    themes: project.attributes?.themes || [],
-    teams: project.attributes?.teams || [],
-    region: project.attributes?.region || '',
-    domain: project.attributes?.domain || [],
-    partners: project.attributes?.partners || [],
-    docUrl: project.attributes?.docUrl || '',
-    oficialUrl: project.attributes?.oficialUrl || '',
-    // Keep original Strapi structure
-    _strapi: project
-  }));
+  const list = Array.isArray(strapiProjects) ? strapiProjects : strapiProjects ? [strapiProjects] : [];
+
+  return list.map((project) => {
+    const attributes = project?.attributes ?? {};
+
+    const domains = toArray(attributes.domains?.data).map((department) => ({
+      id: department?.id ?? null,
+      slug: department?.attributes?.slug || '',
+      name: department?.attributes?.name || '',
+    }));
+
+    const members = toArray(attributes.members?.data).map((member) => ({
+      id: member?.id ?? null,
+      slug: member?.attributes?.slug || '',
+      name: member?.attributes?.full_name || member?.attributes?.name || '',
+      title: member?.attributes?.title || '',
+    }));
+
+    const publications = toArray(attributes.publications?.data).map((pub) => ({
+      id: pub?.id ?? null,
+      slug: pub?.attributes?.slug || '',
+      title: pub?.attributes?.title || '',
+      year: pub?.attributes?.year ?? null,
+    }));
+
+    const lead = attributes.lead?.data
+      ? {
+          id: attributes.lead.data.id,
+          slug: attributes.lead.data.attributes?.slug || '',
+          name:
+            attributes.lead.data.attributes?.full_name ||
+            attributes.lead.data.attributes?.name ||
+            '',
+        }
+      : attributes.lead || '';
+
+    return {
+      id: project?.id ?? null,
+      slug: attributes.slug || '',
+      title: attributes.title || '',
+      abstract: attributes.abstract || '',
+      themes: Array.isArray(attributes.themes) ? attributes.themes : toArray(attributes.themes),
+      partners: Array.isArray(attributes.partners) ? attributes.partners : toArray(attributes.partners),
+      region: attributes.region || '',
+      domains,
+      domain: domains.map((d) => d.name).filter(Boolean),
+      members,
+      publications,
+      lead,
+      leadName: typeof lead === 'string' ? lead : lead?.name || '',
+      docUrl: attributes.doc_url || attributes.docUrl || '',
+      oficialUrl: attributes.official_url || attributes.oficialUrl || attributes.officialUrl || '',
+      teams: members.map((member) => ({ name: member.slug, title: member.title })),
+      _strapi: project,
+    };
+  });
 }

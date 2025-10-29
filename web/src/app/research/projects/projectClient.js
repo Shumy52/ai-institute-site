@@ -3,7 +3,6 @@
 import { useMemo, useState } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { proData } from "@/app/data/proData"; 
 
 /* Animations */
 const containerVariants = {
@@ -42,7 +41,7 @@ const normalizeProject = (p) => {
   };
 };
 
-export default function ProjectsClient() {
+export default function ProjectsClient({ projects: rawProjects = [] }) {
   // ---- State filtre ----
   const [q, setQ] = useState("");
   const [regionFilter, setRegionFilter] = useState("");
@@ -51,9 +50,9 @@ export default function ProjectsClient() {
   const [memberFilter, setMemberFilter] = useState("");
 
   const projects = useMemo(() => {
-    const src = Array.isArray(proData) ? proData : [];
+    const src = Array.isArray(rawProjects) ? rawProjects : [];
     return src.map(normalizeProject).filter((p) => p.title);
-  }, []);
+  }, [rawProjects]);
 
   const { regionOptions, domainOptions, leadOptions, memberOptions } = useMemo(() => {
     const regions = new Set();

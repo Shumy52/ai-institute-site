@@ -9,6 +9,8 @@ import units from "@/app/data/departments/researchUnitsData.json";
 import { proData } from "@/app/data/proData";
 import { pubData } from "@/app/data/pubData";
 
+// TODO: Remove slug creators, can be integrated into Strapi
+
 const researchUnits = Array.isArray(units) ? units : [];
 
 /* --- Animations --- */
