@@ -32,6 +32,7 @@ services:
     restart: always
     environment:
       NODE_ENV: production
+      STRAPI_API_TOKEN: ${STRAPI_API_TOKEN}
     ports:
       - "3000:3000"
     depends_on:
