@@ -22,7 +22,6 @@ const engagementMenu = [
   { href: '/engagement/industry', label: 'Industry engagement' },
   { href: '/engagement/high-school', label: 'High-school engagement' },
   { href: '/engagement/partners', label: 'Partners' },
-  { href: '/engagement/tech-transfer', label: 'Technology transfer & development' },
   { href: '/engagement/hpc-ai', label: 'HPC-AI services' },
   { href: '/engagement/industrial-phd', label: 'Industrial PhD' },
 ];
