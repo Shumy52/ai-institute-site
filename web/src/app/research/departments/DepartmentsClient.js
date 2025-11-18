@@ -9,6 +9,7 @@ import supUnits from "@/app/data/departments/supportUnitsData.json";
 import { allStaff } from "@/app/data/staffData";
 import { proData } from "@/app/data/proData";
 import { pubData } from "@/app/data/pubData";
+import { techTransferPage } from "./TechTransferClient.js";
 
 const researchUnits = Array.isArray(units) ? units : [];
 const supportUnits = Array.isArray(supUnits) ? supUnits : [];
@@ -560,6 +561,9 @@ export default function DepartmentsClient() {
                 {unitView === "details" && (
                   <motion.div variants={containerVariants} initial="hidden" animate="visible">
                     <motion.div variants={itemVariants} className="space-y-4">
+                      {selectedUnit.name==="Technology Transfer & Development Unit" && (
+                        <>{techTransferPage}</>
+                      )}
                       {selectedUnit.description && (
                         <p className="text-gray-700 dark:text-gray-300">{selectedUnit.description}</p>
                       )}
