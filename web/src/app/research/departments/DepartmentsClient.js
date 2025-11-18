@@ -434,7 +434,8 @@ export default function DepartmentsClient() {
     selectedUnit?.co_coordinator ||
     "";
   const elements = Array.isArray(selectedUnit?.elements) ? selectedUnit.elements : [];
-
+  
+  const isSupportUnit = selectedUnit?.type === "support" ? true : false;
   const unitMembersSorted = useMemo(
     () =>
       Array.isArray(unitMembers)
@@ -522,7 +523,11 @@ export default function DepartmentsClient() {
                 >
                   <div className="flex justify-center md:justify-start">
                     <div className="inline-flex rounded-xl border border-gray-200 dark:border-gray-800 overflow-hidden max-w-full overflow-x-auto whitespace-nowrap">
-                      {[
+                      {isSupportUnit ? (
+                        <p className="px-4 py-2 text-sm font-medium focus:outline-none bg-blue-600 text-white dark:bg-blue-500">Details</p>
+                      ) : (
+                        <>
+                          {[
                         { id: "details", label: "Details" },
                         { id: "themes", label: "Themes" },
                         { id: "projects", label: "Projects" },
@@ -530,6 +535,7 @@ export default function DepartmentsClient() {
                         { id: "publications", label: "Publications" },
                       ].map((it) => {
                         const active = unitView === it.id;
+                        
                         return (
                           <button
                             key={it.id}
@@ -545,6 +551,8 @@ export default function DepartmentsClient() {
                           </button>
                         );
                       })}
+                        </>
+                      )}
                     </div>
                   </div>
                 </div>

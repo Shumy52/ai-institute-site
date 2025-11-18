@@ -21,7 +21,8 @@
                     ""
                 ]
             }
-        ]
+        ],
+        "type": "support" 
     },
     {
         "name": "Validation Center",
@@ -45,6 +46,7 @@
                     ""
                 ]
             }
-        ]
+        ],
+        "type": "support" 
     }
 ]
