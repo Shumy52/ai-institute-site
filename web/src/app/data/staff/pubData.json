@@ -1,0 +1,12 @@
+[
+ 
+  {
+    "title": "Deep Clustering for Blood Cell Classification and Quantification",
+    "year": 2024,
+    "domain": "Robotics for healthcare",
+    "kind": "Article",
+    "description": "Accurate classification of blood cells plays a key role in improving automated blood analysis for both medical and veterinary applications. This work presents a two-stage deep clustering method for classifying blood cells from high-dimensional signal data. In the first stage, red blood cells (RBCs) and platelets (PLTs) are separated using a combination of an improved autoencoder and the IDEC algorithm. The second stage further classifies RBC subtypes, pure RBCs, reticulocytes, and clumped RBCs, through a variational deep embedding (VaDE) approach. Due to the lack of detailed cell-level labels, soft classification probabilities are generated from sample-level data to approximate the true distributions. The aim is to contribute to the development of low-cost, automated blood analysis systems suitable for veterinary and biomedical use. Initial results indicate this method shows promise in effectively distinguishing different blood cell populations, even with limited supervision.",
+    "authors": ["AdrianPetru-Groza", "MihaelaMacarie-Ancau"],
+    "docUrl": "/publications/DeepFlow.pdf#toolbar=1"
+  }
+]

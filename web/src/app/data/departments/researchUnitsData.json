@@ -1,0 +1,293 @@
+[
+    {
+        "name": "Software and Hardware for AI",
+        "description": [
+            "Our department is also active in the field of artificial intelligence, with applications in: robotics and nonlinear control, neuroscience, big data man-agement and analysis, energy transition and sustainability, agentic AI, and knowledge representation, also addressing challenges related to the deployment of AI models in distributed environments.",
+            "In robotics and nonlinear control, research topics range from intelligent perception and control for robots; through AI-based methods for fundamental nonlinear optimal control, networked systems, and estimation; to fundamental algorithms and software for reinforcement learning and deep neural networks. These methods are applied in marine, ground, and aerial robotics, precision agriculture, medicine, rehabilitation robotics, and more.",
+            "Research in neuroscience carried out by the department’s team involves developing machine learning techniques for spike sorting and burst detection, EEG data analysis, and mapping functional brain networks using graph neural models. In collaboration with the Transylvanian Institute of Neuroscience, the team aims to develop computational tools for analyzing neural and brain activity.",
+            "In the area of big data, the teams develop and adapt advanced AI techniques, including Transformer and LLM models, deep neural networks, large-scale language models, and reinforcement learning, to support decision-making and enable predictive as well as descriptive analytics (e.g., predictive maintenance, modeling user behaviors in household scenarios, energy consumption profiling, etc.). Research also explores scalable storage systems, visualization techniques, and preprocessing methods for data cleaning and transformation. While the main focus is on IoT data, the developed techniques are not limited to it and can be applied to other types of data.",
+            "In the direction of energy transition and sustainability, research topics include advanced AI, blockchain, and distributed control techniques to support decision-making in energy network management and to perform predictive analyses related to energy demand and supply, consumption optimization, and renewable integration. These approaches enable the development of decentralized, secure, and privacy-preserving energy markets as well as the modeling and digitization of industrial processes. They also include the design and implementation of smart contracts for automated energy transactions, AI mechanisms for peer-to-peer trading without the need for a trusted intermediary, and tokenized ecosystems to incentivize distributed production and prosumer participation",
+            "Research themes also include the development of explainable AI models, by creating algorithms capable of explaining decisions—a crucial area in the application of AI in sensitive sectors.",
+            "Agent-based technologies target:"
+        ],
+        "coordonator": "Lucian Busoniu",
+        "co-coordonator": "Camelia Lemnaru",
+        "elements": [
+            {
+                "text": "Simulations for training autonomous agents (reinforcement learning for agents acting in complex environments such as industrial robots, autonomous vehicles, drones)",
+                "content": [
+                    ""
+                ]
+            },
+            {
+                "text": "Multi-agent coordination and planning, optimizing the behavior of large groups of agents (robot fleets, teams of software agents) using distributed planning algorithms that require intensive computation",
+                "content": [
+                    ""
+                ]
+            },      
+            {
+                "text": "Real-time execution of large models for agents (e.g., industrial assistants interpreting sensors and technical documentation to provide operators with instructions",
+                "content": [
+                    ""
+                ]
+            },
+            {
+                "text": "Optimization and continuous learning (e.g., rapid retraining of AI models on newly collected field data, with immediate deployment of updated versions to active agents)",
+                "content": [
+                    ""
+                ]
+            },
+            {
+                "text": "Knowledge representation and reasoning over this knowledge",
+                "content": [
+                    ""
+                ]
+            }
+        ]
+    },
+    {
+        "name": "Robotics for healthcare",
+        "description": "The research program focuses on four major directions addressing critical needs for innovation across multiple medical specialties.",
+        "coordonator": "Doina Pisla",
+        "co-coordonator": "",
+        "elements": [
+            {
+                "text": "Artificial Intelligence & Robotics in Cancer Diagnosis and Treatment",
+                "content": [
+                    "New robotic systems and instruments. Robotic surgery for minimally invasive, precise interventions. Targeted radiotherapy where robots ensure accurate positioning and AI algorithms optimize treatment parameters (exposure time, dose, frequency).",
+                    "Personalized cancer treatments. AI-driven decision systems to create individualized treatment plans using patient history, genetics, and imaging data.Predictive models that estimate treatment effectiveness and risk of recurrence, adapting plans in real time.",
+                    "Robots and AI for differential diagnosis.",
+                    "Robotic-assisted biopsies and ultrasound systems for precise early detection.",
+                    "AI algorithms to analyze imaging and pathology data, improving accuracy in early-stage diagnosis. AI-based ultrasound systems. Early detection and monitoring of lung cancer: low-cost, portable, real-time evaluation and guided biopsies. Non-invasive diagnosis of diffuse lung diseases using AI- enhanced thoracic ultrasound. AI-augmented ultrasound for lymph node analysis, critical for cancer staging and treatment decisions."
+                ]
+            },
+            {
+                "text": "Artificial Intelligence Robotics in Oral Surgery and Dentistry",
+                "content": [
+                    "Robotic implantology and AI imaging. More precise implant placement, even in patients with poor bone structure. Improved alignment of multiple implants.",
+                    "3D navigation and vision system. Integration of robotics and AI to monitor surgery in real time. Automated treatment planning based on patient-specific anatomical data."
+                ]
+            },
+            {
+                "text": "AI & Robotics in Neurorehabilitation",
+                "content": [
+                    "Neurological disorders are among the fastest-growing global health challenges (stroke, Parkinson’s disease, multiple sclerosis). WHO warns that by 2030, health systems may no longer cope with demand.",
+                    "Main directions:",
+                    "Adaptive robotic solutions: modular devices for hospitals and home rehabilitation.",
+                    "Human–robot interaction models: multimodal sensors + AI for patient evaluation, progress track-ing, and real-time therapy adjustment.",
+                    "AI-driven control strategies: personalized rehabilitation programs combining medical and technical data for both physical and cognitive recovery."
+                ]
+            },
+            {
+                "text": "AI & Robotics in Human–Robot Medical Interaction",
+                "content": [
+                    "Aging populations and longer life expectancy demand new approaches for healthy aging and telemedicine.",
+                    "Telemedicine systems: Robotic platforms for remote investigations (tele-ultrasound) and long-term rehabilitation programs.",
+                    "AI patient monitoring: Continuous, non-invasive tracking of vital and cognitive parameters. Early detection of acute events (falls, heart attacks) and monitoring of chronic conditions (mobility, hyper-tension, cognition)."
+                ]
+            }
+        ]
+    },
+    {
+        "name": "Autonomous Systems",
+        "description": "Dedicated to the research and implementation of intelligent systems with autonomous capabilities.",
+        "coordonator": "Sergiu Nedevschi",
+        "co-coordonator": "Florin Oniga",
+        "elements": [
+            {
+                "text": "Autonomous drones for data collection and processing in various application domains",
+                "content": [
+                    "More information coming soon"
+                ]
+            },
+            {
+                "text": "Multimodal AI solutions for holistic environment representation, capable of providing advanced support in analysis, prediction, and decision-making",
+                "content": [
+                    "More information coming soon"
+                ]
+            },
+            {
+                "text": "Perception, representation, and environment understanding systems for autonomous civil or industrial vehicles",
+                "content": [
+                    "More information coming soon"
+                ]
+            },
+            {
+                "text": "Multisensory and multimodal perception, representation, and environment understanding systems for cyber-physical systems",
+                "content": [
+                    "More information coming soon"
+                ]
+            }
+        ]
+    },
+    {
+        "name": "Robotics and IoT",
+        "description": "The Robotics & IoT Department of ICIA offers an extensive range of RDI services (Research–Development–Innovation) tailored to the needs of SMEs in industry, public administration, and services, with a strong focus on applied artificial intelligence, intelligent robotics, and industrial digitalization. ",
+        "coordonator": "Stelian Brad",
+        "co-coordonator": "Valentin Sita",
+        "elements": [
+            {
+                "text": "Applied Research and Experimental Development Services",
+                "content": [
+                    "AI modeling and development for industrial applications: defect detection, predictive maintenance, energy optimization, adapted to real industrial use cases.",
+                    "Design and validation of robotic systems: collaborative, mobile, or autonomous robots with inte-grated algorithms for adaptive control, navigation, and human–robot interaction.",
+                    "Edge AI and Industrial IoT (I-IoT) for smart factories: developing modules for data collection,local processing, and integration into hybrid PLC/SCADA networks.",
+                    "Prototyping and functional testing with digital twins: behavioral simulation, ergonomic-functional testing, validation before investment."
+                ]
+            },
+            {
+                "text": "Industrial Testing, Validation, and Optimization Services",
+                "content": [
+                    "Intelligent visual inspection systems: industrial cameras + AI for defect detection, mounted on collaborative robots or inspection cells.",
+                    "Navigation and robotic collaboration testing in semi-structured environments: validation of obstacle avoidance algorithms, object recognition, adaptive motion planning based on context.",
+                    "Validation of AI models on in-house and client-side infrastructure (“Zero-Data Lab”): real-condition testing with federated learning, without raw data transfer."
+                ]
+            },
+            {
+                "text": "Digitalization and Smart Transformation Services",
+                "content": [
+                    "Digital Twin-as-a-Service: operational data upload, automated twin generation, scenario execution, and personalized simulations.",
+                    "Process simulation and optimization with LLM + RoboDK/Anylogic: the operator describes the problem, AI proposes and tests optimization scenarios.",
+                    "Cloud platforms for SMEs (AI Factory): execution environment for AI models, training and inter-preting results without programming knowledge."
+                ]
+            },
+            {
+                "text": "Software/Hardware Development Services",
+                "content": [
+                    "Integrated AI + robotics systems for decentralized micro-manufacturing: plug-and-play platforms with industrial connectivity and real-time AI control.",
+                    "Industrial AI appliances (“AI on a pallet”): preconfigured edge devices for quality control or energy management.",
+                    "Retrofit kits for industrial vision: camera + AI + lighting, installed in one day, result-based pricing model."
+                ]
+            },
+            {
+                "text": "AI-Assisted Invention Services (AI-Inventor Lab)",
+                "content": [
+                    "Product and process design with AI + TRIZ: idea generation, simulations, optimizations, documentation for patenting or industrialization.",
+                    "Prompt Engineering for SMEs: generation of business plans, operating models, financial simulations, marketing optimization.",
+                    "Testing disruptive technologies and ideas through AI simulations and “white space” concept exploration."
+                ]
+            },
+            {
+                "text": "Support and Consulting Services for Scaling and Implementation",
+                "content": [
+                    "AI audit for industrial processes: robustness and compliance analysis with the AI Act, including the in-house “AI Wind Tunnel” service.",
+                    "Patent and technology licensing services: for prototypes, AI modules, and robotic applications developed in collaboration with SMEs.",
+                    "Training & education through the AI Academy for Industry: certified courses, bootcamps, digital onboarding via social robots."
+                ]
+            },
+            {
+                "text": "Support Services for Funded Projects and Grants",
+                "content": [
+                    "AI for Grants – transforming digitalization plans into eligible applications for Horizon Europe, Digital Europe, etc",
+                    "Consulting and implementation services for smart city strategies, administration digitalization, and intelligent micro-factory networks.",
+                    "Most of these services will be offered as RDI projects, technology transfer contracts, SaaS packages, pilot services, or subscriptions. Priority will be given to SMEs collaborating directly with the department during 2025–2027, under the subsidiary contracts of the project."
+                ]
+            }
+        ]
+    },
+    {
+        "name": "Microelectronics",
+        "description": "The Microelectronics Department within PICIA aims to address eight research themes. Each of these themes highlights how artificial intelligence (AI) can facilitate and improve the 2 design, analysis, and manufacturing processes in the field of integrated circuits, thus contributing to the development of more advanced and efficient technologies.",
+        "coordonator": "Marius Purcar",
+        "co-coordonator": "Marius Neag",
+        "elements": [
+            {
+                "text": "AI Applications in the Optimal Design of Integrated Systems and Circuits",
+                "content": [
+                    "AI can significantly enhance the design process of integrated circuits by using machine learning algorithms to optimize circuit topology, reduce power consumption, and maximize performance. This reduces development and testing time, enabling engineers to explore more configurations and implement innovative solutions. This also includes new methodologies and AI-based solutions for system-and circuit-level design and testing."
+                ]
+            },
+            {
+                "text": "I-Based Software Tools for Fast Determination of Electro-Thermal Parameters in Integrated Circuits",
+                "content": [
+                    "The use of AI in software tools can accelerate electro-thermal analysis, enabling rapid identification of parasitic parameters such as induced resistances and capacitances. This information is essential for improving circuit reliability and meeting performance standards."
+                ]
+            },
+            {
+                "text": "AI-Optimized Signal Processing Platforms",
+                "content": [
+                    "AI can be applied to create more adaptive and efficient signal processing algorithms, optimizing the performance of signal processing platforms. Such solutions can handle and analyze complex signals used in wireless communications, radar, or medical imaging."
+                ]
+            },
+            {
+                "text": "AI-Based Yield Analysis and Post-Silicon Verification",
+                "content": [
+                    "By applying AI techniques, predictive analyses can estimate the yield of integrated circuits before fabrication (pre-silicon). This helps identify potential design issues early and improves the verification process, reducing costs and time associated with later design modifications."
+                ]
+            },
+            {
+                "text": "Multi-Variable Analysis of Integrated Circuits and Systems Using AI",
+                "content": [
+                    "Machine learning techniques are essential for streamlining pre-silicon verification and characterization of integrated circuits and systems, drastically reducing the number of required simulations."
+                ]
+            },
+            {
+                "text": "Research on New ASIC Design and Testing Technologies for Smart Sensors",
+                "content": [
+                    "AI can revolutionize the design of application-specific integrated circuits (ASICs) by automating the design and optimization processes. Research focuses on developing advanced techniques that enable the creation of smart sensors capable of real-time data processing and adaptive functionality based on environmental and external stimuli."
+                ]
+            },
+            {
+                "text": "Scaling 3D “Time of Flight” Technology for Cameras",
+                "content": [
+                    "This research theme targets depth detection methods, extended dynamic range, and improved detection capacity. The aim is to integrate AI-based system-level solutions to simplify integration and shorten product development cycles while reducing risks and costs. This requires configurable, preinstalled computer vision algorithms that maximize the data provided by 3D depth sensors, coupled with embedded AI-capable processors."
+                ]
+            },
+            {
+                "text": "Testing and Standardization Methodologies for Electromagnetic Compatibility (EMC)",
+                "content": [
+                    "Electromagnetic compatibility is essential in the design, testing, and development of any system. This research theme focuses on co-design processes that reduce power consumption, shorten execution and certification times (e.g., EMC), improve security, and automate processes through:",
+                    "Preliminary pre-compliance EMC analyses for proposed equipment.",
+                    "Radiated emission and immunity tests in accordance with standards agreed with industrial partners, adhering both to European regulations and to manufacturer-specific requirements.",
+                    "Testing integrated systems for electrostatic discharge (ESD) and identifying immunity issues caused by poor wiring, inadequate system composition, or grounding problems.",
+                    "Analysis of potential human exposure risks in the vicinity of developed equipment and systems."
+                ]
+            }
+        ]
+    },
+    {
+        "name": "Cybersecurity and Space",
+        "description": [
+            "The Department of Cybersecurity and Space Applications explores the wide-ranging applications of artificial intelligence in ensuring cybersecurity. The group includes members from the Department of Communications within the Faculty of Electronics, Telecommunications and Information Technology, as well as from the Department of Computer Science within the Faculty of Automation and Computer Science.",
+            "Within each department, members typically come from research laboratories, such as:",
+            "Unified Communications in Cloud (UC Labs), coordinated by Prof. Dr. Eng. Virgil-Mircea Dobrota",
+            "Data Processing and Security Center (CCPSD), coordinated by Prof. Dr. Eng. Romulus-Mircea Terebes, within the Department of Communications",
+            "Cybersecurity for Defense and Attack Resilience (CYDAR), coordinated by Assoc. Prof. Dr. Eng. Adrian-Viorel Coles, a, within the Department of Computer Science",
+            "Reseach themes:"
+        ],
+        "coordonator": "Daniel Zinca",
+        "co-coordonator": "Adrian Coleșa",
+        "elements": [
+            {
+                "text": "Development of intrusion detection and prevention systems using artificial intelligence algorithms",
+                "content": [
+                    ""
+                ]
+            },
+            {
+                "text": "Traffic analysis to detect unauthorized use of equipment and protocols within the institution, as well as unauthorized operations involving the extraction of confidential data and its transmission outside the institution.",
+                "content": [
+                    ""
+                ]
+            },
+            {
+                "text": "The use of Generative Adversarial Networks (GANs), which have multiple applications in the field of cybersecurity",
+                "content": [
+                    ""
+                ]
+            },
+            {
+                "text": "Cybersecurity for intelligent agents",
+                "content": [
+                    ""
+                ]
+            },
+            {
+                "text": "Vulnerability detection at code level using artificial intelligence",
+                "content": [
+                    ""
+                ]
+            }
+        ]
+    }
+]
