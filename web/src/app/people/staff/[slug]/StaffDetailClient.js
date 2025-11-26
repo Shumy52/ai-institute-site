@@ -17,6 +17,12 @@ export default function StaffDetailClient({ person, publications, projects, slug
   const [pDomainFilter, setPDomainFilter] = useState("");
   const [pLeadFilter, setPLeadFilter] = useState("");
 
+  const getLeadName = (project) =>
+    project?.leadName ||
+    (typeof project?.lead === "string"
+      ? project.lead
+      : project?.lead?.name || "");
+
   const slugify = (s) =>
     String(s || "")
       .normalize("NFD")
@@ -54,7 +60,8 @@ export default function StaffDetailClient({ person, publications, projects, slug
 
     projects.forEach((p) => {
       (Array.isArray(p.domain) ? p.domain : []).forEach((d) => domainsSet.add(d));
-      if (p.lead) leadsSet.add(p.lead);
+      const leadName = getLeadName(p);
+      if (leadName) leadsSet.add(leadName);
     });
 
     return {
@@ -78,7 +85,7 @@ export default function StaffDetailClient({ person, publications, projects, slug
 
       const matchesSearch = !q || haystack.includes(q);
       const matchesDomain = !pDomainFilter || (Array.isArray(p.domain) && p.domain.includes(pDomainFilter));
-      const matchesLead = !pLeadFilter || p.lead === pLeadFilter;
+    const matchesLead = !pLeadFilter || getLeadName(p) === pLeadFilter;
 
       return matchesSearch && matchesDomain && matchesLead;
     });
@@ -294,10 +301,10 @@ export default function StaffDetailClient({ person, publications, projects, slug
               {filteredProjects.length ? (
                 <ul className="space-y-4">
                   {filteredProjects.map((p, i) => {
-                    const projectSlug = p?.title ? slugify(p.title) : `project-${i}`;
+                    const projectSlug = p?.slug || (p?.title ? slugify(p.title) : `project-${i}`);
                     return (
                       <li
-                        key={i}
+                        key={p.slug || `${p.title}-${i}` || i}
                         className="rounded-xl border border-gray-200 dark:border-gray-800 p-4 hover:bg-gray-50 dark:hover:bg-gray-900"
                       >
                         <Link
@@ -305,9 +312,9 @@ export default function StaffDetailClient({ person, publications, projects, slug
                           className="block group"
                         >
                           <div className="font-medium group-hover:underline">{p.title}</div>
-                          {p.lead && (
+                          {getLeadName(p) && (
                             <div className="mt-1 text-sm text-gray-700 dark:text-gray-300">
-                              <span className="font-medium">Lead:</span> {p.lead}
+                              <span className="font-medium">Lead:</span> {getLeadName(p)}
                             </div>
                           )}
                           {p.abstract && (

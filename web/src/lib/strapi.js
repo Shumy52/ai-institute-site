@@ -25,6 +25,60 @@ const resolveMediaUrl = (media) => {
   return `${STRAPI_URL}${url.startsWith('/') ? url : `/${url}`}`;
 };
 
+const setPopulate = (params, baseKey, config = {}) => {
+  params.set(baseKey, 'true');
+
+  const fields = Array.isArray(config.fields) ? config.fields : [];
+  fields
+    .filter(Boolean)
+    .forEach((field, index) => {
+      params.append(`${baseKey}[fields][${index}]`, field);
+    });
+
+  const nestedPopulate = config.populate && typeof config.populate === 'object' ? config.populate : {};
+  Object.entries(nestedPopulate).forEach(([relation, relationConfig]) => {
+    setPopulate(params, `${baseKey}[populate][${relation}]`, relationConfig || {});
+  });
+};
+
+const DEPARTMENT_POPULATE = {
+  fields: ['name', 'slug', 'description'],
+};
+
+const PERSON_FIELDS = ['full_name', 'slug', 'title', 'email', 'phone'];
+
+const PERSON_FLAT_POPULATE = {
+  fields: PERSON_FIELDS,
+};
+
+const PERSON_WITH_IMAGE_POPULATE = {
+  fields: PERSON_FIELDS,
+  populate: {
+    image: {},
+  },
+};
+
+const PUBLICATION_POPULATE = {
+  fields: ['title', 'slug', 'year', 'kind', 'description', 'doc_url', 'external_url'],
+  populate: {
+    domain: DEPARTMENT_POPULATE,
+    projects: {
+      fields: ['title', 'slug'],
+    },
+    authors: PERSON_FLAT_POPULATE,
+  },
+};
+
+const PROJECT_POPULATE = {
+  fields: ['title', 'slug', 'abstract', 'region', 'themes', 'partners', 'doc_url', 'official_url'],
+  populate: {
+    domains: DEPARTMENT_POPULATE,
+    lead: PERSON_WITH_IMAGE_POPULATE,
+    members: PERSON_WITH_IMAGE_POPULATE,
+    publications: PUBLICATION_POPULATE,
+  },
+};
+
 /**
  * Helper function to make API calls to Strapi
  * @param {string} endpoint - The API endpoint (without /api prefix)
@@ -65,7 +119,7 @@ export async function fetchAPI(endpoint, options = {}) {
     console.error('Strapi API Error:', {
       message: error.message,
       url,
-  tokenAttached: !!(token && isServer),
+      tokenAttached: !!(token && isServer),
       stack: error.stack,
     });
 
@@ -81,24 +135,13 @@ export async function fetchAPI(endpoint, options = {}) {
 export async function getStaff() {
   try {
     // The person content-type uses `full_name` as the field, not `name`.
-    const params = new URLSearchParams({
-      populate: [
-        'department',
-        'image',
-        'projects',
-        'projects.domains',
-        'projects.lead',
-        'projects.members',
-        'publications',
-        'publications.domain',
-        'publications.projects',
-        'leading_projects',
-        'leading_projects.domains',
-        'leading_projects.members',
-        'leading_projects.publications',
-      ].join(','),
-      sort: 'full_name:asc',
-    });
+    const params = new URLSearchParams();
+    params.set('sort', 'full_name:asc');
+    setPopulate(params, 'populate[department]', DEPARTMENT_POPULATE);
+    setPopulate(params, 'populate[image]');
+    setPopulate(params, 'populate[projects]', PROJECT_POPULATE);
+    setPopulate(params, 'populate[leading_projects]', PROJECT_POPULATE);
+    setPopulate(params, 'populate[publications]', PUBLICATION_POPULATE);
     const data = await fetchAPI(`/people?${params.toString()}`);
     return data.data || [];
   } catch (error) {
@@ -116,25 +159,13 @@ export async function getStaffMember(slug) {
   try {
     if (!slug) return null;
     // Single person lookup - collection is `people` in Strapi
-    const params = new URLSearchParams({
-      'filters[slug][$eq]': slug,
-      populate: [
-        'department',
-        'image',
-        'projects',
-        'projects.domains',
-        'projects.lead',
-        'projects.members',
-        'projects.publications',
-        'leading_projects',
-        'leading_projects.domains',
-        'leading_projects.members',
-        'leading_projects.publications',
-        'publications',
-        'publications.domain',
-        'publications.projects',
-      ].join(','),
-    });
+    const params = new URLSearchParams();
+    params.set('filters[slug][$eq]', slug);
+    setPopulate(params, 'populate[department]', DEPARTMENT_POPULATE);
+    setPopulate(params, 'populate[image]');
+    setPopulate(params, 'populate[projects]', PROJECT_POPULATE);
+    setPopulate(params, 'populate[leading_projects]', PROJECT_POPULATE);
+    setPopulate(params, 'populate[publications]', PUBLICATION_POPULATE);
 
     const data = await fetchAPI(`/people?${params.toString()}`);
     return data.data?.[0] || null;
@@ -150,19 +181,12 @@ export async function getStaffMember(slug) {
  */
 export async function getProjects() {
   try {
-    const params = new URLSearchParams({
-      populate: [
-        'lead',
-        'lead.department',
-        'members',
-        'members.department',
-        'domains',
-        'publications',
-        'publications.authors',
-        'publications.domain',
-      ].join(','),
-      sort: 'title:asc',
-    });
+    const params = new URLSearchParams();
+    params.set('sort', 'title:asc');
+    setPopulate(params, 'populate[lead]', PERSON_WITH_IMAGE_POPULATE);
+    setPopulate(params, 'populate[members]', PERSON_WITH_IMAGE_POPULATE);
+    setPopulate(params, 'populate[domains]', DEPARTMENT_POPULATE);
+    setPopulate(params, 'populate[publications]', PUBLICATION_POPULATE);
     const data = await fetchAPI(`/projects?${params.toString()}`);
     return data.data || [];
   } catch (error) {
@@ -179,19 +203,12 @@ export async function getProjects() {
 export async function getProject(slug) {
   try {
     if (!slug) return null;
-    const params = new URLSearchParams({
-      'filters[slug][$eq]': slug,
-      populate: [
-        'lead',
-        'lead.department',
-        'members',
-        'members.department',
-        'domains',
-        'publications',
-        'publications.authors',
-        'publications.domain',
-      ].join(','),
-    });
+    const params = new URLSearchParams();
+    params.set('filters[slug][$eq]', slug);
+    setPopulate(params, 'populate[lead]', PERSON_WITH_IMAGE_POPULATE);
+    setPopulate(params, 'populate[members]', PERSON_WITH_IMAGE_POPULATE);
+    setPopulate(params, 'populate[domains]', DEPARTMENT_POPULATE);
+    setPopulate(params, 'populate[publications]', PUBLICATION_POPULATE);
     const data = await fetchAPI(`/projects?${params.toString()}`);
     return data.data?.[0] || null;
   } catch (error) {
@@ -206,17 +223,17 @@ export async function getProject(slug) {
  */
 export async function getPublications() {
   try {
-    const params = new URLSearchParams({
-      populate: [
-        'authors',
-        'authors.department',
-        'projects',
-        'projects.domains',
-        'projects.lead',
-        'domain',
-      ].join(','),
-      sort: 'year:desc',
+    const params = new URLSearchParams();
+    params.set('sort', 'year:desc');
+    setPopulate(params, 'populate[authors]', PERSON_FLAT_POPULATE);
+    setPopulate(params, 'populate[projects]', {
+      fields: ['title', 'slug'],
+      populate: {
+        lead: PERSON_FLAT_POPULATE,
+        domains: DEPARTMENT_POPULATE,
+      },
     });
+    setPopulate(params, 'populate[domain]', DEPARTMENT_POPULATE);
     const data = await fetchAPI(`/publications?${params.toString()}`);
     return data.data || [];
   } catch (error) {
@@ -233,18 +250,18 @@ export async function getPublications() {
 export async function getPublicationsByAuthor(authorSlug) {
   try {
     if (!authorSlug) return [];
-    const params = new URLSearchParams({
-      'filters[authors][slug][$eq]': authorSlug,
-      populate: [
-        'authors',
-        'authors.department',
-        'projects',
-        'projects.domains',
-        'projects.lead',
-        'domain',
-      ].join(','),
-      sort: 'year:desc',
+    const params = new URLSearchParams();
+    params.set('filters[authors][slug][$eq]', authorSlug);
+    params.set('sort', 'year:desc');
+    setPopulate(params, 'populate[authors]', PERSON_FLAT_POPULATE);
+    setPopulate(params, 'populate[projects]', {
+      fields: ['title', 'slug'],
+      populate: {
+        lead: PERSON_FLAT_POPULATE,
+        domains: DEPARTMENT_POPULATE,
+      },
     });
+    setPopulate(params, 'populate[domain]', DEPARTMENT_POPULATE);
     const data = await fetchAPI(`/publications?${params.toString()}`);
     return data.data || [];
   } catch (error) {
@@ -261,21 +278,14 @@ export async function getPublicationsByAuthor(authorSlug) {
 export async function getProjectsByMember(memberSlug) {
   try {
     if (!memberSlug) return [];
-    const params = new URLSearchParams({
-      populate: [
-        'lead',
-        'lead.department',
-        'members',
-        'members.department',
-        'domains',
-        'publications',
-        'publications.authors',
-        'publications.domain',
-      ].join(','),
-      sort: 'title:asc',
-      'filters[$or][0][lead][slug][$eq]': memberSlug,
-      'filters[$or][1][members][slug][$eq]': memberSlug,
-    });
+    const params = new URLSearchParams();
+    params.set('sort', 'title:asc');
+    params.set('filters[$or][0][lead][slug][$eq]', memberSlug);
+    params.set('filters[$or][1][members][slug][$eq]', memberSlug);
+    setPopulate(params, 'populate[lead]', PERSON_WITH_IMAGE_POPULATE);
+    setPopulate(params, 'populate[members]', PERSON_WITH_IMAGE_POPULATE);
+    setPopulate(params, 'populate[domains]', DEPARTMENT_POPULATE);
+    setPopulate(params, 'populate[publications]', PUBLICATION_POPULATE);
     const data = await fetchAPI(`/projects?${params.toString()}`);
     return data.data || [];
   } catch (error) {
@@ -286,20 +296,20 @@ export async function getProjectsByMember(memberSlug) {
 
 export async function getDepartments() {
   try {
-    const params = new URLSearchParams({
-      populate: [
-        'people',
-        'people.projects',
-        'people.leading_projects',
-        'people.publications',
-        'projects',
-        'projects.lead',
-        'projects.members',
-        'projects.publications',
-        'publications',
-      ].join(','),
-      sort: 'name:asc',
+    const params = new URLSearchParams();
+    params.set('sort', 'name:asc');
+    setPopulate(params, 'populate[people]', {
+      fields: PERSON_FIELDS,
+      populate: {
+        image: {},
+        department: DEPARTMENT_POPULATE,
+        projects: PROJECT_POPULATE,
+        leading_projects: PROJECT_POPULATE,
+        publications: PUBLICATION_POPULATE,
+      },
     });
+    setPopulate(params, 'populate[projects]', PROJECT_POPULATE);
+    setPopulate(params, 'populate[publications]', PUBLICATION_POPULATE);
     const data = await fetchAPI(`/departments?${params.toString()}`);
     return data.data || [];
   } catch (error) {
@@ -431,12 +441,19 @@ export function transformProjectData(strapiProjects) {
       name: department?.attributes?.name || '',
     }));
 
-    const members = toArray(attributes.members?.data).map((member) => ({
-      id: member?.id ?? null,
-      slug: member?.attributes?.slug || '',
-      name: member?.attributes?.full_name || member?.attributes?.name || '',
-      title: member?.attributes?.title || '',
-    }));
+    const members = toArray(attributes.members?.data).map((member) => {
+      const memberAttr = member?.attributes ?? {};
+      const image = resolveMediaUrl(memberAttr.image) || memberAttr.image || '';
+      return {
+        id: member?.id ?? null,
+        slug: memberAttr.slug || '',
+        name: memberAttr.full_name || memberAttr.name || '',
+        title: memberAttr.title || '',
+        email: memberAttr.email || '',
+        phone: memberAttr.phone || '',
+        image,
+      };
+    });
 
     const publications = toArray(attributes.publications?.data).map((pub) => ({
       id: pub?.id ?? null,
@@ -445,16 +462,32 @@ export function transformProjectData(strapiProjects) {
       year: pub?.attributes?.year ?? null,
     }));
 
-    const lead = attributes.lead?.data
+    const leadEntry = attributes.lead?.data;
+    const leadAttr = leadEntry?.attributes ?? {};
+    const leadDetails = leadEntry
       ? {
-          id: attributes.lead.data.id,
-          slug: attributes.lead.data.attributes?.slug || '',
-          name:
-            attributes.lead.data.attributes?.full_name ||
-            attributes.lead.data.attributes?.name ||
-            '',
+          id: leadEntry.id ?? null,
+          slug: leadAttr.slug || '',
+          name: leadAttr.full_name || leadAttr.name || '',
+          title: leadAttr.title || '',
+          email: leadAttr.email || '',
+          phone: leadAttr.phone || '',
+          image: resolveMediaUrl(leadAttr.image) || leadAttr.image || '',
         }
-      : attributes.lead || '';
+      : typeof attributes.lead === 'string' && attributes.lead.trim().length
+      ? {
+          id: null,
+          slug: '',
+          name: attributes.lead.trim(),
+          title: '',
+          email: '',
+          phone: '',
+          image: '',
+        }
+      : null;
+
+    const leadName = leadDetails?.name || '';
+    const leadSlug = leadDetails?.slug || '';
 
     return {
       id: project?.id ?? null,
@@ -468,11 +501,13 @@ export function transformProjectData(strapiProjects) {
       domain: domains.map((d) => d.name).filter(Boolean),
       members,
       publications,
-      lead,
-      leadName: typeof lead === 'string' ? lead : lead?.name || '',
+      lead: leadName,
+      leadName,
+      leadSlug,
+      leadDetails,
       docUrl: attributes.doc_url || attributes.docUrl || '',
       oficialUrl: attributes.official_url || attributes.oficialUrl || attributes.officialUrl || '',
-      teams: members.map((member) => ({ name: member.slug, title: member.title })),
+      teams: members.map((member) => ({ name: member.slug, title: member.title, fullName: member.name })),
       _strapi: project,
     };
   });

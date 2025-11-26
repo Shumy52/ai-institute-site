@@ -65,12 +65,18 @@ export default async function StaffDetailPage({ params }) {
       typeof project.lead === "string"
         ? project.lead
         : project.lead?.name || project.leadName || "";
+    const leadSlug =
+      typeof project.lead === "object" && project.lead
+        ? project.lead.slug || ""
+        : project.leadSlug || "";
 
     projectMap.set(key, {
       id: project.id ?? null,
       slug: project.slug || key,
       title: project.title || "",
       lead: leadName,
+      leadName,
+      leadSlug,
       abstract: project.abstract || "",
       themes: Array.isArray(project.themes) ? project.themes : [],
       teams: Array.isArray(project.teams) ? project.teams : [],
