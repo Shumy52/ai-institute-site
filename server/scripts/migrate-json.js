@@ -36,6 +36,12 @@ const resolveDataRoot = () => {
 const DATA_ROOT = resolveDataRoot();
 
 const nowISO = () => new Date().toISOString();
+const STATUS_MAP = {
+  personal: 'personal',
+  Personal: 'personal',
+  researchers: 'researcher',
+  Researchers: 'researcher',
+};
 
 const toKey = (value) =>
   String(value || '')
@@ -78,9 +84,38 @@ const extractString = (value) => {
   return value ? String(value).trim() : '';
 };
 
+const extractParagraphs = (value) => {
+  const list = Array.isArray(value) ? value : value ? [value] : [];
+  return list
+    .map((entry) => (typeof entry === 'string' ? entry.trim() : ''))
+    .filter(Boolean);
+};
+
+const toRichTextBlocks = (paragraphs) => {
+  if (!paragraphs.length) return [];
+  return [
+    {
+      __component: 'shared.rich-text',
+      body: paragraphs.join('\n\n'),
+    },
+  ];
+};
+
+const toFocusItems = (elements = []) =>
+  elements
+    .map((element) => {
+      const description = extractString(element?.content).trim();
+      if (!element?.text && !description) return null;
+      return {
+        title: element?.text || 'Details',
+        description,
+        richContent: description,
+      };
+    })
+    .filter(Boolean);
+
 const getDocId = (doc) => (doc && (doc.documentId || doc.id || doc.document_id)) || null;
 
-const pickFirst = (value) => (Array.isArray(value) ? value[0] : value);
 
 async function findDocument(uid, filters) {
   const payload = {
@@ -93,94 +128,111 @@ async function findDocument(uid, filters) {
   return results.length ? results[0] : null;
 }
 
-async function importDepartmentsAndResearchUnits(state) {
+async function importDepartments(state) {
   const units = await readJson('departments', 'researchUnitsData.json');
-  const departmentDocs = {};
-
-  console.log(`\n⏳ Importing departments & research units (${units.length} units detected)`);
+  console.log(`\n⏳ Importing departments (${units.length} units detected)`);
 
   for (const unit of units) {
     const name = String(unit?.name || '').trim();
     if (!name) continue;
 
     const normalizedKey = toKey(name);
-    if (state.departments[normalizedKey]) continue;
-
-    const description = extractString(unit?.description);
+    const paragraphs = extractParagraphs(unit?.description);
+    const description = paragraphs.join('\n\n');
+    const focusItems = toFocusItems(unit?.elements);
 
     const existing = await findDocument('api::department.department', {
       name: { $eqi: name },
     });
 
-    let departmentDoc = existing;
+    const baseData = {
+      name,
+      slug: toSlug(name),
+      summary: paragraphs[0] || '',
+      description,
+      body: toRichTextBlocks(paragraphs),
+      focusItems,
+      contactLinks: unit?.contactLinks || [],
+    };
 
-    if (!existing) {
-      departmentDoc = await strapi.documents('api::department.department').create({
-        data: {
-          name,
-          slug: toSlug(name),
-          description,
-          publishedAt: nowISO(),
-        },
-      });
-      console.log(`  ✅ created department: ${name}`);
+    let departmentDoc;
+    if (existing) {
+      departmentDoc = await strapi
+        .documents('api::department.department')
+        .update({
+          documentId: getDocId(existing),
+          data: baseData,
+        });
+      console.log(`  🔁 updated department: ${name}`);
     } else {
-      console.log(`  ◼︎ skipped existing department: ${name}`);
+      departmentDoc = await strapi
+        .documents('api::department.department')
+        .create({
+          data: {
+            ...baseData,
+            publishedAt: nowISO(),
+          },
+        });
+      console.log(`  ✅ created department: ${name}`);
     }
 
-    departmentDocs[normalizedKey] = departmentDoc;
     state.departments[normalizedKey] = departmentDoc;
     state.departmentsByName[name] = departmentDoc;
+    state.departmentMeta[normalizedKey] = {
+      coordinator: unit?.coordonator || unit?.coordinator || '',
+      coCoordinator: unit?.['co-coordonator'] || unit?.deputy_coordinator || '',
+    };
   }
+}
+
+async function importSupportUnits(state) {
+  const units = await readJson('departments', 'supportUnitsData.json');
+  console.log(`\n⏳ Importing support units (${units.length} units detected)`);
 
   for (const unit of units) {
     const name = String(unit?.name || '').trim();
     if (!name) continue;
 
-    const existing = await findDocument('api::research-unit.research-unit', {
+    const key = toKey(name);
+    const paragraphs = extractParagraphs(unit?.description);
+    const services = toFocusItems(unit?.elements);
+
+    const existing = await findDocument('api::support-unit.support-unit', {
       name: { $eqi: name },
     });
 
-    if (existing) {
-      console.log(`  ◼︎ skipped existing research unit: ${name}`);
-      state.researchUnits[toKey(name)] = existing;
-      continue;
-    }
-
-    const description = extractString(unit?.description);
-    const summaryCandidate = Array.isArray(unit?.description)
-      ? pickFirst(unit.description)
-      : unit?.description;
-    const summary = summaryCandidate ? String(summaryCandidate).trim().slice(0, 240) : '';
-
-    const departmentKey = toKey(name);
-    const departmentDoc = departmentDocs[departmentKey];
-    const departmentId = getDocId(departmentDoc);
-
-    const payload = {
+    const baseData = {
       name,
       slug: toSlug(name),
-      icon: unit?.icon || null,
-      summary,
-      description,
-      details: unit?.details || null,
-      elements: unit?.elements || [],
-      coordinator: unit?.coordonator || unit?.coordinator || '',
-      deputy_coordinator: unit?.['co-coordonator'] || unit?.deputy_coordinator || '',
-      publishedAt: nowISO(),
+      summary: paragraphs[0] || '',
+      mission: paragraphs.join('\n\n'),
+      body: toRichTextBlocks(paragraphs),
+      services,
+      contactLinks: unit?.contactLinks || [],
     };
 
-    if (departmentId) {
-      payload.departments = { connect: [departmentId] };
+    let supportDoc;
+    if (existing) {
+      supportDoc = await strapi
+        .documents('api::support-unit.support-unit')
+        .update({
+          documentId: getDocId(existing),
+          data: baseData,
+        });
+      console.log(`  🔁 updated support unit: ${name}`);
+    } else {
+      supportDoc = await strapi
+        .documents('api::support-unit.support-unit')
+        .create({
+          data: {
+            ...baseData,
+            publishedAt: nowISO(),
+          },
+        });
+      console.log(`  ✅ created support unit: ${name}`);
     }
 
-    const researchUnitDoc = await strapi.documents('api::research-unit.research-unit').create({
-      data: payload,
-    });
-
-    console.log(`  ✅ created research unit: ${name}`);
-
-    state.researchUnits[toKey(name)] = researchUnitDoc;
+    state.supportUnits[key] = supportDoc;
   }
 }
 
@@ -203,6 +255,8 @@ async function importPeople(state) {
 
     const slug = String(person?.slug || '').trim() || toSlug(fullName);
     const normalizedSlug = toKey(slug);
+    const categoryKey = toKey(person?.category);
+    const status = STATUS_MAP[person?.category] || STATUS_MAP[categoryKey] || 'researcher';
 
     if (state.peopleBySlug[slug] || state.peopleByKey[normalizedSlug]) {
       continue;
@@ -230,13 +284,13 @@ async function importPeople(state) {
     }
 
     const payload = {
-      full_name: fullName,
+      fullName,
       slug,
-      title: person?.title || '',
+      status,
+      titles: person?.title ? [person.title] : [],
+      position: person?.title || '',
       phone: person?.phone || '',
       email: person?.email || '',
-      role: '',
-      category: person?.category || '',
       publishedAt: nowISO(),
     };
 
@@ -266,6 +320,94 @@ function lookupPerson(state, value) {
   if (state.peopleByKey[normalized]) return state.peopleByKey[normalized];
 
   return null;
+}
+
+async function ensureTheme(state, name) {
+  const label = String(name || '').trim();
+  if (!label) return null;
+  const key = toKey(label);
+  if (state.themes[key]) return state.themes[key];
+
+  const slug = toSlug(label);
+  const existing = await findDocument('api::research-theme.research-theme', {
+    slug: { $eqi: slug },
+  });
+
+  if (existing) {
+    state.themes[key] = existing;
+    return existing;
+  }
+
+  const created = await strapi.documents('api::research-theme.research-theme').create({
+    data: {
+      name: label,
+      slug,
+      summary: '',
+      publishedAt: nowISO(),
+    },
+  });
+
+  state.themes[key] = created;
+  return created;
+}
+
+async function ensurePartner(state, name) {
+  const label = String(name || '').trim();
+  if (!label) return null;
+  const key = toKey(label);
+  if (state.partners[key]) return state.partners[key];
+
+  const slug = toSlug(label);
+  const existing = await findDocument('api::partner.partner', {
+    slug: { $eqi: slug },
+  });
+
+  if (existing) {
+    state.partners[key] = existing;
+    return existing;
+  }
+
+  const created = await strapi.documents('api::partner.partner').create({
+    data: {
+      name: label,
+      slug,
+      description: '',
+      publishedAt: nowISO(),
+    },
+  });
+
+  state.partners[key] = created;
+  return created;
+}
+
+async function attachDepartmentLeads(state) {
+  console.log('\n⏳ Linking department coordinators');
+
+  for (const [key, meta] of Object.entries(state.departmentMeta)) {
+    const department = state.departments[key];
+    if (!department) continue;
+
+    const data = {};
+    const coordinatorDoc = lookupPerson(state, meta?.coordinator);
+    const deputyDoc = lookupPerson(state, meta?.coCoordinator);
+
+    if (coordinatorDoc) {
+      const coordinatorId = getDocId(coordinatorDoc);
+      if (coordinatorId) data.coordinator = { connect: [coordinatorId] };
+    }
+
+    if (deputyDoc) {
+      const deputyId = getDocId(deputyDoc);
+      if (deputyId) data.coCoordinator = { connect: [deputyId] };
+    }
+
+    if (!Object.keys(data).length) continue;
+
+    await strapi.documents('api::department.department').update({
+      documentId: getDocId(department),
+      data,
+    });
+  }
 }
 
 async function importPublications(state) {
@@ -381,15 +523,31 @@ async function importProjects(state) {
 
     const partners = extractArray(proj?.partners).filter(Boolean);
 
+    const themeIds = [];
+    const themeNames = extractArray(proj?.themes);
+    for (const themeName of themeNames) {
+      const themeDoc = await ensureTheme(state, themeName);
+      const id = getDocId(themeDoc);
+      if (id) themeIds.push(id);
+    }
+
+    const partnerIds = [];
+    const partnerNames = partners.length ? partners : [];
+    for (const partnerName of partnerNames) {
+      const partnerDoc = await ensurePartner(state, partnerName);
+      const id = getDocId(partnerDoc);
+      if (id) partnerIds.push(id);
+    }
+
     const payload = {
       title,
       slug,
       abstract: proj?.abstract || '',
+      status: proj?.status || 'ongoing',
       region: proj?.region || 'national',
-      themes: Array.isArray(proj?.themes) ? proj.themes : [],
-      partners,
-      doc_url: proj?.docUrl || proj?.doc_url || '',
-      official_url: proj?.oficialUrl || proj?.officialUrl || '',
+      body: toRichTextBlocks(extractParagraphs(proj?.abstract)),
+      docUrl: proj?.docUrl || proj?.doc_url || '',
+      officialUrl: proj?.oficialUrl || proj?.officialUrl || '',
       publishedAt: nowISO(),
     };
 
@@ -407,6 +565,14 @@ async function importProjects(state) {
 
     if (publicationId) {
       payload.publications = { connect: [publicationId] };
+    }
+
+    if (themeIds.length) {
+      payload.themes = { connect: themeIds };
+    }
+
+    if (partnerIds.length) {
+      payload.partners = { connect: partnerIds };
     }
 
     const created = await strapi.documents('api::project.project').create({
@@ -453,13 +619,17 @@ async function importDatasets(state) {
         continue;
       }
 
+      const url = dataset?.url || dataset?.description;
       const payload = {
         title,
         slug,
-        summary: dataset?.description ? String(dataset.description).trim().slice(0, 240) : '',
+        summary: dataset?.description
+          ? String(dataset.description).trim().slice(0, 240)
+          : '',
         description: extractString(dataset?.description),
         tags: dataset?.tags || null,
-        source_url: dataset?.url || '',
+        source_url: url || '',
+        platform: dataset?.platform || 'dataverse',
         publishedAt: nowISO(),
       };
 
@@ -482,16 +652,21 @@ async function runMigration() {
   const state = {
     departments: {},
     departmentsByName: {},
-    researchUnits: {},
+    departmentMeta: {},
+    supportUnits: {},
     peopleBySlug: {},
     peopleByKey: {},
     publications: {},
     projects: {},
     datasets: {},
+    themes: {},
+    partners: {},
   };
 
-  await importDepartmentsAndResearchUnits(state);
+  await importDepartments(state);
+  await importSupportUnits(state);
   await importPeople(state);
+  await attachDepartmentLeads(state);
   await importPublications(state);
   await importProjects(state);
   await importDatasets(state);

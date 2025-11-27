@@ -51,6 +51,16 @@
       "repeatable": true,
       "component": "shared.contact-link"
     },
+    "coordinator": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::person.person"
+    },
+    "coCoordinator": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::person.person"
+    },
     "people": {
       "type": "relation",
       "relation": "oneToMany",
