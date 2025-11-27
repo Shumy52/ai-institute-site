@@ -23,6 +23,11 @@
 		"abstract": {
 			"type": "text"
 		},
+		"status": {
+			"type": "enumeration",
+			"enum": ["planned", "ongoing", "completed", "archived"],
+			"default": "ongoing"
+		},
 		"region": {
 			"type": "enumeration",
 			"enum": [
@@ -34,16 +39,41 @@
 			],
 			"default": "national"
 		},
+		"heroImage": {
+			"type": "media",
+			"multiple": false,
+			"allowedTypes": ["images"]
+		},
+		"body": {
+			"type": "dynamiczone",
+			"components": [
+				"shared.section",
+				"shared.rich-text",
+				"shared.media",
+				"shared.slider"
+			]
+		},
 		"themes": {
-			"type": "json"
+			"type": "relation",
+			"relation": "manyToMany",
+			"target": "api::research-theme.research-theme",
+			"inversedBy": "projects"
+		},
+		"domains": {
+			"type": "relation",
+			"relation": "manyToMany",
+			"target": "api::department.department",
+			"inversedBy": "projects"
 		},
 		"partners": {
-			"type": "json"
+			"type": "relation",
+			"relation": "manyToMany",
+			"target": "api::partner.partner"
 		},
-		"doc_url": {
+		"docUrl": {
 			"type": "string"
 		},
-		"official_url": {
+		"officialUrl": {
 			"type": "string"
 		},
 		"lead": {
@@ -58,17 +88,31 @@
 			"target": "api::person.person",
 			"inversedBy": "projects"
 		},
-		"domains": {
-			"type": "relation",
-			"relation": "manyToMany",
-			"target": "api::department.department",
-			"inversedBy": "projects"
+		"team": {
+			"type": "component",
+			"repeatable": true,
+			"component": "project.team-member"
+		},
+		"timeline": {
+			"type": "component",
+			"repeatable": true,
+			"component": "project.timeline-entry"
 		},
 		"publications": {
 			"type": "relation",
 			"relation": "manyToMany",
 			"target": "api::publication.publication",
 			"mappedBy": "projects"
+		},
+		"datasets": {
+			"type": "relation",
+			"relation": "manyToMany",
+			"target": "api::dataset.dataset",
+			"mappedBy": "projects"
+		},
+		"featured": {
+			"type": "boolean",
+			"default": false
 		}
 	}
 }

@@ -20,8 +20,36 @@
       "type": "uid",
       "targetField": "name"
     },
+    "summary": {
+      "type": "text"
+    },
+    "heroImage": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": ["images"]
+    },
     "description": {
       "type": "richtext"
+    },
+    "body": {
+      "type": "dynamiczone",
+      "components": [
+        "shared.section",
+        "shared.quote",
+        "shared.rich-text",
+        "shared.media",
+        "shared.slider"
+      ]
+    },
+    "focusItems": {
+      "type": "component",
+      "repeatable": true,
+      "component": "shared.focus-item"
+    },
+    "contactLinks": {
+      "type": "component",
+      "repeatable": true,
+      "component": "shared.contact-link"
     },
     "people": {
       "type": "relation",

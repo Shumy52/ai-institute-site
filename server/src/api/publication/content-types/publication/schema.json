@@ -44,6 +44,12 @@
 			"target": "api::department.department",
 			"inversedBy": "publications"
 		},
+		"themes": {
+			"type": "relation",
+			"relation": "manyToMany",
+			"target": "api::research-theme.research-theme",
+			"inversedBy": "publications"
+		},
 		"authors": {
 			"type": "relation",
 			"relation": "manyToMany",
@@ -55,6 +61,12 @@
 			"relation": "manyToMany",
 			"target": "api::project.project",
 			"inversedBy": "publications"
+		},
+		"datasets": {
+			"type": "relation",
+			"relation": "manyToMany",
+			"target": "api::dataset.dataset",
+			"mappedBy": "publications"
 		}
 	}
 }

@@ -4,46 +4,62 @@
   "info": {
     "singularName": "person",
     "pluralName": "people",
-    "displayName": "Person"
+    "displayName": "Person",
+    "description": "Staff, researchers, collaborators"
   },
   "options": {
     "draftAndPublish": true
   },
   "pluginOptions": {},
   "attributes": {
-    "full_name": {
+    "fullName": {
       "type": "string",
       "required": true,
       "unique": true
     },
     "slug": {
       "type": "uid",
-      "targetField": "full_name"
+      "targetField": "fullName",
+      "required": true
     },
-    "title": {
+    "status": {
+      "type": "enumeration",
+      "enum": [
+        "personal",
+        "researcher",
+        "alumni",
+        "visitor",
+        "external"
+      ],
+      "default": "researcher"
+    },
+    "titles": {
+      "type": "json"
+    },
+    "position": {
+      "type": "string"
+    },
+    "email": {
       "type": "string"
     },
     "phone": {
       "type": "string"
     },
-    "email": {
-      "type": "email"
-    },
-    "role": {
+    "location": {
       "type": "string"
     },
     "bio": {
       "type": "richtext"
     },
-    "image": {
+    "portrait": {
       "type": "media",
       "multiple": false,
-      "allowedTypes": [
-        "images",
-        "files",
-        "videos",
-        "audios"
-      ]
+      "allowedTypes": ["images"]
+    },
+    "socialLinks": {
+      "type": "component",
+      "repeatable": true,
+      "component": "shared.contact-link"
     },
     "department": {
       "type": "relation",
@@ -51,8 +67,11 @@
       "target": "api::department.department",
       "inversedBy": "people"
     },
-    "category": {
-      "type": "string"
+    "support_units": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::support-unit.support-unit",
+      "mappedBy": "members"
     },
     "projects": {
       "type": "relation",
