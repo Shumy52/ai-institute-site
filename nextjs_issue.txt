@@ -1,0 +1,10 @@
+
+> ai-institute-site@0.1.0 start
+> next start
+
+   ▲ Next.js 15.3.4
+   - Local:        http://localhost:3000
+   - Network:      http://172.18.0.4:3000
+
+ ✓ Starting...
+ ✓ Ready in 598ms

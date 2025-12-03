@@ -30,10 +30,10 @@
 			"type": "richtext"
 		},
 		"doc_url": {
-			"type": "string"
+			"type": "text"
 		},
 		"external_url": {
-			"type": "string"
+			"type": "text"
 		},
 		"metadata": {
 			"type": "json"

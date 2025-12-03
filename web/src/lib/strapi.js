@@ -41,7 +41,8 @@ const setPopulate = (params, baseKey, config = {}) => {
   });
 };
 
-const PERSON_FIELDS = ['full_name', 'slug', 'title', 'email', 'phone'];
+// Strapi schema uses camelCase field names
+const PERSON_FIELDS = ['fullName', 'slug', 'position', 'email', 'phone', 'status', 'location'];
 
 const PERSON_FLAT_POPULATE = {
   fields: PERSON_FIELDS,
@@ -50,12 +51,12 @@ const PERSON_FLAT_POPULATE = {
 const PERSON_WITH_IMAGE_POPULATE = {
   fields: PERSON_FIELDS,
   populate: {
-    image: {},
+    portrait: {},
   },
 };
 
 const DEPARTMENT_POPULATE = {
-  fields: ['name', 'slug', 'summary', 'description', 'icon'],
+  fields: ['name', 'slug', 'summary', 'description'],
 };
 
 
@@ -71,12 +72,17 @@ const PUBLICATION_POPULATE = {
 };
 
 const PROJECT_POPULATE = {
-  fields: ['title', 'slug', 'abstract', 'region', 'themes', 'partners', 'doc_url', 'official_url'],
+  fields: ['title', 'slug', 'abstract', 'region', 'status', 'docUrl', 'officialUrl', 'featured'],
   populate: {
     domains: DEPARTMENT_POPULATE,
     lead: PERSON_WITH_IMAGE_POPULATE,
     members: PERSON_WITH_IMAGE_POPULATE,
-    publications: PUBLICATION_POPULATE,
+    themes: {
+      fields: ['name', 'slug'],
+    },
+    partners: {
+      fields: ['name', 'slug'],
+    },
   },
 };
 
@@ -135,19 +141,19 @@ export async function fetchAPI(endpoint, options = {}) {
  */
 export async function getStaff() {
   try {
-    // The person content-type uses `full_name` as the field, not `name`.
     const params = new URLSearchParams();
-    params.set('sort', 'full_name:asc');
-    params.append('fields[0]', 'full_name');
+    // Use fullName (camelCase) as defined in the schema
+    params.set('sort', 'fullName:asc');
+    params.append('fields[0]', 'fullName');
     params.append('fields[1]', 'slug');
-    params.append('fields[2]', 'title');
+    params.append('fields[2]', 'position');
     params.append('fields[3]', 'email');
     params.append('fields[4]', 'phone');
-    params.append('fields[5]', 'role');
-    params.append('fields[6]', 'category');
+    params.append('fields[5]', 'status');
+    params.append('fields[6]', 'location');
     params.append('fields[7]', 'bio');
     setPopulate(params, 'populate[department]', { fields: ['name', 'slug'] });
-    setPopulate(params, 'populate[image]', { fields: ['url', 'formats', 'alternativeText'] });
+    setPopulate(params, 'populate[portrait]', { fields: ['url', 'formats', 'alternativeText'] });
     const data = await fetchAPI(`/people?${params.toString()}`);
     return data.data || [];
   } catch (error) {
@@ -164,14 +170,19 @@ export async function getStaff() {
 export async function getStaffMember(slug) {
   try {
     if (!slug) return null;
-    // Single person lookup - collection is `people` in Strapi
     const params = new URLSearchParams();
     params.set('filters[slug][$eq]', slug);
     setPopulate(params, 'populate[department]', DEPARTMENT_POPULATE);
-    setPopulate(params, 'populate[image]');
-    setPopulate(params, 'populate[projects]', PROJECT_POPULATE);
-    setPopulate(params, 'populate[leading_projects]', PROJECT_POPULATE);
-    setPopulate(params, 'populate[publications]', PUBLICATION_POPULATE);
+    setPopulate(params, 'populate[portrait]');
+    setPopulate(params, 'populate[projects]', {
+      fields: ['title', 'slug'],
+    });
+    setPopulate(params, 'populate[leading_projects]', {
+      fields: ['title', 'slug'],
+    });
+    setPopulate(params, 'populate[publications]', {
+      fields: ['title', 'slug', 'year'],
+    });
 
     const data = await fetchAPI(`/people?${params.toString()}`);
     return data.data?.[0] || null;
@@ -192,7 +203,9 @@ export async function getProjects() {
     setPopulate(params, 'populate[lead]', PERSON_WITH_IMAGE_POPULATE);
     setPopulate(params, 'populate[members]', PERSON_WITH_IMAGE_POPULATE);
     setPopulate(params, 'populate[domains]', DEPARTMENT_POPULATE);
-    setPopulate(params, 'populate[publications]', PUBLICATION_POPULATE);
+    setPopulate(params, 'populate[themes]', { fields: ['name', 'slug'] });
+    setPopulate(params, 'populate[partners]', { fields: ['name', 'slug'] });
+    setPopulate(params, 'populate[publications]', { fields: ['title', 'slug', 'year'] });
     const data = await fetchAPI(`/projects?${params.toString()}`);
     return data.data || [];
   } catch (error) {
@@ -214,7 +227,11 @@ export async function getProject(slug) {
     setPopulate(params, 'populate[lead]', PERSON_WITH_IMAGE_POPULATE);
     setPopulate(params, 'populate[members]', PERSON_WITH_IMAGE_POPULATE);
     setPopulate(params, 'populate[domains]', DEPARTMENT_POPULATE);
-    setPopulate(params, 'populate[publications]', PUBLICATION_POPULATE);
+    setPopulate(params, 'populate[themes]', { fields: ['name', 'slug'] });
+    setPopulate(params, 'populate[partners]', { fields: ['name', 'slug'] });
+    setPopulate(params, 'populate[publications]', { fields: ['title', 'slug', 'year'] });
+    setPopulate(params, 'populate[heroImage]');
+    setPopulate(params, 'populate[body]');
     const data = await fetchAPI(`/projects?${params.toString()}`);
     return data.data?.[0] || null;
   } catch (error) {
@@ -308,7 +325,6 @@ export async function getDepartments() {
     params.append('fields[1]', 'slug');
     params.append('fields[2]', 'summary');
     params.append('fields[3]', 'description');
-    params.append('fields[4]', 'icon');
     setPopulate(params, 'populate[focusItems]');
     setPopulate(params, 'populate[contactLinks]');
     setPopulate(params, 'populate[body]');
@@ -368,17 +384,20 @@ export function transformStaffData(strapiStaff) {
       year: pub?.attributes?.year ?? null,
     }));
 
-    const image = resolveMediaUrl(attributes.image) || attributes.image || '';
+    // Use 'portrait' field from schema
+    const image = resolveMediaUrl(attributes.portrait) || attributes.portrait || '';
 
     return {
       id: person?.id ?? null,
       slug: attributes.slug || '',
-      name: attributes.full_name || attributes.name || '',
-      title: attributes.title || '',
+      // Map fullName (schema) to name (frontend)
+      name: attributes.fullName || attributes.name || '',
+      // Map position (schema) to title (frontend)
+      title: attributes.position || attributes.title || '',
       phone: attributes.phone || '',
       email: attributes.email || '',
-      role: attributes.role || '',
-      category: attributes.category || '',
+      role: attributes.status || attributes.role || '',
+      category: attributes.status || attributes.category || '',
       department: department?.name || '',
       departmentInfo: department,
       image,
@@ -403,7 +422,8 @@ export function transformPublicationData(strapiPubs) {
     const authors = toArray(attributes.authors?.data).map((author) => ({
       id: author?.id ?? null,
       slug: author?.attributes?.slug || '',
-      name: author?.attributes?.full_name || author?.attributes?.name || '',
+      // Map fullName (schema) to name (frontend)
+      name: author?.attributes?.fullName || author?.attributes?.name || '',
     }));
 
     const projects = toArray(attributes.projects?.data).map((project) => ({
@@ -446,14 +466,28 @@ export function transformProjectData(strapiProjects) {
       name: department?.attributes?.name || '',
     }));
 
+    const themes = toArray(attributes.themes?.data).map((theme) => ({
+      id: theme?.id ?? null,
+      slug: theme?.attributes?.slug || '',
+      name: theme?.attributes?.name || '',
+    }));
+
+    const partners = toArray(attributes.partners?.data).map((partner) => ({
+      id: partner?.id ?? null,
+      slug: partner?.attributes?.slug || '',
+      name: partner?.attributes?.name || '',
+    }));
+
     const members = toArray(attributes.members?.data).map((member) => {
       const memberAttr = member?.attributes ?? {};
-      const image = resolveMediaUrl(memberAttr.image) || memberAttr.image || '';
+      const image = resolveMediaUrl(memberAttr.portrait) || memberAttr.portrait || '';
       return {
         id: member?.id ?? null,
         slug: memberAttr.slug || '',
-        name: memberAttr.full_name || memberAttr.name || '',
-        title: memberAttr.title || '',
+        // Map fullName (schema) to name (frontend)
+        name: memberAttr.fullName || memberAttr.name || '',
+        // Map position (schema) to title (frontend)
+        title: memberAttr.position || memberAttr.title || '',
         email: memberAttr.email || '',
         phone: memberAttr.phone || '',
         image,
@@ -473,11 +507,13 @@ export function transformProjectData(strapiProjects) {
       ? {
           id: leadEntry.id ?? null,
           slug: leadAttr.slug || '',
-          name: leadAttr.full_name || leadAttr.name || '',
-          title: leadAttr.title || '',
+          // Map fullName (schema) to name (frontend)
+          name: leadAttr.fullName || leadAttr.name || '',
+          // Map position (schema) to title (frontend)
+          title: leadAttr.position || leadAttr.title || '',
           email: leadAttr.email || '',
           phone: leadAttr.phone || '',
-          image: resolveMediaUrl(leadAttr.image) || leadAttr.image || '',
+          image: resolveMediaUrl(leadAttr.portrait) || leadAttr.portrait || '',
         }
       : typeof attributes.lead === 'string' && attributes.lead.trim().length
       ? {
@@ -499,8 +535,12 @@ export function transformProjectData(strapiProjects) {
       slug: attributes.slug || '',
       title: attributes.title || '',
       abstract: attributes.abstract || '',
-      themes: Array.isArray(attributes.themes) ? attributes.themes : toArray(attributes.themes),
-      partners: Array.isArray(attributes.partners) ? attributes.partners : toArray(attributes.partners),
+      // Map themes relation to simple array for frontend compatibility
+      themes: themes.map(t => t.name).filter(Boolean),
+      // Map partners relation to simple array for frontend compatibility
+      partners: partners.map(p => p.name).filter(Boolean),
+      themesData: themes,
+      partnersData: partners,
       region: attributes.region || '',
       domains,
       domain: domains.map((d) => d.name).filter(Boolean),
@@ -510,8 +550,10 @@ export function transformProjectData(strapiProjects) {
       leadName,
       leadSlug,
       leadDetails,
-      docUrl: attributes.doc_url || attributes.docUrl || '',
-      oficialUrl: attributes.official_url || attributes.oficialUrl || attributes.officialUrl || '',
+      // Map docUrl (schema) to docUrl (frontend)
+      docUrl: attributes.docUrl || attributes.doc_url || '',
+      // Map officialUrl (schema) to oficialUrl (legacy frontend typo)
+      oficialUrl: attributes.officialUrl || attributes.oficial_url || attributes.official_url || '',
       teams: members.map((member) => ({ name: member.slug, title: member.title, fullName: member.name })),
       _strapi: project,
     };
@@ -549,12 +591,12 @@ export function transformDepartmentData(strapiDepartments) {
     const coCoordinatorEntry = attributes.coCoordinator?.data;
 
     const coordinator =
-      coordinatorEntry?.attributes?.full_name ||
+      coordinatorEntry?.attributes?.fullName ||
       coordinatorEntry?.attributes?.name ||
       attributes.coordinator ||
       '';
     const coCoordinator =
-      coCoordinatorEntry?.attributes?.full_name ||
+      coCoordinatorEntry?.attributes?.fullName ||
       coCoordinatorEntry?.attributes?.name ||
       attributes.coCoordinator ||
       '';
@@ -581,7 +623,7 @@ export function transformDepartmentData(strapiDepartments) {
       body: attributes.body || [],
       elements,
       contactLinks,
-      icon: attributes.icon || '🏷️',
+      icon: '🏷️', // Default icon since schema doesn't have icon field
       coordinator,
       coCoordinator,
       focusItems: elements,

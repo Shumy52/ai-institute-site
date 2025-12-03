@@ -68,13 +68,14 @@
 		"partners": {
 			"type": "relation",
 			"relation": "manyToMany",
-			"target": "api::partner.partner"
+			"target": "api::partner.partner",
+			"inversedBy": "projects"
 		},
 		"docUrl": {
-			"type": "string"
+			"type": "text"
 		},
 		"officialUrl": {
-			"type": "string"
+			"type": "text"
 		},
 		"lead": {
 			"type": "relation",

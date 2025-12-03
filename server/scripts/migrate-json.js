@@ -34,8 +34,19 @@ const resolveDataRoot = () => {
 };
 
 const DATA_ROOT = resolveDataRoot();
+console.log(`Using migration data root: ${DATA_ROOT}`);
 
 const nowISO = () => new Date().toISOString();
+
+// Helper to publish a document after creation
+const publishDocument = async (uid, documentId) => {
+  try {
+    await strapi.documents(uid).publish({ documentId });
+  } catch (error) {
+    console.warn(`  ⚠️  Failed to publish ${uid} ${documentId}:`, error.message);
+  }
+};
+
 const STATUS_MAP = {
   personal: 'personal',
   Personal: 'personal',
@@ -66,6 +77,11 @@ const readJson = async (...segments) => {
     throw new Error(`Missing JSON data file: ${absPath}`);
   }
   return fs.readJSON(absPath);
+};
+
+const hasJson = async (...segments) => {
+  const absPath = path.join(DATA_ROOT, ...segments);
+  return fs.pathExists(absPath);
 };
 
 const extractArray = (value) => {
@@ -168,11 +184,9 @@ async function importDepartments(state) {
       departmentDoc = await strapi
         .documents('api::department.department')
         .create({
-          data: {
-            ...baseData,
-            publishedAt: nowISO(),
-          },
+          data: baseData,
         });
+      await publishDocument('api::department.department', getDocId(departmentDoc));
       console.log(`  ✅ created department: ${name}`);
     }
 
@@ -186,6 +200,11 @@ async function importDepartments(state) {
 }
 
 async function importSupportUnits(state) {
+  const exists = await hasJson('departments', 'supportUnitsData.json');
+  if (!exists) {
+    console.warn('⚠️  supportUnitsData.json not found. Skipping support units import.');
+    return;
+  }
   const units = await readJson('departments', 'supportUnitsData.json');
   console.log(`\n⏳ Importing support units (${units.length} units detected)`);
 
@@ -291,7 +310,6 @@ async function importPeople(state) {
       position: person?.title || '',
       phone: person?.phone || '',
       email: person?.email || '',
-      publishedAt: nowISO(),
     };
 
     if (departmentId) {
@@ -302,6 +320,7 @@ async function importPeople(state) {
       data: payload,
     });
 
+    await publishDocument('api::person.person', getDocId(created));
     console.log(`  ✅ created person: ${fullName}`);
 
     state.peopleBySlug[slug] = created;
@@ -343,7 +362,6 @@ async function ensureTheme(state, name) {
       name: label,
       slug,
       summary: '',
-      publishedAt: nowISO(),
     },
   });
 
@@ -372,7 +390,6 @@ async function ensurePartner(state, name) {
       name: label,
       slug,
       description: '',
-      publishedAt: nowISO(),
     },
   });
 

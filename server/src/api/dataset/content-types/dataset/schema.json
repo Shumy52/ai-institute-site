@@ -27,7 +27,7 @@
 			"type": "richtext"
 		},
 		"source_url": {
-			"type": "string"
+			"type": "text"
 		},
 		"platform": {
 			"type": "enumeration",
