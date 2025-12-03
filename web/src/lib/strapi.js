@@ -41,10 +41,6 @@ const setPopulate = (params, baseKey, config = {}) => {
   });
 };
 
-const DEPARTMENT_POPULATE = {
-  fields: ['name', 'slug', 'description'],
-};
-
 const PERSON_FIELDS = ['full_name', 'slug', 'title', 'email', 'phone'];
 
 const PERSON_FLAT_POPULATE = {
@@ -57,6 +53,11 @@ const PERSON_WITH_IMAGE_POPULATE = {
     image: {},
   },
 };
+
+const DEPARTMENT_POPULATE = {
+  fields: ['name', 'slug', 'summary', 'description', 'icon'],
+};
+
 
 const PUBLICATION_POPULATE = {
   fields: ['title', 'slug', 'year', 'kind', 'description', 'doc_url', 'external_url'],
@@ -137,11 +138,16 @@ export async function getStaff() {
     // The person content-type uses `full_name` as the field, not `name`.
     const params = new URLSearchParams();
     params.set('sort', 'full_name:asc');
-    setPopulate(params, 'populate[department]', DEPARTMENT_POPULATE);
-    setPopulate(params, 'populate[image]');
-    setPopulate(params, 'populate[projects]', PROJECT_POPULATE);
-    setPopulate(params, 'populate[leading_projects]', PROJECT_POPULATE);
-    setPopulate(params, 'populate[publications]', PUBLICATION_POPULATE);
+    params.append('fields[0]', 'full_name');
+    params.append('fields[1]', 'slug');
+    params.append('fields[2]', 'title');
+    params.append('fields[3]', 'email');
+    params.append('fields[4]', 'phone');
+    params.append('fields[5]', 'role');
+    params.append('fields[6]', 'category');
+    params.append('fields[7]', 'bio');
+    setPopulate(params, 'populate[department]', { fields: ['name', 'slug'] });
+    setPopulate(params, 'populate[image]', { fields: ['url', 'formats', 'alternativeText'] });
     const data = await fetchAPI(`/people?${params.toString()}`);
     return data.data || [];
   } catch (error) {
@@ -298,18 +304,17 @@ export async function getDepartments() {
   try {
     const params = new URLSearchParams();
     params.set('sort', 'name:asc');
-    setPopulate(params, 'populate[people]', {
-      fields: PERSON_FIELDS,
-      populate: {
-        image: {},
-        department: DEPARTMENT_POPULATE,
-        projects: PROJECT_POPULATE,
-        leading_projects: PROJECT_POPULATE,
-        publications: PUBLICATION_POPULATE,
-      },
-    });
-    setPopulate(params, 'populate[projects]', PROJECT_POPULATE);
-    setPopulate(params, 'populate[publications]', PUBLICATION_POPULATE);
+    params.append('fields[0]', 'name');
+    params.append('fields[1]', 'slug');
+    params.append('fields[2]', 'summary');
+    params.append('fields[3]', 'description');
+    params.append('fields[4]', 'icon');
+    setPopulate(params, 'populate[focusItems]');
+    setPopulate(params, 'populate[contactLinks]');
+    setPopulate(params, 'populate[body]');
+    setPopulate(params, 'populate[heroImage]');
+    setPopulate(params, 'populate[coordinator]', PERSON_FLAT_POPULATE);
+    setPopulate(params, 'populate[coCoordinator]', PERSON_FLAT_POPULATE);
     const data = await fetchAPI(`/departments?${params.toString()}`);
     return data.data || [];
   } catch (error) {
@@ -509,6 +514,80 @@ export function transformProjectData(strapiProjects) {
       oficialUrl: attributes.official_url || attributes.oficialUrl || attributes.officialUrl || '',
       teams: members.map((member) => ({ name: member.slug, title: member.title, fullName: member.name })),
       _strapi: project,
+    };
+  });
+}
+
+export function transformDepartmentData(strapiDepartments) {
+  const list = Array.isArray(strapiDepartments)
+    ? strapiDepartments
+    : strapiDepartments
+    ? [strapiDepartments]
+    : [];
+
+  const normalizeFocusItems = (items) =>
+    Array.isArray(items)
+      ? items
+          .map((item) => {
+            if (!item) return null;
+            const title =
+              item?.title || item?.heading || item?.text || item?.label || 'Details';
+            const description = stripHtml(item?.description || item?.content || item?.body || '');
+            const content = description ? [description] : [];
+            return {
+              text: title,
+              content,
+              raw: item,
+            };
+          })
+          .filter(Boolean)
+      : [];
+
+  return list.map((department) => {
+    const attributes = department?.attributes ?? {};
+    const coordinatorEntry = attributes.coordinator?.data;
+    const coCoordinatorEntry = attributes.coCoordinator?.data;
+
+    const coordinator =
+      coordinatorEntry?.attributes?.full_name ||
+      coordinatorEntry?.attributes?.name ||
+      attributes.coordinator ||
+      '';
+    const coCoordinator =
+      coCoordinatorEntry?.attributes?.full_name ||
+      coCoordinatorEntry?.attributes?.name ||
+      attributes.coCoordinator ||
+      '';
+
+    const elements = normalizeFocusItems(attributes.focusItems);
+    const contactLinks = Array.isArray(attributes.contactLinks)
+      ? attributes.contactLinks.map((link) => ({
+          label: link?.label || link?.title || link?.text || 'Contact',
+          url: link?.url || link?.href || '',
+          icon: link?.icon || '',
+        }))
+      : [];
+
+    return {
+      id: department?.id ?? null,
+      name: attributes.name || '',
+      slug: attributes.slug || '',
+      summary: attributes.summary || '',
+      description:
+        typeof attributes.description === 'string'
+          ? stripHtml(attributes.description)
+          : stripHtml(attributes.description?.toString?.() || ''),
+      rawDescription: attributes.description || '',
+      body: attributes.body || [],
+      elements,
+      contactLinks,
+      icon: attributes.icon || '🏷️',
+      coordinator,
+      coCoordinator,
+      focusItems: elements,
+      coCoordinatorSlug: coCoordinatorEntry?.attributes?.slug || '',
+      coordinatorSlug: coordinatorEntry?.attributes?.slug || '',
+      _strapi: department,
     };
   });
 }
