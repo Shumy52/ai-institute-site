@@ -14,6 +14,8 @@ services:
   strapi:
     build: ./server
     restart: always
+    env_file:
+      - ./server/.env
     environment:
       DATABASE_CLIENT: ${DATABASE_CLIENT}
       DATABASE_HOST: ${DATABASE_HOST}
