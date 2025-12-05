@@ -36,8 +36,10 @@ const matchesPerson = (value, person) => {
 };
 
 export default async function ProjectDetailPage({ params }) {
-  const slugParam = Array.isArray(params?.slug) ? params.slug[0] : params?.slug;
-  const projectParam = Array.isArray(params?.project) ? params.project[0] : params?.project;
+  // In Next.js 15+, params is a Promise
+  const resolvedParams = await params;
+  const slugParam = Array.isArray(resolvedParams?.slug) ? resolvedParams.slug[0] : resolvedParams?.slug;
+  const projectParam = Array.isArray(resolvedParams?.project) ? resolvedParams.project[0] : resolvedParams?.project;
 
   if (!slugParam || !projectParam) {
     notFound();
@@ -53,11 +55,14 @@ export default async function ProjectDetailPage({ params }) {
     notFound();
   }
 
+  // Handle both Strapi 4 (with attributes) and Strapi 5 (flat) formats
+  const personData = strapiPerson.attributes ?? strapiPerson;
+
   const memberProjectsRaw = transformProjectData(
-    strapiPerson.attributes?.projects?.data ?? []
+    personData.projects?.data ?? personData.projects ?? []
   );
   const leadingProjectsRaw = transformProjectData(
-    strapiPerson.attributes?.leading_projects?.data ?? []
+    personData.leading_projects?.data ?? personData.leading_projects ?? []
   );
 
   const combinedProjects = [...leadingProjectsRaw, ...memberProjectsRaw];
@@ -93,8 +98,9 @@ export default async function ProjectDetailPage({ params }) {
     notFound();
   }
 
+  const projectData = projectStrapi?.attributes ?? projectStrapi;
   const publications = transformPublicationData(
-    projectStrapi?.attributes?.publications?.data ?? []
+    projectData?.publications?.data ?? projectData?.publications ?? []
   ).map(({ _strapi: _ignored, ...item }) => item);
 
   const leadIdentifier = projectEntry.leadDetails?.slug || projectEntry.leadSlug || "";

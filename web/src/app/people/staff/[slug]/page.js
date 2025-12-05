@@ -9,7 +9,9 @@ import {
 import StaffDetailClient from "./StaffDetailClient";
 
 export default async function StaffDetailPage({ params }) {
-  const slug = Array.isArray(params?.slug) ? params.slug[0] : params?.slug;
+  // In Next.js 15+, params is a Promise
+  const resolvedParams = await params;
+  const slug = Array.isArray(resolvedParams?.slug) ? resolvedParams.slug[0] : resolvedParams?.slug;
   
   if (!slug) {
     notFound();
@@ -27,16 +29,19 @@ export default async function StaffDetailPage({ params }) {
     notFound();
   }
 
+  // Handle both Strapi 4 (with attributes) and Strapi 5 (flat) formats
+  const personData = strapiPerson.attributes ?? strapiPerson;
+  
   const publicationsRaw = transformPublicationData(
-    strapiPerson.attributes?.publications?.data ?? []
+    personData.publications?.data ?? personData.publications ?? []
   );
 
   const leadingProjectsRaw = transformProjectData(
-    strapiPerson.attributes?.leading_projects?.data ?? []
+    personData.leading_projects?.data ?? personData.leading_projects ?? []
   );
 
   const memberProjectsRaw = transformProjectData(
-    strapiPerson.attributes?.projects?.data ?? []
+    personData.projects?.data ?? personData.projects ?? []
   );
 
   const normalizePublication = (pub) => ({
