@@ -347,9 +347,11 @@ export function transformStaffData(strapiStaff) {
   const list = Array.isArray(strapiStaff) ? strapiStaff : strapiStaff ? [strapiStaff] : [];
 
   return list.map((person) => {
-    const attributes = person?.attributes ?? {};
-    const departmentEntry = attributes.department?.data;
-    const departmentAttributes = departmentEntry?.attributes ?? {};
+    // Strapi 5 returns flat objects, Strapi 4 had attributes wrapper
+    const attributes = person?.attributes ?? person ?? {};
+    // Strapi 5: department is direct object, Strapi 4: department.data
+    const departmentEntry = attributes.department?.data ?? attributes.department;
+    const departmentAttributes = departmentEntry?.attributes ?? departmentEntry ?? {};
 
     const department = departmentEntry
       ? {
@@ -365,24 +367,33 @@ export function transformStaffData(strapiStaff) {
         }
       : null;
 
-    const leadingProjects = toArray(attributes.leading_projects?.data).map((project) => ({
-      id: project?.id ?? null,
-      slug: project?.attributes?.slug || '',
-      title: project?.attributes?.title || '',
-    }));
+    const leadingProjects = toArray(attributes.leading_projects?.data ?? attributes.leading_projects).map((project) => {
+      const proj = project?.attributes ?? project ?? {};
+      return {
+        id: project?.id ?? null,
+        slug: proj.slug || '',
+        title: proj.title || '',
+      };
+    });
 
-    const memberProjects = toArray(attributes.projects?.data).map((project) => ({
-      id: project?.id ?? null,
-      slug: project?.attributes?.slug || '',
-      title: project?.attributes?.title || '',
-    }));
+    const memberProjects = toArray(attributes.projects?.data ?? attributes.projects).map((project) => {
+      const proj = project?.attributes ?? project ?? {};
+      return {
+        id: project?.id ?? null,
+        slug: proj.slug || '',
+        title: proj.title || '',
+      };
+    });
 
-    const publications = toArray(attributes.publications?.data).map((pub) => ({
-      id: pub?.id ?? null,
-      slug: pub?.attributes?.slug || '',
-      title: pub?.attributes?.title || '',
-      year: pub?.attributes?.year ?? null,
-    }));
+    const publications = toArray(attributes.publications?.data ?? attributes.publications).map((pub) => {
+      const pubData = pub?.attributes ?? pub ?? {};
+      return {
+        id: pub?.id ?? null,
+        slug: pubData.slug || '',
+        title: pubData.title || '',
+        year: pubData.year ?? null,
+      };
+    });
 
     // Use 'portrait' field from schema
     const image = resolveMediaUrl(attributes.portrait) || attributes.portrait || '';
@@ -417,23 +428,30 @@ export function transformPublicationData(strapiPubs) {
   const list = Array.isArray(strapiPubs) ? strapiPubs : strapiPubs ? [strapiPubs] : [];
 
   return list.map((pub) => {
-    const attributes = pub?.attributes ?? {};
+    const attributes = pub?.attributes ?? pub ?? {};
 
-    const authors = toArray(attributes.authors?.data).map((author) => ({
-      id: author?.id ?? null,
-      slug: author?.attributes?.slug || '',
-      // Map fullName (schema) to name (frontend)
-      name: author?.attributes?.fullName || author?.attributes?.name || '',
-    }));
+    const authors = toArray(attributes.authors?.data ?? attributes.authors).map((author) => {
+      const authorData = author?.attributes ?? author ?? {};
+      return {
+        id: author?.id ?? null,
+        slug: authorData.slug || '',
+        // Map fullName (schema) to name (frontend)
+        name: authorData.fullName || authorData.name || '',
+      };
+    });
 
-    const projects = toArray(attributes.projects?.data).map((project) => ({
-      id: project?.id ?? null,
-      slug: project?.attributes?.slug || '',
-      title: project?.attributes?.title || '',
-    }));
+    const projects = toArray(attributes.projects?.data ?? attributes.projects).map((project) => {
+      const projectData = project?.attributes ?? project ?? {};
+      return {
+        id: project?.id ?? null,
+        slug: projectData.slug || '',
+        title: projectData.title || '',
+      };
+    });
 
-    const domainEntry = attributes.domain?.data;
-    const domain = domainEntry?.attributes?.name || attributes.domain || '';
+    const domainEntry = attributes.domain?.data ?? attributes.domain;
+    const domainData = domainEntry?.attributes ?? domainEntry ?? {};
+    const domain = domainData.name || (typeof attributes.domain === 'string' ? attributes.domain : '');
 
     return {
       id: pub?.id ?? null,
@@ -458,28 +476,37 @@ export function transformProjectData(strapiProjects) {
   const list = Array.isArray(strapiProjects) ? strapiProjects : strapiProjects ? [strapiProjects] : [];
 
   return list.map((project) => {
-    const attributes = project?.attributes ?? {};
+    const attributes = project?.attributes ?? project ?? {};
 
-    const domains = toArray(attributes.domains?.data).map((department) => ({
-      id: department?.id ?? null,
-      slug: department?.attributes?.slug || '',
-      name: department?.attributes?.name || '',
-    }));
+    const domains = toArray(attributes.domains?.data ?? attributes.domains).map((department) => {
+      const deptData = department?.attributes ?? department ?? {};
+      return {
+        id: department?.id ?? null,
+        slug: deptData.slug || '',
+        name: deptData.name || '',
+      };
+    });
 
-    const themes = toArray(attributes.themes?.data).map((theme) => ({
-      id: theme?.id ?? null,
-      slug: theme?.attributes?.slug || '',
-      name: theme?.attributes?.name || '',
-    }));
+    const themes = toArray(attributes.themes?.data ?? attributes.themes).map((theme) => {
+      const themeData = theme?.attributes ?? theme ?? {};
+      return {
+        id: theme?.id ?? null,
+        slug: themeData.slug || '',
+        name: themeData.name || '',
+      };
+    });
 
-    const partners = toArray(attributes.partners?.data).map((partner) => ({
-      id: partner?.id ?? null,
-      slug: partner?.attributes?.slug || '',
-      name: partner?.attributes?.name || '',
-    }));
+    const partners = toArray(attributes.partners?.data ?? attributes.partners).map((partner) => {
+      const partnerData = partner?.attributes ?? partner ?? {};
+      return {
+        id: partner?.id ?? null,
+        slug: partnerData.slug || '',
+        name: partnerData.name || '',
+      };
+    });
 
-    const members = toArray(attributes.members?.data).map((member) => {
-      const memberAttr = member?.attributes ?? {};
+    const members = toArray(attributes.members?.data ?? attributes.members).map((member) => {
+      const memberAttr = member?.attributes ?? member ?? {};
       const image = resolveMediaUrl(memberAttr.portrait) || memberAttr.portrait || '';
       return {
         id: member?.id ?? null,
@@ -494,15 +521,18 @@ export function transformProjectData(strapiProjects) {
       };
     });
 
-    const publications = toArray(attributes.publications?.data).map((pub) => ({
-      id: pub?.id ?? null,
-      slug: pub?.attributes?.slug || '',
-      title: pub?.attributes?.title || '',
-      year: pub?.attributes?.year ?? null,
-    }));
+    const publications = toArray(attributes.publications?.data ?? attributes.publications).map((pub) => {
+      const pubData = pub?.attributes ?? pub ?? {};
+      return {
+        id: pub?.id ?? null,
+        slug: pubData.slug || '',
+        title: pubData.title || '',
+        year: pubData.year ?? null,
+      };
+    });
 
-    const leadEntry = attributes.lead?.data;
-    const leadAttr = leadEntry?.attributes ?? {};
+    const leadEntry = attributes.lead?.data ?? attributes.lead;
+    const leadAttr = leadEntry?.attributes ?? leadEntry ?? {};
     const leadDetails = leadEntry
       ? {
           id: leadEntry.id ?? null,
@@ -586,19 +616,21 @@ export function transformDepartmentData(strapiDepartments) {
       : [];
 
   return list.map((department) => {
-    const attributes = department?.attributes ?? {};
-    const coordinatorEntry = attributes.coordinator?.data;
-    const coCoordinatorEntry = attributes.coCoordinator?.data;
+    const attributes = department?.attributes ?? department ?? {};
+    const coordinatorEntry = attributes.coordinator?.data ?? attributes.coordinator;
+    const coCoordinatorEntry = attributes.coCoordinator?.data ?? attributes.coCoordinator;
+    const coordinatorData = coordinatorEntry?.attributes ?? coordinatorEntry ?? {};
+    const coCoordinatorData = coCoordinatorEntry?.attributes ?? coCoordinatorEntry ?? {};
 
     const coordinator =
-      coordinatorEntry?.attributes?.fullName ||
-      coordinatorEntry?.attributes?.name ||
-      attributes.coordinator ||
+      coordinatorData.fullName ||
+      coordinatorData.name ||
+      (typeof attributes.coordinator === 'string' ? attributes.coordinator : '') ||
       '';
     const coCoordinator =
-      coCoordinatorEntry?.attributes?.fullName ||
-      coCoordinatorEntry?.attributes?.name ||
-      attributes.coCoordinator ||
+      coCoordinatorData.fullName ||
+      coCoordinatorData.name ||
+      (typeof attributes.coCoordinator === 'string' ? attributes.coCoordinator : '') ||
       '';
 
     const elements = normalizeFocusItems(attributes.focusItems);
@@ -627,8 +659,8 @@ export function transformDepartmentData(strapiDepartments) {
       coordinator,
       coCoordinator,
       focusItems: elements,
-      coCoordinatorSlug: coCoordinatorEntry?.attributes?.slug || '',
-      coordinatorSlug: coordinatorEntry?.attributes?.slug || '',
+      coCoordinatorSlug: coCoordinatorData.slug || '',
+      coordinatorSlug: coordinatorData.slug || '',
       _strapi: department,
     };
   });
