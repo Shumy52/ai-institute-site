@@ -18,7 +18,7 @@ export default function ToolsClient() {
             variants={itemVariants}
             className="text-4xl font-extrabold text-center mb-8 text-blue-600 dark:text-yellow-400 text-center"
           >
-            🛠️ Tools
+            Tools
           </motion.h1>
 
           {/* Content */}

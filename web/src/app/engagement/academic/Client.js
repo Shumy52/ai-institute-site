@@ -4,12 +4,46 @@ import Link from "next/link";
 import { useMemo, useCallback } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { motion } from "framer-motion";
+// import Courses_ML from "./Courses_ML.js";  
 
 const TABS = [
-  { key: "Overview", label: "Overview" },
-  { key: "Initiatives", label: "Initiatives" },
-  { key: "Courses", label: "Courses & Workshops" },
-  { key: "Mobility", label: "Co-tutoring & Mobility" },
+  {
+    key: "Overview",
+    label: "Overview",
+    subtabs: [
+      { key: "partnerships", label: "Academic partnerships" },
+      { key: "teaching", label: "Teaching & training" },
+      { key: "mobility", label: "Mobility" },
+    ],
+  },
+  {
+    key: "Initiatives",
+    label: "Initiatives",
+    subtabs: [
+      { key: "schools", label: "Summer schools & workshops" },
+      { key: "seminars", label: "Joint seminars" },
+      { key: "visits", label: "Research visits" },
+    ],
+  },
+  {
+    key: "Courses",
+    label: "Courses & Workshops",
+    subtabs: [
+      { key: "ml", label: "Machine Learning" },
+      { key: "robotics", label: "Robotics & Vision" },
+      { key: "hpc", label: "HPC for AI" },
+      { key: "ethics", label: "AI Ethics & Safety" },
+    ],
+  },
+  {
+    key: "Mobility",
+    label: "Co-tutoring & Mobility",
+    subtabs: [
+      { key: "phd", label: "Co-supervision" },
+      { key: "grants", label: "Mobility grants" },
+      { key: "placements", label: "Placements & exchanges" },
+    ],
+  },
 ];
 
 const containerVariants = {
@@ -35,78 +69,146 @@ function Feature({ emoji, title, desc }) {
   );
 }
 
+function SectionTitle({ emoji, title, desc }) {
+  return (
+    <div className="flex items-start gap-3">
+      <div className="text-2xl" aria-hidden>{emoji}</div>
+      <div>
+        <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">{title}</h3>
+        <p className="mt-1 text-sm text-gray-700 dark:text-gray-300">{desc}</p>
+      </div>
+    </div>
+  );
+}
+
 export default function Client() {
   const router = useRouter();
   const sp = useSearchParams();
   const tab = sp.get("tab") || "Overview";
 
+  // ---------------------------------------------------------------------------
+  // get path params
   const setTab = useCallback(
     (t) => router.replace(`?tab=${encodeURIComponent(t)}`, { scroll: false }),
     [router]
   );
 
-  const content = useMemo(() => {
-    switch (tab) {
-      case "Initiatives":
-        return (
-          <motion.section className="space-y-4" variants={containerVariants} initial="hidden" animate="visible">
-            <motion.h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100" variants={itemVariants}>
-              Initiatives
-            </motion.h2>
-            <motion.div
-              className="rounded-xl border border-gray-200 dark:border-gray-800 p-5 bg-white dark:bg-gray-900 shadow-sm"
-              variants={itemVariants}
-            >
-              <ul className="list-disc pl-6 space-y-1 text-sm text-gray-700 dark:text-gray-300">
-                <li>Summer schools & workshops</li>
-                <li>Co-tutoring program, research visits, mobility</li>
-                <li>Joint seminars & invited speakers</li>
-              </ul>
-            </motion.div>
-          </motion.section>
-        );
-      case "Courses":
-        return (
-          <motion.section className="space-y-4" variants={containerVariants} initial="hidden" animate="visible">
-            <motion.h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100" variants={itemVariants}>
-              Courses & Workshops
-            </motion.h2>
-            <motion.div className="grid gap-4 md:grid-cols-2" variants={containerVariants}>
-              <Feature emoji="🧠" title="Machine Learning" desc="Joint courses, applied modules, projects." />
-              <Feature emoji="🤖" title="Robotics & Vision" desc="Labs, projects, mixed teams." />
-              <Feature emoji="🖥️" title="HPC for AI" desc="Hands-on modules on the HPC infrastructure." />
-              <Feature emoji="🔐" title="AI Ethics & Safety" desc="Workshops on responsible AI & regulation." />
-            </motion.div>
-          </motion.section>
-        );
-      case "Mobility":
-        return (
-          <motion.section className="space-y-4" variants={containerVariants} initial="hidden" animate="visible">
-            <motion.h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100" variants={itemVariants}>
-              Co-tutoring & Mobility
-            </motion.h2>
-            <motion.div
-              className="rounded-xl border border-gray-200 dark:border-gray-800 p-5 bg-white dark:bg-gray-900 shadow-sm"
-              variants={itemVariants}
-            >
-              <ul className="list-disc pl-6 space-y-1 text-sm text-gray-700 dark:text-gray-300">
-                <li>Co-supervision of PhD theses with partner universities</li>
-                <li>Mobility grants (students, PhD candidates, staff)</li>
-                <li>Research visits & short-term placements</li>
-              </ul>
-            </motion.div>
-          </motion.section>
-        );
-      default:
-        return (
-          <motion.div className="grid gap-4 md:grid-cols-3" variants={containerVariants} initial="hidden" animate="visible">
-            <Feature emoji="🤝" title="Academic partnerships" desc="A network of collaborations and joint activities." />
-            <Feature emoji="🏫" title="Teaching & training" desc="Courses, summer schools, workshops." />
-            <Feature emoji="🌍" title="Mobility" desc="Co-tutoring, visits, internships, exchanges." />
-          </motion.div>
-        );
+  const sub = sp.get("sub") || TABS.find((t) => t.key === tab)?.subtabs?.[0]?.key;
+
+  const setSub = useCallback(
+    (s) =>
+      router.replace(`?tab=${encodeURIComponent(tab)}&sub=${encodeURIComponent(s)}`, {
+        scroll: false,
+      }),
+    [router, tab]
+  );
+
+  const activeTab = TABS.find((t) => t.key === tab);
+
+  // ---------------------------------------------------------------------------
+  // render inner content for main topics
+  function renderSubContent(tab, sub) {
+    if (tab === "Overview") {
+      if (sub === "partnerships")
+        return <SectionTitle title="Academic partnerships" desc="A network of collaborations and joint activities." />;
+
+      if (sub === "teaching")
+        return <SectionTitle title="Teaching & training" desc="Courses, summer schools, and workshops." />;
+
+      if (sub === "mobility")
+        return <SectionTitle title="Mobility" desc="Co-tutoring, visits, internships, exchanges." />;
     }
-  }, [tab]);
+
+    if (tab === "Initiatives") {
+      if (sub === "schools")
+        return <SectionTitle title="Summer schools & workshops" desc="International and local events for students and researchers." />;
+
+      if (sub === "seminars")
+        return <SectionTitle title="Joint seminars" desc="Collaborative talks & invited speakers." />;
+
+      if (sub === "visits")
+        return <SectionTitle title="Research visits" desc="Short-term & long-term research stays." />;
+    }
+
+    if (tab === "Courses") {
+      if (sub === "ml")
+        return <div>
+          <SectionTitle title="Machine Learning" desc="Joint courses, applied modules, projects." />
+          <br/>
+          <Feature
+            title="“Progress and Innovation in Ophtalmoogy” Forum 2025"
+            desc={
+              <>
+                <p className="mb-4 text-gray-700 dark:text-gray-300">
+                  The 3rd edition of “Eye and AI” workshop is jointly organized by the Department of Ophthalmology, “Iuliu Hațieganu” University of Medicine and Pharmacy, the Cluj County Emergency Clinical Hospital, and the Artificial Intelligence Research Institute (AIRi@UTCN), Technical University of Cluj-Napoca, Romania. Bringing together clinicians, researchers, and industry practitioners, the event explores how artificial intelligence is transforming ophthalmic care—from imaging and screening to decision support and workflow optimization.
+                </p>
+                <p className="mb-4 text-sm text-gray-600 dark:text-gray-400">
+                  <strong>Moderators:</strong> Adrian GROZA, Anca MĂRGINEAN, Radu-Răzvan SLĂVESCU
+                </p>
+
+                <ul className="space-y-2 list-disc pl-5 text-gray-700 dark:text-gray-300">
+                  <li>
+                    <strong>Reconstructing Compact 3D OCT Volumes from B-scans: a Comparative Study of U-Net Architectures</strong>
+                    <br />
+                    Adrian POP — Technical University, Cluj-Napoca
+                  </li>
+
+                  <li>
+                    <strong>3D Reconstruction Based on the AROI Set</strong>
+                    <br />
+                    Cristian Raul MOLDOVAN, Radu-Răzvan SLĂVESCU — Technical University, Cluj-Napoca
+                  </li>
+
+                  <li>
+                    <strong>Adapting Vision Foundation Models for OCT and Eye Fundus</strong>
+                    <br />
+                    Anca MĂRGINEAN — Technical University, Cluj-Napoca
+                  </li>
+
+                  <li>
+                    <strong>Segmentation of the Retinal Vascular Network and Biomarker Quantification in OCTA Imaging</strong>
+                    <br />
+                    Darius STAN, Raluca BREHAR — Technical University, Cluj-Napoca
+                  </li>
+                </ul>
+
+                <a
+                  href="https://elitemedicale.ro/forumul-progrese-si-inovatii-in-oftalmologie-2025/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center mt-2 text-sm font-medium text-blue-600 hover:underline dark:text-blue-400"
+                >
+                  View full event details →
+                </a>
+              </>
+            }
+          />
+        </div>;
+
+
+      if (sub === "robotics")
+        return <SectionTitle title="Robotics & Vision" desc="Hands-on labs, automation, and vision systems." />;
+
+      if (sub === "hpc")
+        return <SectionTitle title="HPC for AI" desc="GPU programming & large-scale AI training." />;
+
+      if (sub === "ethics")
+        return <SectionTitle title="AI Ethics & Safety" desc="Fairness, explainability & governance in AI." />;
+    }
+
+    if (tab === "Mobility") {
+      if (sub === "phd")
+        return <SectionTitle title="Co-supervision" desc="Joint PhD supervision with international partners." />;
+
+      if (sub === "grants")
+        return <SectionTitle title="Mobility grants" desc="Funding for exchanges & research stays." />;
+
+      if (sub === "placements")
+        return <SectionTitle title="Placements & exchanges" desc="Internships, visits, and staff exchanges." />;
+    }
+
+    return <div className="text-gray-500">Select a topic from the left menu.</div>;
+  }
 
   return (
     <main className="flex flex-col items-center justify-center bg-gray-50 dark:bg-gray-900 py-12">
@@ -116,7 +218,7 @@ export default function Client() {
             variants={itemVariants}
             className="text-2xl md:text-3xl font-extrabold mb-2 text-blue-600 dark:text-yellow-400 tracking-tight text-center"
           >
-            🎓 Academic engagement
+            Academic engagement
           </motion.h1>
           <motion.p
             variants={itemVariants}
@@ -152,7 +254,38 @@ export default function Client() {
             <div className="mt-2 border-b border-gray-200 dark:border-gray-800" />
           </div>
 
-          <div className="mt-6">{content}</div>
+          <div className="mt-8 grid grid-cols-1 md:grid-cols-[260px_1fr] gap-6">
+
+            {/* left submenu */}
+            <div className="flex flex-col gap-2 border border-gray-200 dark:border-gray-800 rounded-xl p-3 bg-white dark:bg-gray-900 h-fit">
+              {activeTab?.subtabs?.map((st) => {
+                const active = sub === st.key;
+                return (
+                  <button
+                    key={st.key}
+                    onClick={() => setSub(st.key)}
+                    className={
+                      "w-full text-left px-4 py-3 rounded-lg text-sm font-medium transition " +
+                      (active
+                        ? "bg-blue-600 text-white dark:bg-blue-500"
+                        : "text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800")
+                    }
+                  >
+                    {st.label}
+                  </button>
+                );
+              })}
+            </div>
+            {/* right content */}
+            <motion.div
+              className="rounded-xl border border-gray-200 dark:border-gray-800 p-6 bg-white dark:bg-gray-900 shadow-sm"
+              variants={containerVariants}
+              initial="hidden"
+              animate="visible"
+            >
+              {renderSubContent(tab, sub)}
+            </motion.div>
+          </div>
 
           <div className="mt-8 flex justify-center">
             <Link

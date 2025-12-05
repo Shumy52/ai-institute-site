@@ -21,7 +21,7 @@ export default function OpenProjectsCallsClient() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 1 }}
       >
-        📢 Calls for Projects
+        Calls for Projects
       </motion.h1>
 
       <motion.p

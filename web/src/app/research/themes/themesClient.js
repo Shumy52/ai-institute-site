@@ -35,7 +35,7 @@ export default function ThemesClient() {
             variants={itemVariants}
             className="text-4xl font-extrabold text-center mb-8 text-blue-600 dark:text-yellow-400 tracking-tight text-center"
           >
-            🧭 Themes
+            Themes
           </motion.h1>
 
           {themes.length ? (

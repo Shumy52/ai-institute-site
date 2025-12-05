@@ -18,7 +18,7 @@ export default function MissionClient() {
         className="text-2xl md:text-3xl font-extrabold mb-3 text-blue-600 dark:text-yellow-400 tracking-tight text-center"
         variants={item}
       >
-        🎯 Mission
+        Mission
       </motion.h1>
 
       <motion.p className="text-gray-700 dark:text-gray-300 text-center max-w-3xl mx-auto" variants={item}>

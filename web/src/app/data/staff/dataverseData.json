@@ -1,31 +1,10 @@
 [
   {
-    "name": "Sergiu-Nedevschi",
+    "name": "Adrian Groza",
     "elements": [ 
       {
-        "title": "WildUAV",
-        "description": "Is a dataset dedicated to drone-based environment perception, focused on depth estimation and semantic segmentation. It contains high-resolution RGB images with dense depth annotations obtained through photogrammetry and manually created segmentation masks. The dataset is structured into two components: a mapping set with 4 annotated sequences, and a video set with 11 4K sequences for self-supervised training. Through its diversity of natural scenes, WildUAV supports the development and validation of deep learning algorithms for aerial perception and environmental monitoring."
-      }, 
-      {
-        "title": "ClaraVid",
-        "description": "Is a synthetic dataset designed for holistic scene reconstruction and understanding from a low-altitude aerial perspective. The dataset includes high-resolution images generated in Unreal Engine, accompanied by multimodal labels for tasks such as panoptic segmentation, depth estimation, and 3D reconstruction. ClaraVid is used as a benchmark for testing and comparing modern deep learning methods in aerial perception, with direct applications in urban mapping and holistic scene understanding."
-      },
-      {
-        "title": "Thermal Pedestrian Dataset",
-        "description": "Is a dataset developed for pedestrian detection and tracking tasks in thermal images. The dataset contains over 26,000 images of pedestrians captured with a thermal camera under various weather and temperature conditions. Annotations were made for pedestrians, and the main purpose of the dataset is the validation of robust data association methods by combining learned and engineered features. This dataset provides a relevant framework for developing algorithms for perception in nighttime or low-visibility environments.("
-      }, 
-      {
-        "title": "CROSSIR",
-        "description": "Is a dataset created for understanding pedestrian actions in thermal imagery, collected with a FLIR camera in Cluj-Napoca, Romania, under diverse weather and lighting conditions. The dataset contains 86 high-resolution video sequences, resulting in 14,678 annotated images, covering 175 unique pedestrians. Annotations include pedestrian positions, crossing actions, road semantic segmentation, movement direction, and occlusion levels. CROSSIR is used for tasks such as pedestrian detection and tracking, road segmentation, and crossing action recognition."
-      },
-      {
-        "title": "UaVID Plus",
-        "description": "Is a real-world dataset dedicated to semantic and panoptic segmentation tasks in urban environments, collected with low-altitude drones. The dataset contains over 40 high-resolution (4K) video sequences, covering streets, buildings, vegetation, and road traffic, with dense pixel-level annotations across multiple semantic classes."
-      }, 
-      {
-        "title": "TC UP-Drive Dataset",
-        "description": "Is a dataset developed within the European H2020 – UP-Drive project, initially used for training neural networks for onboard perception in an autonomous vehicle prototype. The dataset is dedicated to segmentation tasks and includes 16,168 manually annotated images, covering 23 semantic classes specific to urban environments. These data have been used to train algorithms for semantic segmentation, instance segmentation, and panoptic segmentation, making it a valuable resource for developing robust visual perception in complex urban scenarios."
-      }
+        "title": "AIRI data repository",
+        "description": "http://dataverse.utcluj.ro"}
     ]
   }
 ]

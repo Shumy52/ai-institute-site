@@ -27,7 +27,7 @@ export default function ResearchersClient({ staffData = [] }) {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 1 }}
       >
-        🔬 Researchers
+        Researchers
       </motion.h1>
 
       <motion.p

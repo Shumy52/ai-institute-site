@@ -407,7 +407,7 @@ export default function DepartmentsClient({ staffData = [], departments = [], pr
                   variants={itemVariants}
                   className="text-4xl font-extrabold text-center mb-8 text-blue-600 dark:text-yellow-400 tracking-tight text-center"
                 >
-                  🧑‍🤝‍🧑 Departments
+                   Research departments
                 </motion.h1>
 
                 <motion.div variants={containerVariants} initial="hidden" animate="visible">
@@ -420,7 +420,7 @@ export default function DepartmentsClient({ staffData = [], departments = [], pr
                         onClick={() => handleUnitClick(unit)}
                       >
                         <h2 className="text-lg md:text-xl font-bold text-gray-900 dark:text-gray-100 flex items-center gap-3">
-                          {unit.icon || "🏷️"} {unit.name}
+                          {unit.name}
                         </h2>
                       </motion.div>
                     ))}
@@ -428,7 +428,33 @@ export default function DepartmentsClient({ staffData = [], departments = [], pr
                 </motion.div>
               </>
             )}
-
+            {!selectedUnit && (
+              <>
+             <motion.h1
+                  variants={itemVariants}
+                  className="mt-8 text-4xl font-extrabold text-center mb-8 text-blue-600 dark:text-yellow-400 tracking-tight text-center"
+                >
+                   Support departments
+                </motion.h1>
+                <motion.div variants={containerVariants} initial="hidden" animate="visible">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
+                    {supportUnits.map((unit, index) => (
+                      <motion.div
+                        key={index}
+                        variants={itemVariants}
+                        className="bg-white dark:bg-gray-900 rounded-lg shadow-md p-4 md:p-5 border cursor-pointer"
+                        onClick={() => handleUnitClick(unit)}
+                      >
+                        <h2 className="text-lg md:text-xl font-bold text-gray-900 dark:text-gray-100 flex items-center gap-3">
+                          {unit.name}
+                        </h2>
+                      </motion.div>
+                    ))}
+                  </div>
+                </motion.div>
+                </>
+               )}
+              
             {selectedUnit && (
               <>
                 <h2

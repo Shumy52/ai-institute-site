@@ -115,7 +115,7 @@ export default function ProjectsClient({ projects: rawProjects = [] }) {
             variants={itemVariants}
             className="text-4xl font-extrabold text-center mb-8 text-blue-600 dark:text-yellow-400 text-center"
           >
-            🗂️ Projects
+            Projects
           </motion.h1>
 
           {/* GRID: sidebar (filters) + list */}
