@@ -37,6 +37,7 @@ export default {
       'api::research-theme.research-theme',
       'api::partner.partner',
       'api::support-unit.support-unit',
+      'api::news-article.news-article',
     ];
 
     let addedCount = 0;

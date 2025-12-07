@@ -64,6 +64,7 @@ const SUPPORT_UNIT_POPULATE = {
 };
 
 
+
 const PUBLICATION_POPULATE = {
   fields: ['title', 'slug', 'year', 'kind', 'description', 'doc_url', 'external_url'],
   populate: {
@@ -87,6 +88,16 @@ const PROJECT_POPULATE = {
     partners: {
       fields: ['name', 'slug'],
     },
+  },
+};
+
+const NEWS_ARTICLE_POPULATE = {
+  fields: ['title', 'slug', 'summary', 'category', 'publishedDate', 'linkUrl'],
+  populate: {
+    heroImage: {},
+    relatedDepartments: DEPARTMENT_POPULATE,
+    relatedProjects: PROJECT_POPULATE,
+    featuredPeople: PERSON_FLAT_POPULATE,
   },
 };
 
@@ -265,6 +276,23 @@ export async function getPublications() {
     return data.data || [];
   } catch (error) {
     console.error('Failed to fetch publications:', error);
+    return [];
+  }
+}
+
+/**
+ * Get all news articles from Strapi
+ * @returns {Promise<Array>} Array of news articles
+ */
+export async function getNewsArticles() {
+  try {
+    const params = new URLSearchParams();
+    params.set('sort', 'publishedDate:desc');
+    setPopulate(params, 'populate', NEWS_ARTICLE_POPULATE);
+    const data = await fetchAPI(`/news-articles?${params.toString()}`);
+    return data.data || [];
+  } catch (error) {
+    console.error('Failed to fetch news articles:', error);
     return [];
   }
 }
@@ -493,6 +521,68 @@ export function transformPublicationData(strapiPubs) {
       _strapi: pub,
     };
   });
+}
+
+export function transformNewsData(strapiNews) {
+  const list = Array.isArray(strapiNews) ? strapiNews : strapiNews ? [strapiNews] : [];
+
+  const normalizeDate = (value) => {
+    if (!value) return null;
+    const d = new Date(value);
+    if (Number.isNaN(d.getTime())) return null;
+    return {
+      day: d.getUTCDate(),
+      month: d.getUTCMonth() + 1,
+      year: d.getUTCFullYear(),
+    };
+  };
+
+  const items = list.map((item) => {
+    const attributes = item?.attributes ?? item ?? {};
+    return {
+      id: item?.id ?? null,
+      title: attributes.title || '',
+      slug: attributes.slug || '',
+      summary: attributes.summary || '',
+      category: attributes.category || 'other',
+      date: normalizeDate(attributes.publishedDate),
+      linkUrl: attributes.linkUrl || '',
+      image: resolveMediaUrl(attributes.heroImage),
+      _strapi: item,
+    };
+  });
+
+  // Group by category to preserve the existing UI structure
+  const byCategory = items.reduce((acc, item) => {
+    const key = item.category || 'other';
+    if (!acc[key]) acc[key] = [];
+    acc[key].push(item);
+    return acc;
+  }, {});
+
+  const categoryLabel = (cat) => {
+    const map = {
+      announcement: 'Announcements',
+      construction: 'Construction',
+      collaboration: 'Collaborations',
+      award: 'Awards',
+      press: 'Press',
+      other: 'Other',
+    };
+    return map[cat] || 'Other';
+  };
+
+  return Object.entries(byCategory)
+    .map(([cat, list]) => ({
+      title: categoryLabel(cat),
+      items: list.map((n) => ({
+        text: n.title,
+        url: n.linkUrl || '#',
+        date: n.date || { day: null, month: null, year: null },
+        image: n.image,
+      })),
+    }))
+    .sort((a, b) => a.title.localeCompare(b.title));
 }
 
 /**

@@ -2,7 +2,6 @@
 
 import { useState, useMemo } from "react";
 import { motion } from "framer-motion";
-import newsData from "@/app/data/news&events/newsData.json";
 
 /* Animations */
 const containerVariants = {
@@ -39,8 +38,8 @@ function formatNewsDate(date) {
 
 
 // Generation function for XML file 
-function generateAndDownloadRSS() {
-  const groups = Array.isArray(newsData) ? newsData : [];
+function generateAndDownloadRSS(groupsInput) {
+  const groups = Array.isArray(groupsInput) ? groupsInput : [];
   const items = [];
 
   for (const g of groups) {
@@ -89,8 +88,8 @@ function generateAndDownloadRSS() {
   URL.revokeObjectURL(url);
 }
 
-export default function NewsClient() {
-  const groups = Array.isArray(newsData) ? newsData : [];
+export default function NewsClient({ newsGroups = [] }) {
+  const groups = Array.isArray(newsGroups) ? newsGroups : [];
   const [selectedIdx, setSelectedIdx] = useState(0);
 
   const selectedGroup = useMemo(
@@ -226,7 +225,7 @@ export default function NewsClient() {
 
       {/* RSS Button */}
       <button
-        onClick={generateAndDownloadRSS}
+        onClick={() => generateAndDownloadRSS(groups)}
         aria-label="Download RSS feed (XML)"
         title="Download RSS feed (XML)"
         className="fixed bottom-6 right-20 z-50 bg-blue-600 dark:bg-yellow-400 text-white dark:text-black rounded-full shadow-lg p-4 transition-transform duration-300 hover:scale-110"
