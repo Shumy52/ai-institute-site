@@ -59,6 +59,10 @@ const DEPARTMENT_POPULATE = {
   fields: ['name', 'slug', 'summary', 'description'],
 };
 
+const SUPPORT_UNIT_POPULATE = {
+  fields: ['name', 'slug', 'summary', 'mission'],
+};
+
 
 const PUBLICATION_POPULATE = {
   fields: ['title', 'slug', 'year', 'kind', 'description', 'doc_url', 'external_url'],
@@ -335,6 +339,28 @@ export async function getDepartments() {
     return data.data || [];
   } catch (error) {
     console.error('Failed to fetch departments:', error);
+    return [];
+  }
+}
+
+export async function getSupportUnits() {
+  try {
+    const params = new URLSearchParams();
+    params.set('sort', 'name:asc');
+    params.append('fields[0]', 'name');
+    params.append('fields[1]', 'slug');
+    params.append('fields[2]', 'summary');
+    params.append('fields[3]', 'mission');
+    setPopulate(params, 'populate[services]');
+    setPopulate(params, 'populate[contactLinks]');
+    setPopulate(params, 'populate[body]');
+    setPopulate(params, 'populate[heroImage]');
+    setPopulate(params, 'populate[lead]', PERSON_FLAT_POPULATE);
+    setPopulate(params, 'populate[members]', PERSON_FLAT_POPULATE);
+    const data = await fetchAPI(`/support-units?${params.toString()}`);
+    return data.data || [];
+  } catch (error) {
+    console.error('Failed to fetch support units:', error);
     return [];
   }
 }
@@ -662,6 +688,77 @@ export function transformDepartmentData(strapiDepartments) {
       coCoordinatorSlug: coCoordinatorData.slug || '',
       coordinatorSlug: coordinatorData.slug || '',
       _strapi: department,
+    };
+  });
+}
+
+export function transformSupportUnitData(strapiSupportUnits) {
+  const list = Array.isArray(strapiSupportUnits)
+    ? strapiSupportUnits
+    : strapiSupportUnits
+    ? [strapiSupportUnits]
+    : [];
+
+  const normalizeServices = (items) =>
+    Array.isArray(items)
+      ? items
+          .map((item) => {
+            if (!item) return null;
+            const title = item?.title || item?.heading || item?.text || item?.label || 'Details';
+            const description = stripHtml(item?.description || item?.content || item?.body || '');
+            const content = description ? [description] : [];
+            return {
+              text: title,
+              content,
+              raw: item,
+            };
+          })
+          .filter(Boolean)
+      : [];
+
+  return list.map((unit) => {
+    const attributes = unit?.attributes ?? unit ?? {};
+    const leadEntry = attributes.lead?.data ?? attributes.lead;
+    const leadData = leadEntry?.attributes ?? leadEntry ?? {};
+    const members = toArray(attributes.members?.data ?? attributes.members).map((member) => {
+      const memberData = member?.attributes ?? member ?? {};
+      return {
+        id: member?.id ?? null,
+        slug: memberData.slug || '',
+        name: memberData.fullName || memberData.name || '',
+        title: memberData.position || memberData.title || '',
+        email: memberData.email || '',
+        phone: memberData.phone || '',
+      };
+    });
+
+    const services = normalizeServices(attributes.services);
+    const contactLinks = Array.isArray(attributes.contactLinks)
+      ? attributes.contactLinks.map((link) => ({
+          label: link?.label || link?.title || link?.text || 'Contact',
+          url: link?.url || link?.href || '',
+          icon: link?.icon || '',
+        }))
+      : [];
+
+    return {
+      id: unit?.id ?? null,
+      name: attributes.name || '',
+      slug: attributes.slug || '',
+      summary: attributes.summary || '',
+      description: stripHtml(attributes.mission) || stripHtml(attributes.summary) || '',
+      rawDescription: attributes.mission || attributes.summary || '',
+      body: attributes.body || [],
+      elements: services,
+      contactLinks,
+      icon: '🏷️',
+      coordinator: leadData.fullName || leadData.name || '',
+      coCoordinator: '',
+      focusItems: services,
+      coCoordinatorSlug: '',
+      coordinatorSlug: leadData.slug || '',
+      members,
+      _strapi: unit,
     };
   });
 }

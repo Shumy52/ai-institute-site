@@ -143,7 +143,14 @@ function SectionToggle({ label, children, defaultOpen = false }) {
   );
 }
 
-export default function DepartmentsClient({ staffData = [], departments = [], projects = [], publications = [] }) {
+export default function DepartmentsClient({
+  staffData = [],
+  departments = [],
+  supportUnits = [],
+  projects = [],
+  publications = [],
+}) {
+  const supportUnitsList = Array.isArray(supportUnits) ? supportUnits : [];
   const [selectedUnit, setSelectedUnit] = useState(null);
   const [unitView, setUnitView] = useState("details");
 
@@ -438,7 +445,7 @@ export default function DepartmentsClient({ staffData = [], departments = [], pr
                 </motion.h1>
                 <motion.div variants={containerVariants} initial="hidden" animate="visible">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
-                    {supportUnits.map((unit, index) => (
+                    {supportUnitsList.map((unit, index) => (
                       <motion.div
                         key={index}
                         variants={itemVariants}

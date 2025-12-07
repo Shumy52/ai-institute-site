@@ -36,6 +36,7 @@ export default {
       'api::dataset.dataset',
       'api::research-theme.research-theme',
       'api::partner.partner',
+      'api::support-unit.support-unit',
     ];
 
     let addedCount = 0;
