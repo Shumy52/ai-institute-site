@@ -10,6 +10,12 @@ services:
       - pgdata:/var/lib/postgresql/data
     ports:
       - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
 
   strapi:
     build: ./server
@@ -27,7 +33,15 @@ services:
     ports:
       - "1337:1337"
     depends_on:
-      - postgres
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      # The fucking health check kept failing. This is an ugly workaround.
+      test: ["CMD-SHELL", "netstat -tln | grep 1337 || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
 
   nextjs:
     build: ./web
@@ -38,7 +52,8 @@ services:
     ports:
       - "3000:3000"
     depends_on:
-      - strapi
+      strapi:
+        condition: service_healthy
 
 volumes:
   pgdata:

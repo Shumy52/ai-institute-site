@@ -45,3 +45,4 @@ next-env.d.ts
 /stable_releases/
 web/src/app/research/publications/publicationsClient.js.backup
 web/src/app/people/staff/\[slug]/page.js.backup
+.vscode/
