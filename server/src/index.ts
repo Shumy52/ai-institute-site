@@ -38,8 +38,6 @@ export default {
       'api::partner.partner',
       'api::support-unit.support-unit',
       'api::news-article.news-article',
-      'api::event.event',
-      'api::seminar.seminar',
     ];
 
     let addedCount = 0;

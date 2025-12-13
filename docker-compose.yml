@@ -22,9 +22,6 @@ services:
     restart: always
     env_file:
       - ./server/.env
-    volumes:
-      - ./web/src/app/data:/web/src/app/data:ro
-      - ./web/public:/web/public:ro
     environment:
       DATABASE_CLIENT: ${DATABASE_CLIENT}
       DATABASE_HOST: ${DATABASE_HOST}

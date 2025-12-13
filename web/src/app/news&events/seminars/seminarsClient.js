@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import seminarsData from "@/app/data/news&events/seminarsData.json";
 
 /* Animations */
 const containerVariants = {
@@ -64,8 +65,8 @@ function SectionToggle({ label, children, defaultOpen = false }) {
   );
 }
 
-export default function SeminarsClient({ items: rawItems = [] }) {
-  const items = Array.isArray(rawItems) ? rawItems : [];
+export default function SeminarsClient() {
+  const items = Array.isArray(seminarsData) ? seminarsData : [];
 
   return (
     <main className="max-w-6xl mx-auto p-6 bg-white dark:bg-gray-950 text-black dark:text-white rounded-lg shadow-lg">

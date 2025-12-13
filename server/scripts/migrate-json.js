@@ -2,7 +2,6 @@
 
 const path = require('path');
 const fs = require('fs-extra');
-const mime = require('mime-types');
 
 const resolveDataRoot = () => {
   const fromEnv = process.env.MIGRATION_DATA_ROOT;
@@ -39,79 +38,12 @@ console.log(`Using migration data root: ${DATA_ROOT}`);
 
 const nowISO = () => new Date().toISOString();
 
-const pad2 = (value) => String(value).padStart(2, '0');
-
-const toISODate = (dateLike) => {
-  if (!dateLike || typeof dateLike !== 'object') return null;
-  const year = Number(dateLike.year ?? 0);
-  const month = Number(dateLike.month ?? dateLike.mouth ?? 0);
-  const day = Number(dateLike.day ?? 0);
-  if (!year || !month || !day) return null;
-  return `${year}-${pad2(month)}-${pad2(day)}`;
-};
-
-function getFileSizeInBytes(filePath) {
-  const stats = fs.statSync(filePath);
-  return stats.size;
-}
-
-function getFileDataFromPath(filePath) {
-  const base = path.basename(filePath);
-  const ext = base.split('.').pop();
-  const mimeType = mime.lookup(ext || '') || '';
-  return {
-    filepath: filePath,
-    originalFileName: base,
-    size: getFileSizeInBytes(filePath),
-    mimetype: mimeType,
-  };
-}
-
-async function uploadFile(file, name) {
-  return strapi
-    .plugin('upload')
-    .service('upload')
-    .upload({
-      files: file,
-      data: {
-        fileInfo: {
-          alternativeText: name,
-          caption: name,
-          name,
-        },
-      },
-    });
-}
-
-async function ensureUploadedSingleImage(absFilePath) {
-  if (!absFilePath) return null;
-  if (!fs.existsSync(absFilePath)) return null;
-
-  const base = path.basename(absFilePath);
-  const nameNoExt = base.replace(/\..*$/, '');
-
-  const existing = await strapi.query('plugin::upload.file').findOne({
-    where: {
-      name: nameNoExt,
-    },
-  });
-
-  if (existing) return existing;
-
-  const fileData = getFileDataFromPath(absFilePath);
-  const [uploaded] = await uploadFile(fileData, nameNoExt);
-  return uploaded || null;
-}
-
 // Helper to publish a document after creation
 const publishDocument = async (uid, documentId) => {
-  if (!uid || !documentId) return;
   try {
     await strapi.documents(uid).publish({ documentId });
   } catch (error) {
-    const details = error?.details || error?.response?.data || null;
     console.warn(`  ⚠️  Failed to publish ${uid} ${documentId}:`, error.message);
-    if (details) console.warn('    details:', details);
   }
 };
 
@@ -198,8 +130,7 @@ const toFocusItems = (elements = []) =>
     })
     .filter(Boolean);
 
-const getEntityId = (doc) => (doc && (doc.id ?? doc.ID ?? doc._id)) || null;
-const getDocumentId = (doc) => (doc && (doc.documentId || doc.document_id)) || null;
+const getDocId = (doc) => (doc && (doc.documentId || doc.id || doc.document_id)) || null;
 
 
 async function findDocument(uid, filters) {
@@ -245,10 +176,9 @@ async function importDepartments(state) {
       departmentDoc = await strapi
         .documents('api::department.department')
         .update({
-          documentId: getDocumentId(existing),
+          documentId: getDocId(existing),
           data: baseData,
         });
-      await publishDocument('api::department.department', getDocumentId(departmentDoc));
       console.log(`  🔁 updated department: ${name}`);
     } else {
       departmentDoc = await strapi
@@ -256,7 +186,7 @@ async function importDepartments(state) {
         .create({
           data: baseData,
         });
-      await publishDocument('api::department.department', getDocumentId(departmentDoc));
+      await publishDocument('api::department.department', getDocId(departmentDoc));
       console.log(`  ✅ created department: ${name}`);
     }
 
@@ -305,13 +235,9 @@ async function importSupportUnits(state) {
       supportDoc = await strapi
         .documents('api::support-unit.support-unit')
         .update({
-          documentId: getDocumentId(existing),
-          data: {
-            ...baseData,
-            publishedAt: nowISO(),
-          },
+          documentId: getDocId(existing),
+          data: baseData,
         });
-      await publishDocument('api::support-unit.support-unit', getDocumentId(supportDoc));
       console.log(`  🔁 updated support unit: ${name}`);
     } else {
       supportDoc = await strapi
@@ -359,13 +285,21 @@ async function importPeople(state) {
       slug: { $eqi: slug },
     });
 
+    if (existing) {
+      state.peopleBySlug[slug] = existing;
+      state.peopleByKey[normalizedSlug] = existing;
+      state.peopleByKey[toKey(fullName)] = existing;
+      console.log(`  ◼︎ skipped existing person: ${fullName}`);
+      continue;
+    }
+
     const departmentName = String(person?.department || '').trim();
     let departmentId = null;
     if (departmentName) {
       const departmentDoc =
         state.departments[toKey(departmentName)] ||
         (await findDocument('api::department.department', { name: { $eqi: departmentName } }));
-      departmentId = getEntityId(departmentDoc);
+      departmentId = getDocId(departmentDoc);
     }
 
     const payload = {
@@ -376,32 +310,22 @@ async function importPeople(state) {
       position: person?.title || '',
       phone: person?.phone || '',
       email: person?.email || '',
-      publishedAt: nowISO(),
     };
 
     if (departmentId) {
       payload.department = { connect: [departmentId] };
     }
 
-    let personDoc;
-    if (existing) {
-      personDoc = await strapi.documents('api::person.person').update({
-        documentId: getDocumentId(existing),
-        data: payload,
-      });
-      await publishDocument('api::person.person', getDocumentId(personDoc));
-      console.log(`  🔁 updated person: ${fullName}`);
-    } else {
-      personDoc = await strapi.documents('api::person.person').create({
-        data: payload,
-      });
-      await publishDocument('api::person.person', getDocumentId(personDoc));
-      console.log(`  ✅ created person: ${fullName}`);
-    }
+    const created = await strapi.documents('api::person.person').create({
+      data: payload,
+    });
 
-    state.peopleBySlug[slug] = personDoc;
-    state.peopleByKey[normalizedSlug] = personDoc;
-    state.peopleByKey[toKey(fullName)] = personDoc;
+    await publishDocument('api::person.person', getDocId(created));
+    console.log(`  ✅ created person: ${fullName}`);
+
+    state.peopleBySlug[slug] = created;
+    state.peopleByKey[normalizedSlug] = created;
+    state.peopleByKey[toKey(fullName)] = created;
   }
 }
 
@@ -429,9 +353,6 @@ async function ensureTheme(state, name) {
   });
 
   if (existing) {
-    if (!existing.publishedAt) {
-      await publishDocument('api::research-theme.research-theme', getDocumentId(existing));
-    }
     state.themes[key] = existing;
     return existing;
   }
@@ -441,11 +362,8 @@ async function ensureTheme(state, name) {
       name: label,
       slug,
       summary: '',
-      publishedAt: nowISO(),
     },
   });
-
-  await publishDocument('api::research-theme.research-theme', getDocumentId(created));
 
   state.themes[key] = created;
   return created;
@@ -463,9 +381,6 @@ async function ensurePartner(state, name) {
   });
 
   if (existing) {
-    if (!existing.publishedAt) {
-      await publishDocument('api::partner.partner', getDocumentId(existing));
-    }
     state.partners[key] = existing;
     return existing;
   }
@@ -475,11 +390,8 @@ async function ensurePartner(state, name) {
       name: label,
       slug,
       description: '',
-      publishedAt: nowISO(),
     },
   });
-
-  await publishDocument('api::partner.partner', getDocumentId(created));
 
   state.partners[key] = created;
   return created;
@@ -497,19 +409,19 @@ async function attachDepartmentLeads(state) {
     const deputyDoc = lookupPerson(state, meta?.coCoordinator);
 
     if (coordinatorDoc) {
-      const coordinatorId = getEntityId(coordinatorDoc);
+      const coordinatorId = getDocId(coordinatorDoc);
       if (coordinatorId) data.coordinator = { connect: [coordinatorId] };
     }
 
     if (deputyDoc) {
-      const deputyId = getEntityId(deputyDoc);
+      const deputyId = getDocId(deputyDoc);
       if (deputyId) data.coCoordinator = { connect: [deputyId] };
     }
 
     if (!Object.keys(data).length) continue;
 
     await strapi.documents('api::department.department').update({
-      documentId: getDocumentId(department),
+      documentId: getDocId(department),
       data,
     });
   }
@@ -530,7 +442,10 @@ async function importPublications(state) {
       slug: { $eqi: slug },
     });
 
-    // continue with upsert to keep content published and in sync
+    if (existing) {
+      state.publications[slug] = existing;
+      continue;
+    }
 
     const departmentName = String(pub?.domain || '').trim();
     let departmentId = null;
@@ -538,14 +453,14 @@ async function importPublications(state) {
       const departmentDoc =
         state.departments[toKey(departmentName)] ||
         (await findDocument('api::department.department', { name: { $eqi: departmentName } }));
-      departmentId = getEntityId(departmentDoc);
+      departmentId = getDocId(departmentDoc);
     }
 
     const authorIds = [];
     const authorValues = Array.isArray(pub?.authors) ? pub.authors : [];
     for (const author of authorValues) {
       const authorDoc = lookupPerson(state, author);
-      const id = getEntityId(authorDoc);
+      const id = getDocId(authorDoc);
       if (id) authorIds.push(id);
     }
 
@@ -569,23 +484,13 @@ async function importPublications(state) {
       payload.authors = { connect: authorIds };
     }
 
-    let pubDoc;
-    if (existing) {
-      pubDoc = await strapi.documents('api::publication.publication').update({
-        documentId: getDocumentId(existing),
-        data: payload,
-      });
-      await publishDocument('api::publication.publication', getDocumentId(pubDoc));
-      console.log(`  🔁 updated publication: ${title}`);
-    } else {
-      pubDoc = await strapi.documents('api::publication.publication').create({
-        data: payload,
-      });
-      await publishDocument('api::publication.publication', getDocumentId(pubDoc));
-      console.log(`  ✅ created publication: ${title}`);
-    }
+    const created = await strapi.documents('api::publication.publication').create({
+      data: payload,
+    });
 
-    state.publications[slug] = pubDoc;
+    console.log(`  ✅ created publication: ${title}`);
+
+    state.publications[slug] = created;
   }
 }
 
@@ -604,59 +509,34 @@ async function importProjects(state) {
       slug: { $eqi: slug },
     });
 
+    if (existing) {
+      state.projects[slug] = existing;
+      continue;
+    }
+
     const domainNames = Array.isArray(proj?.domain) ? proj.domain : extractArray(proj?.domain);
     const domainIds = [];
     for (const name of domainNames) {
       const depDoc = state.departments[toKey(name)] || (await findDocument('api::department.department', { name: { $eqi: name } }));
-      const id = getEntityId(depDoc);
+      const id = getDocId(depDoc);
       if (id) domainIds.push(id);
     }
 
     const memberDocs = Array.isArray(proj?.teams) ? proj.teams : [];
     const memberIds = [];
-    const teamEntries = [];
-    const seenTeam = new Set();
     for (const member of memberDocs) {
       const personDoc = lookupPerson(state, member?.name || member?.slug || member);
-      const id = getEntityId(personDoc);
+      const id = getDocId(personDoc);
       if (id) memberIds.push(id);
-
-      const role = extractString(member?.title || '').trim() || 'Member';
-      if (id) {
-        const teamKey = `${id}:${role}`;
-        if (!seenTeam.has(teamKey)) {
-          seenTeam.add(teamKey);
-          teamEntries.push({
-            person: id,
-            role,
-            isLead: false,
-          });
-        }
-      }
     }
 
     const leadDoc = lookupPerson(state, proj?.lead);
-    const leadId = getEntityId(leadDoc);
-
-    if (leadId) {
-      for (const entry of teamEntries) {
-        if (entry.person === leadId) entry.isLead = true;
-      }
-
-      const hasLeadInTeam = teamEntries.some((entry) => entry.person === leadId);
-      if (!hasLeadInTeam) {
-        teamEntries.unshift({
-          person: leadId,
-          role: 'Lead',
-          isLead: true,
-        });
-      }
-    }
+    const leadId = getDocId(leadDoc);
 
     const relatedPublicationTitle = String(proj?.publication || '').trim();
     const publicationSlug = relatedPublicationTitle ? toSlug(relatedPublicationTitle) : null;
     const publicationDoc = publicationSlug ? state.publications[publicationSlug] : null;
-    const publicationId = getEntityId(publicationDoc);
+    const publicationId = getDocId(publicationDoc);
 
     const partners = extractArray(proj?.partners).filter(Boolean);
 
@@ -664,7 +544,7 @@ async function importProjects(state) {
     const themeNames = extractArray(proj?.themes);
     for (const themeName of themeNames) {
       const themeDoc = await ensureTheme(state, themeName);
-      const id = getEntityId(themeDoc);
+      const id = getDocId(themeDoc);
       if (id) themeIds.push(id);
     }
 
@@ -672,7 +552,7 @@ async function importProjects(state) {
     const partnerNames = partners.length ? partners : [];
     for (const partnerName of partnerNames) {
       const partnerDoc = await ensurePartner(state, partnerName);
-      const id = getEntityId(partnerDoc);
+      const id = getDocId(partnerDoc);
       if (id) partnerIds.push(id);
     }
 
@@ -693,11 +573,7 @@ async function importProjects(state) {
     }
 
     if (memberIds.length) {
-      payload.members = { connect: Array.from(new Set(memberIds)) };
-    }
-
-    if (teamEntries.length) {
-      payload.team = teamEntries;
+      payload.members = { connect: memberIds };
     }
 
     if (domainIds.length) {
@@ -716,213 +592,13 @@ async function importProjects(state) {
       payload.partners = { connect: partnerIds };
     }
 
-    let projectDoc;
-    if (existing) {
-      projectDoc = await strapi.documents('api::project.project').update({
-        documentId: getDocumentId(existing),
-        data: payload,
-      });
-      await publishDocument('api::project.project', getDocumentId(projectDoc));
-      console.log(`  🔁 updated project: ${title}`);
-    } else {
-      projectDoc = await strapi.documents('api::project.project').create({
-        data: payload,
-      });
-      await publishDocument('api::project.project', getDocumentId(projectDoc));
-      console.log(`  ✅ created project: ${title}`);
-    }
-
-    state.projects[slug] = projectDoc;
-  }
-}
-
-async function importNewsArticles(state) {
-  const exists = await hasJson('news&events', 'newsData.json');
-  if (!exists) {
-    console.warn('⚠️  newsData.json not found. Skipping news import.');
-    return;
-  }
-
-  const groups = await readJson('news&events', 'newsData.json');
-  const allItems = [];
-  for (const group of groups) {
-    const title = String(group?.title || '').trim();
-    const items = Array.isArray(group?.items) ? group.items : [];
-    for (const item of items) {
-      allItems.push({ groupTitle: title, ...item });
-    }
-  }
-
-  console.log(`\n⏳ Importing news (${allItems.length} items detected)`);
-
-  const categoryFromGroupTitle = (groupTitle) => {
-    const key = toKey(groupTitle);
-    if (key.includes('construction')) return 'construction';
-    if (key.includes('award')) return 'award';
-    if (key.includes('press') || key.includes('media')) return 'press';
-    if (key.includes('collaboration') || key.includes('partner')) return 'collaboration';
-    if (key.includes('announcement')) return 'announcement';
-    return 'other';
-  };
-
-  const resolveWebPublicFile = (webPublicPath) => {
-    const cleaned = String(webPublicPath || '').replace(/^\//, '');
-    if (!cleaned) return null;
-    return path.resolve(__dirname, '..', '..', 'web', 'public', cleaned);
-  };
-
-  for (const item of allItems) {
-    const title = String(item?.text || '').trim();
-    if (!title) continue;
-
-    const slug = toSlug(title);
-    const existing = await findDocument('api::news-article.news-article', {
-      slug: { $eqi: slug },
+    const created = await strapi.documents('api::project.project').create({
+      data: payload,
     });
 
-    const publishedDate = toISODate(item?.date);
-    const category = categoryFromGroupTitle(item?.groupTitle || '');
+    console.log(`  ✅ created project: ${title}`);
 
-    const heroImagePath = resolveWebPublicFile(item?.image);
-    const heroImage = await ensureUploadedSingleImage(heroImagePath);
-
-    const payload = {
-      title,
-      slug,
-      summary: '',
-      category,
-      publishedDate,
-      linkUrl: item?.url || '',
-      body: [],
-      publishedAt: nowISO(),
-    };
-
-    if (heroImage) {
-      payload.heroImage = heroImage;
-    }
-
-    if (existing) {
-      const updated = await strapi.documents('api::news-article.news-article').update({
-        documentId: getDocumentId(existing),
-        data: payload,
-      });
-      await publishDocument('api::news-article.news-article', getDocumentId(updated));
-      console.log(`  🔁 updated news: ${title}`);
-    } else {
-      const created = await strapi.documents('api::news-article.news-article').create({
-        data: payload,
-      });
-      await publishDocument('api::news-article.news-article', getDocumentId(created));
-      console.log(`  ✅ created news: ${title}`);
-    }
-  }
-}
-
-async function importEvents(state) {
-  const exists = await hasJson('news&events', 'eventsData.json');
-  if (!exists) {
-    console.warn('⚠️  eventsData.json not found. Skipping events import.');
-    return;
-  }
-
-  const events = await readJson('news&events', 'eventsData.json');
-  const list = Array.isArray(events) ? events : [];
-
-  console.log(`\n⏳ Importing events (${list.length} items detected)`);
-
-  for (const ev of list) {
-    const title = String(ev?.title || '').trim();
-    if (!title) continue;
-
-    const slug = toSlug(title);
-    const existing = await findDocument('api::event.event', {
-      slug: { $eqi: slug },
-    });
-
-    const payload = {
-      title,
-      slug,
-      description: '',
-      category: 'event',
-      ctaLabel: 'Open',
-      ctaUrl: ev?.url || '',
-      publishedAt: nowISO(),
-    };
-
-    if (existing) {
-      const updated = await strapi.documents('api::event.event').update({
-        documentId: getDocumentId(existing),
-        data: payload,
-      });
-      await publishDocument('api::event.event', getDocumentId(updated));
-      console.log(`  🔁 updated event: ${title}`);
-    } else {
-      const created = await strapi.documents('api::event.event').create({
-        data: payload,
-      });
-      await publishDocument('api::event.event', getDocumentId(created));
-      console.log(`  ✅ created event: ${title}`);
-    }
-  }
-}
-
-async function importSeminars(state) {
-  const exists = await hasJson('news&events', 'seminarsData.json');
-  if (!exists) {
-    console.warn('⚠️  seminarsData.json not found. Skipping seminars import.');
-    return;
-  }
-
-  const seminars = await readJson('news&events', 'seminarsData.json');
-  const list = Array.isArray(seminars) ? seminars : [];
-
-  console.log(`\n⏳ Importing seminars (${list.length} items detected)`);
-
-  for (const s of list) {
-    const title = String(s?.title || '').trim();
-    if (!title) continue;
-
-    const slug = toSlug(title);
-    const existing = await findDocument('api::seminar.seminar', {
-      slug: { $eqi: slug },
-    });
-
-    const about = extractParagraphs(s?.about);
-    const moduleStrings = extractArray(s?.modules)
-      .map((m) => (typeof m === 'string' ? m.trim() : String(m || '').trim()))
-      .filter(Boolean);
-
-    const payload = {
-      title,
-      slug,
-      provider: '',
-      summary: about.join('\n'),
-      modules: moduleStrings.map((m) => ({
-        title: m,
-        description: '',
-        richContent: '',
-      })),
-      ctaUrl: s?.url || '',
-      ctaLabel: 'Open',
-      body: toRichTextBlocks(about),
-      tags: null,
-      publishedAt: nowISO(),
-    };
-
-    if (existing) {
-      const updated = await strapi.documents('api::seminar.seminar').update({
-        documentId: getDocumentId(existing),
-        data: payload,
-      });
-      await publishDocument('api::seminar.seminar', getDocumentId(updated));
-      console.log(`  🔁 updated seminar: ${title}`);
-    } else {
-      const created = await strapi.documents('api::seminar.seminar').create({
-        data: payload,
-      });
-      await publishDocument('api::seminar.seminar', getDocumentId(created));
-      console.log(`  ✅ created seminar: ${title}`);
-    }
+    state.projects[slug] = created;
   }
 }
 
@@ -940,7 +616,7 @@ async function importDatasets(state) {
 
   for (const owner of owners) {
     const ownerDoc = lookupPerson(state, owner?.name);
-    const ownerId = getEntityId(ownerDoc);
+    const ownerId = getDocId(ownerDoc);
 
     if (!Array.isArray(owner?.elements) || !owner?.elements.length) continue;
 
@@ -954,6 +630,11 @@ async function importDatasets(state) {
       const existing = await findDocument('api::dataset.dataset', {
         slug: { $eqi: slug },
       });
+
+      if (existing) {
+        state.datasets[slug] = existing;
+        continue;
+      }
 
       const url = dataset?.url || dataset?.description;
       const payload = {
@@ -973,23 +654,13 @@ async function importDatasets(state) {
         payload.authors = { connect: [ownerId] };
       }
 
-      let datasetDoc;
-      if (existing) {
-        datasetDoc = await strapi.documents('api::dataset.dataset').update({
-          documentId: getDocumentId(existing),
-          data: payload,
-        });
-        await publishDocument('api::dataset.dataset', getDocumentId(datasetDoc));
-        console.log(`  🔁 updated dataset: ${title}`);
-      } else {
-        datasetDoc = await strapi.documents('api::dataset.dataset').create({
-          data: payload,
-        });
-        await publishDocument('api::dataset.dataset', getDocumentId(datasetDoc));
-        console.log(`  ✅ created dataset: ${title}`);
-      }
+      const created = await strapi.documents('api::dataset.dataset').create({
+        data: payload,
+      });
 
-      state.datasets[slug] = datasetDoc;
+      console.log(`  ✅ created dataset: ${title}`);
+
+      state.datasets[slug] = created;
     }
   }
 }
@@ -1016,9 +687,6 @@ async function runMigration() {
   await importPublications(state);
   await importProjects(state);
   await importDatasets(state);
-  await importNewsArticles(state);
-  await importEvents(state);
-  await importSeminars(state);
 
   console.log('\n🎉 JSON migration script finished.');
 }
@@ -1037,11 +705,7 @@ async function main() {
     console.error('Migration failed:', error);
   }
 
-  try {
-    await app.destroy();
-  } catch (error) {
-    console.warn('⚠️  Strapi teardown error (ignored):', error?.message || error);
-  }
+  await app.destroy();
 
   process.exit(0);
 }
