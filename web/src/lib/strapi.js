@@ -101,6 +101,28 @@ const NEWS_ARTICLE_POPULATE = {
   },
 };
 
+const EVENT_POPULATE = {
+  fields: ['title', 'slug', 'description', 'startDate', 'endDate', 'location', 'category', 'ctaLabel', 'ctaUrl'],
+  populate: {
+    heroImage: {},
+    organizers: DEPARTMENT_POPULATE,
+    speakers: PERSON_WITH_IMAGE_POPULATE,
+    projects: {
+      fields: ['title', 'slug'],
+    },
+    body: {},
+  },
+};
+
+const SEMINAR_POPULATE = {
+  fields: ['title', 'slug', 'provider', 'summary', 'ctaUrl', 'ctaLabel'],
+  populate: {
+    heroImage: {},
+    modules: {},
+    body: {},
+  },
+};
+
 /**
  * Helper function to make API calls to Strapi
  * @param {string} endpoint - The API endpoint (without /api prefix)
@@ -217,6 +239,12 @@ export async function getProjects() {
     params.set('sort', 'title:asc');
     setPopulate(params, 'populate[lead]', PERSON_WITH_IMAGE_POPULATE);
     setPopulate(params, 'populate[members]', PERSON_WITH_IMAGE_POPULATE);
+    setPopulate(params, 'populate[team]', {
+      fields: ['role', 'isLead'],
+      populate: {
+        person: PERSON_WITH_IMAGE_POPULATE,
+      },
+    });
     setPopulate(params, 'populate[domains]', DEPARTMENT_POPULATE);
     setPopulate(params, 'populate[themes]', { fields: ['name', 'slug'] });
     setPopulate(params, 'populate[partners]', { fields: ['name', 'slug'] });
@@ -241,6 +269,12 @@ export async function getProject(slug) {
     params.set('filters[slug][$eq]', slug);
     setPopulate(params, 'populate[lead]', PERSON_WITH_IMAGE_POPULATE);
     setPopulate(params, 'populate[members]', PERSON_WITH_IMAGE_POPULATE);
+    setPopulate(params, 'populate[team]', {
+      fields: ['role', 'isLead'],
+      populate: {
+        person: PERSON_WITH_IMAGE_POPULATE,
+      },
+    });
     setPopulate(params, 'populate[domains]', DEPARTMENT_POPULATE);
     setPopulate(params, 'populate[themes]', { fields: ['name', 'slug'] });
     setPopulate(params, 'populate[partners]', { fields: ['name', 'slug'] });
@@ -298,6 +332,40 @@ export async function getNewsArticles() {
 }
 
 /**
+ * Get all events from Strapi
+ * @returns {Promise<Array>} Array of events
+ */
+export async function getEvents() {
+  try {
+    const params = new URLSearchParams();
+    params.set('sort', 'startDate:desc');
+    setPopulate(params, 'populate', EVENT_POPULATE);
+    const data = await fetchAPI(`/events?${params.toString()}`);
+    return data.data || [];
+  } catch (error) {
+    console.error('Failed to fetch events:', error);
+    return [];
+  }
+}
+
+/**
+ * Get all seminars from Strapi
+ * @returns {Promise<Array>} Array of seminars
+ */
+export async function getSeminars() {
+  try {
+    const params = new URLSearchParams();
+    params.set('sort', 'title:asc');
+    setPopulate(params, 'populate', SEMINAR_POPULATE);
+    const data = await fetchAPI(`/seminars?${params.toString()}`);
+    return data.data || [];
+  } catch (error) {
+    console.error('Failed to fetch seminars:', error);
+    return [];
+  }
+}
+
+/**
  * Get publications by author slug
  * @param {string} authorSlug - The author's slug
  * @returns {Promise<Array>} Array of publications by the author
@@ -339,6 +407,12 @@ export async function getProjectsByMember(memberSlug) {
     params.set('filters[$or][1][members][slug][$eq]', memberSlug);
     setPopulate(params, 'populate[lead]', PERSON_WITH_IMAGE_POPULATE);
     setPopulate(params, 'populate[members]', PERSON_WITH_IMAGE_POPULATE);
+    setPopulate(params, 'populate[team]', {
+      fields: ['role', 'isLead'],
+      populate: {
+        person: PERSON_WITH_IMAGE_POPULATE,
+      },
+    });
     setPopulate(params, 'populate[domains]', DEPARTMENT_POPULATE);
     setPopulate(params, 'populate[publications]', PUBLICATION_POPULATE);
     const data = await fetchAPI(`/projects?${params.toString()}`);
@@ -676,6 +750,32 @@ export function transformProjectData(strapiProjects) {
     const leadName = leadDetails?.name || '';
     const leadSlug = leadDetails?.slug || '';
 
+    const rawTeam = toArray(attributes.team);
+    const teamsFromComponent = rawTeam
+      .map((teamEntry) => {
+        const role = typeof teamEntry?.role === 'string' ? teamEntry.role.trim() : '';
+        const isLead = !!teamEntry?.isLead;
+
+        const personEntry = teamEntry?.person?.data ?? teamEntry?.person;
+        const personAttr = personEntry?.attributes ?? personEntry ?? {};
+        const slug = personAttr.slug || '';
+        const fullName = personAttr.fullName || personAttr.name || '';
+
+        if (!slug) return null;
+
+        return {
+          name: slug,
+          title: role,
+          fullName,
+          isLead,
+        };
+      })
+      .filter(Boolean);
+
+    const teams = teamsFromComponent.length
+      ? teamsFromComponent
+      : members.map((member) => ({ name: member.slug, title: member.title, fullName: member.name }));
+
     return {
       id: project?.id ?? null,
       slug: attributes.slug || '',
@@ -700,10 +800,47 @@ export function transformProjectData(strapiProjects) {
       docUrl: attributes.docUrl || attributes.doc_url || '',
       // Map officialUrl (schema) to oficialUrl (legacy frontend typo)
       oficialUrl: attributes.officialUrl || attributes.oficial_url || attributes.official_url || '',
-      teams: members.map((member) => ({ name: member.slug, title: member.title, fullName: member.name })),
+      teams,
       _strapi: project,
     };
   });
+}
+
+export function transformEventData(strapiEvents) {
+  const list = Array.isArray(strapiEvents) ? strapiEvents : strapiEvents ? [strapiEvents] : [];
+  return list
+    .map((event) => {
+      const attributes = event?.attributes ?? event ?? {};
+      return {
+        title: attributes.title || '',
+        url: attributes.ctaUrl || '',
+      };
+    })
+    .filter((ev) => ev.title && ev.url);
+}
+
+export function transformSeminarData(strapiSeminars) {
+  const list = Array.isArray(strapiSeminars) ? strapiSeminars : strapiSeminars ? [strapiSeminars] : [];
+  return list
+    .map((seminar) => {
+      const attributes = seminar?.attributes ?? seminar ?? {};
+      const about = String(attributes.summary || '')
+        .split(/\r?\n/)
+        .map((line) => line.trim())
+        .filter(Boolean);
+
+      const modules = toArray(attributes.modules)
+        .map((m) => (m?.title ? String(m.title).trim() : ''))
+        .filter(Boolean);
+
+      return {
+        title: attributes.title || '',
+        url: attributes.ctaUrl || '',
+        about,
+        modules,
+      };
+    })
+    .filter((s) => s.title && s.url);
 }
 
 export function transformDepartmentData(strapiDepartments) {

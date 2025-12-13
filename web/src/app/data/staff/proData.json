@@ -15,10 +15,9 @@
 			"Development and testing of AI prototypes and systems"
 		],
 		"teams": [
-			{
-				"title": "Sisteme inteligente explicabile",
-				"name": "AdrianPetru-Groza"
-			},
+			{ "title": "Sisteme inteligente explicabile", "name": "AdrianPetru-Groza" },
+ 			{ "title": "Sisteme inteligente explicabile", "name": "Rodica-Potolea" },
+  			{ "title": "Sisteme inteligente explicabile", "name": "Cristina-Feier" },
 			{
 				"title": "Modele multi-modale neuro-simbolice",
 				"name": "AncaNicoleta-Marginean"

@@ -1,7 +1,6 @@
 "use client";
 
 import { motion } from "framer-motion";
-import eventsData from "@/app/data/news&events/eventsData.json";
 
 /* Animations */
 const containerVariants = {
@@ -18,7 +17,8 @@ const CALENDAR_EMBED_URL_RAW =
 const CALENDAR_EMBED_URL = CALENDAR_EMBED_URL_RAW.replace(/calendar\.ics(\?.*)?$/i, "calendar.html$1");
 
 export default function EventsClient() {
-  const items = Array.isArray(eventsData) ? eventsData : [];
+export default function EventsClient({ items: rawItems = [] }) {
+  const items = Array.isArray(rawItems) ? rawItems : [];
 
   return (
     <main className="max-w-6xl mx-auto p-6 bg-white dark:bg-gray-950 text-black dark:text-white rounded-lg shadow-lg">
