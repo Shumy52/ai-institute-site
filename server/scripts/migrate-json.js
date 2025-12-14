@@ -190,6 +190,7 @@ async function importDepartments(state) {
       body: toRichTextBlocks(paragraphs),
       focusItems,
       contactLinks: unit?.contactLinks || [],
+      type: unit?.type || 'research',
     };
 
     let departmentDoc;
@@ -198,14 +199,18 @@ async function importDepartments(state) {
         .documents('api::department.department')
         .update({
           documentId: getDocId(existing),
-          data: baseData,
+          data: { ...baseData, publishedAt: nowISO() },
         });
+      await publishDocument('api::department.department', getDocId(departmentDoc));
       console.log(`  🔁 updated department: ${name}`);
     } else {
       departmentDoc = await strapi
         .documents('api::department.department')
         .create({
-          data: baseData,
+          data: {
+            ...baseData,
+            publishedAt: nowISO(),
+          },
         });
       await publishDocument('api::department.department', getDocId(departmentDoc));
       console.log(`  ✅ created department: ${name}`);
@@ -257,8 +262,9 @@ async function importSupportUnits(state) {
         .documents('api::support-unit.support-unit')
         .update({
           documentId: getDocId(existing),
-          data: baseData,
+          data: { ...baseData, publishedAt: nowISO() },
         });
+      await publishDocument('api::support-unit.support-unit', getDocId(supportDoc));
       console.log(`  🔁 updated support unit: ${name}`);
     } else {
       supportDoc = await strapi
@@ -269,6 +275,7 @@ async function importSupportUnits(state) {
             publishedAt: nowISO(),
           },
         });
+      await publishDocument('api::support-unit.support-unit', getDocId(supportDoc));
       console.log(`  ✅ created support unit: ${name}`);
     }
 
@@ -465,6 +472,8 @@ async function importPublications(state) {
 
     if (existing) {
       state.publications[slug] = existing;
+      // ensure published
+      await publishDocument('api::publication.publication', getDocId(existing));
       continue;
     }
 
@@ -508,6 +517,7 @@ async function importPublications(state) {
     const created = await strapi.documents('api::publication.publication').create({
       data: payload,
     });
+    await publishDocument('api::publication.publication', getDocId(created));
 
     console.log(`  ✅ created publication: ${title}`);
 
@@ -532,6 +542,7 @@ async function importProjects(state) {
 
     if (existing) {
       state.projects[slug] = existing;
+      await publishDocument('api::project.project', getDocId(existing));
       continue;
     }
 
@@ -581,7 +592,7 @@ async function importProjects(state) {
       title,
       slug,
       abstract: proj?.abstract || '',
-      status: proj?.status || 'ongoing',
+      phase: proj?.phase || proj?.status || 'ongoing',
       region: proj?.region || 'national',
       body: toRichTextBlocks(extractParagraphs(proj?.abstract)),
       docUrl: proj?.docUrl || proj?.doc_url || '',
@@ -616,6 +627,7 @@ async function importProjects(state) {
     const created = await strapi.documents('api::project.project').create({
       data: payload,
     });
+    await publishDocument('api::project.project', getDocId(created));
 
     console.log(`  ✅ created project: ${title}`);
 
@@ -654,6 +666,7 @@ async function importDatasets(state) {
 
       if (existing) {
         state.datasets[slug] = existing;
+        await publishDocument('api::dataset.dataset', getDocId(existing));
         continue;
       }
 
@@ -678,6 +691,7 @@ async function importDatasets(state) {
       const created = await strapi.documents('api::dataset.dataset').create({
         data: payload,
       });
+      await publishDocument('api::dataset.dataset', getDocId(created));
 
       console.log(`  ✅ created dataset: ${title}`);
 

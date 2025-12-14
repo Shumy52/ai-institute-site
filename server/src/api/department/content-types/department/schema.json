@@ -20,6 +20,11 @@
       "type": "uid",
       "targetField": "name"
     },
+    "type": {
+      "type": "enumeration",
+      "enum": ["research", "academic", "support", "other"],
+      "default": "research"
+    },
     "summary": {
       "type": "text"
     },

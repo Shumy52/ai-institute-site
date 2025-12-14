@@ -23,7 +23,7 @@
     "abstract": {
       "type": "text"
     },
-    "status": {
+    "phase": {
       "type": "enumeration",
       "enum": [
         "planned",

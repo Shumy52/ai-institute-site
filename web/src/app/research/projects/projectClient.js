@@ -25,19 +25,57 @@ const normalizeTeams = (proj) =>
     ? proj.teams.map((t) => String(t?.name || "").trim()).filter(Boolean)
     : [];
 
+const sortStrings = (values) =>
+  Array.from(values)
+    .map((v) => (typeof v === "string" ? v : v?.name || v?.title || String(v || "")))
+    .map((v) => v.trim())
+    .filter(Boolean)
+    .sort((a, b) => a.localeCompare(b));
+
+const toDomainEntries = (proj) => {
+  if (Array.isArray(proj?.domains)) {
+    return proj.domains
+      .map((d) => {
+        const name = typeof d === "string" ? d : d?.name || "";
+        const slug = d?.slug || slugify(name);
+        return name ? { name, slug } : null;
+      })
+      .filter(Boolean);
+  }
+
+  if (Array.isArray(proj?.domain)) {
+    return proj.domain
+      .map((name) => {
+        const safeName = typeof name === "string" ? name.trim() : "";
+        return safeName ? { name: safeName, slug: slugify(safeName) } : null;
+      })
+      .filter(Boolean);
+  }
+
+  return [];
+};
+
 const normalizeProject = (p) => {
-  const domains = Array.isArray(p?.domain)
-    ? p.domain.filter((d) => typeof d === "string" && d.trim().length > 0)
-    : p?.domain
-    ? [String(p.domain)]
-    : [];
+  const domainEntries = toDomainEntries(p);
+  const domainNames = domainEntries.map((d) => d.name).filter(Boolean);
+
+  const memberObjs = Array.isArray(p?.members) ? p.members : [];
+  const memberNames = memberObjs.map((m) => m?.name || m?.fullName || m).filter(Boolean);
+  const memberSlugs = memberObjs.map((m) => m?.slug).filter(Boolean);
+
+  const leadName = p?.leadName || p?.lead || "";
+  const leadSlug = p?.leadSlug || p?.leadDetails?.slug || "";
 
   return {
     title: p?.title || "",
-    lead: p?.lead || "",
-    regions: p?.region ? [String(p.region)] : [], 
-    domains,
-    members: normalizeTeams(p),
+    slug: p?.slug || slugify(p?.title),
+    lead: leadName,
+    leadSlug,
+    regions: p?.region ? [String(p.region)] : [],
+    domains: domainEntries,
+    domainNames,
+    members: memberNames.length ? memberNames : normalizeTeams(p),
+    memberSlugs,
   };
 };
 
@@ -62,16 +100,16 @@ export default function ProjectsClient({ projects: rawProjects = [] }) {
 
     for (const p of projects) {
       p.regions.forEach((r) => r && regions.add(r));
-      p.domains.forEach((d) => d && domains.add(d));
+      p.domainNames.forEach((d) => d && domains.add(d));
       if (p.lead) leads.add(p.lead);
       p.members.forEach((m) => m && members.add(m));
     }
 
     return {
-      regionOptions: Array.from(regions).sort((a, b) => a.localeCompare(b)),
-      domainOptions: Array.from(domains).sort((a, b) => a.localeCompare(b)),
-      leadOptions: Array.from(leads).sort((a, b) => a.localeCompare(b)),
-      memberOptions: Array.from(members).sort((a, b) => a.localeCompare(b)),
+      regionOptions: sortStrings(regions),
+      domainOptions: sortStrings(domains),
+      leadOptions: sortStrings(leads),
+      memberOptions: sortStrings(members),
     };
   }, [projects]);
 
@@ -91,7 +129,7 @@ export default function ProjectsClient({ projects: rawProjects = [] }) {
 
       const matchesQ = !query || haystack.includes(query);
       const matchesRegion = !regionFilter || p.regions.includes(regionFilter);
-      const matchesDomain = !domainFilter || p.domains.includes(domainFilter);
+      const matchesDomain = !domainFilter || p.domainNames.includes(domainFilter);
       const matchesLead = !leadFilter || p.lead === leadFilter;
       const matchesMember = !memberFilter || p.members.includes(memberFilter);
 
@@ -189,8 +227,8 @@ export default function ProjectsClient({ projects: rawProjects = [] }) {
               {filtered.length ? (
                 <ul className="space-y-4">
                   {filtered.map((p, i) => {
-                    const projectSlug = slugify(p.title);
-                    const personSlug = p.members.length ? p.members[0] : "";
+                    const projectSlug = p.slug || slugify(p.title);
+                    const personSlug = p.leadSlug || p.memberSlugs?.[0] || "";
 
                     const content = (
                       <div>
@@ -199,10 +237,23 @@ export default function ProjectsClient({ projects: rawProjects = [] }) {
                         </div>
                         <div className="mt-1 text-sm text-gray-800 dark:text-gray-200 space-y-0.5">
                           <div>{p.lead ? `Lead: ${p.lead}` : "Lead: —"}</div>
-                          <div>
-                            {p.domains.length
-                              ? `Department: ${p.domains.join(", ")}`
-                              : "Department: —"}
+                          <div className="flex gap-2 flex-wrap">
+                            <span>Department:</span>
+                            {p.domains.length ? (
+                              <span className="space-x-2">
+                                {p.domains.map((d, idx) => (
+                                  <Link
+                                    key={`${d.slug}-${idx}`}
+                                    href={`/research/departments?unit=${encodeURIComponent(d.slug || slugify(d.name))}`}
+                                    className="underline decoration-dotted hover:decoration-solid"
+                                  >
+                                    {d.name}
+                                  </Link>
+                                ))}
+                              </span>
+                            ) : (
+                              <span>—</span>
+                            )}
                           </div>
                           {p.regions.length ? <div>Region: {p.regions[0]}</div> : null}
                         </div>

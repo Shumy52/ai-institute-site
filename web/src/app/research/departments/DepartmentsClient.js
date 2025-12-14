@@ -28,7 +28,11 @@ const buildProjectRows = (projects = []) => {
   const rows = [];
   for (const project of projects) {
     if (!project?.title) continue;
-    const domains = Array.isArray(project?.domain) ? project.domain.filter(Boolean) : [];
+    const domains = Array.isArray(project?.domains)
+      ? project.domains
+      : Array.isArray(project?.domain)
+      ? project.domain.filter(Boolean).map((name) => ({ name, slug: slugify(name) }))
+      : [];
     const themes = Array.isArray(project?.themes) ? project.themes.filter(Boolean) : [];
     const projectSlug = project?.slug || slugify(project?.title);
     const fallbackMember = Array.isArray(project?.members) ? project.members[0] : null;
@@ -43,6 +47,7 @@ const buildProjectRows = (projects = []) => {
         title: project.title,
         lead,
         domain: "",
+        domainSlug: "",
         projectSlug,
         themes,
       });
@@ -50,12 +55,15 @@ const buildProjectRows = (projects = []) => {
     }
 
     for (const domain of domains) {
+      const domainName = domain?.name || domain;
+      const domainSlug = domain?.slug || slugify(domainName || "");
       rows.push({
         personName,
         personSlug,
         title: project.title,
         lead,
-        domain,
+        domain: domainName,
+        domainSlug,
         projectSlug,
         themes,
       });
@@ -158,6 +166,27 @@ export default function DepartmentsClient({
   const mobileBarRef = useRef(null);
 
   const departmentList = Array.isArray(departments) ? departments : [];
+  const departmentGroups = useMemo(() => {
+    const groups = {};
+    for (const dept of departmentList) {
+      const type = (dept?.type || "research").toString();
+      if (!groups[type]) groups[type] = [];
+      groups[type].push(dept);
+    }
+    // sort each group by name
+    Object.values(groups).forEach((list) => list.sort((a, b) => (a?.name || "").localeCompare(b?.name || "", "ro", { sensitivity: "base", numeric: true })));
+    return groups;
+  }, [departmentList]);
+
+  const typeLabel = (type) => {
+    const map = {
+      research: "Research departments",
+      academic: "Academic departments",
+      support: "Support departments",
+      other: "Departments",
+    };
+    return map[type] || type || "Departments";
+  };
   const staffList = Array.isArray(staffData) ? staffData : [];
   const projectList = Array.isArray(projects) ? projects : [];
   const publicationList = Array.isArray(publications) ? publications : [];
@@ -218,8 +247,11 @@ export default function DepartmentsClient({
     const unique = [];
 
     for (const row of globalProjects) {
-      if (row.domain !== selectedUnit.name) continue;
-      const key = `${row.projectSlug}|${row.domain || ""}`;
+      const matchesName = row.domain && selectedUnit.name && row.domain.trim().toLowerCase() === selectedUnit.name.trim().toLowerCase();
+      const matchesSlug = row.domainSlug && selectedUnit.slug && row.domainSlug === selectedUnit.slug;
+      if (!matchesName && !matchesSlug) continue;
+
+      const key = `${row.projectSlug}|${row.domainSlug || row.domain || ""}`;
       if (seen.has(key)) continue;
       seen.add(key);
       unique.push(row);
@@ -245,10 +277,14 @@ export default function DepartmentsClient({
   const unitMembers = useMemo(() => {
     if (!selectedUnit) return [];
     const unitName = String(selectedUnit.name || "").trim().toLowerCase();
+    const unitSlug = String(selectedUnit.slug || "").trim();
 
     return staffList.filter((p) => {
-      const dep = String(p?.department || "").trim();
-      return dep && dep.toLowerCase() === unitName;
+      const depName = String(p?.department || "").trim();
+      const depSlug = String(p?.departmentInfo?.slug || "").trim();
+      const matchesName = depName && depName.toLowerCase() === unitName;
+      const matchesSlug = depSlug && unitSlug && depSlug === unitSlug;
+      return matchesName || matchesSlug;
     });
   }, [selectedUnit, staffList]);
 
@@ -410,57 +446,62 @@ export default function DepartmentsClient({
           <section className="p-6 md:p-8">
             {!selectedUnit && (
               <>
-                <motion.h1
-                  variants={itemVariants}
-                  className="text-4xl font-extrabold text-center mb-8 text-blue-600 dark:text-yellow-400 tracking-tight text-center"
-                >
-                   Research departments
-                </motion.h1>
+                {Object.entries(departmentGroups).map(([type, units]) => (
+                  <div key={type} className="mb-10">
+                    <motion.h1
+                      variants={itemVariants}
+                      className="text-4xl font-extrabold text-center mb-6 text-blue-600 dark:text-yellow-400 tracking-tight"
+                    >
+                      {typeLabel(type)}
+                    </motion.h1>
 
-                <motion.div variants={containerVariants} initial="hidden" animate="visible">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
-                    {departmentList.map((unit, index) => (
-                      <motion.div
-                        key={index}
-                        variants={itemVariants}
-                        className="bg-white dark:bg-gray-900 rounded-lg shadow-md p-4 md:p-5 border cursor-pointer"
-                        onClick={() => handleUnitClick(unit)}
-                      >
-                        <h2 className="text-lg md:text-xl font-bold text-gray-900 dark:text-gray-100 flex items-center gap-3">
-                          {unit.name}
-                        </h2>
-                      </motion.div>
-                    ))}
+                    <motion.div variants={containerVariants} initial="hidden" animate="visible">
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
+                        {units.map((unit, index) => (
+                          <motion.div
+                            key={`${type}-${unit.slug || index}`}
+                            variants={itemVariants}
+                            className="bg-white dark:bg-gray-900 rounded-lg shadow-md p-4 md:p-5 border cursor-pointer"
+                            onClick={() => handleUnitClick(unit)}
+                          >
+                            <h2 className="text-lg md:text-xl font-bold text-gray-900 dark:text-gray-100 flex items-center gap-3">
+                              {unit.name}
+                            </h2>
+                          </motion.div>
+                        ))}
+                      </div>
+                    </motion.div>
                   </div>
-                </motion.div>
+                ))}
+
+                {supportUnitsList.length > 0 && (
+                  <div className="mb-6">
+                    <motion.h1
+                      variants={itemVariants}
+                      className="text-4xl font-extrabold text-center mb-6 text-blue-600 dark:text-yellow-400 tracking-tight"
+                    >
+                      Support departments
+                    </motion.h1>
+                    <motion.div variants={containerVariants} initial="hidden" animate="visible">
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
+                        {supportUnitsList.map((unit, index) => (
+                          <motion.div
+                            key={`support-${unit.slug || index}`}
+                            variants={itemVariants}
+                            className="bg-white dark:bg-gray-900 rounded-lg shadow-md p-4 md:p-5 border cursor-pointer"
+                            onClick={() => handleUnitClick(unit)}
+                          >
+                            <h2 className="text-lg md:text-xl font-bold text-gray-900 dark:text-gray-100 flex items-center gap-3">
+                              {unit.name}
+                            </h2>
+                          </motion.div>
+                        ))}
+                      </div>
+                    </motion.div>
+                  </div>
+                )}
               </>
             )}
-            {!selectedUnit && (
-              <>
-             <motion.h1
-                  variants={itemVariants}
-                  className="mt-8 text-4xl font-extrabold text-center mb-8 text-blue-600 dark:text-yellow-400 tracking-tight text-center"
-                >
-                   Support departments
-                </motion.h1>
-                <motion.div variants={containerVariants} initial="hidden" animate="visible">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
-                    {supportUnitsList.map((unit, index) => (
-                      <motion.div
-                        key={index}
-                        variants={itemVariants}
-                        className="bg-white dark:bg-gray-900 rounded-lg shadow-md p-4 md:p-5 border cursor-pointer"
-                        onClick={() => handleUnitClick(unit)}
-                      >
-                        <h2 className="text-lg md:text-xl font-bold text-gray-900 dark:text-gray-100 flex items-center gap-3">
-                          {unit.name}
-                        </h2>
-                      </motion.div>
-                    ))}
-                  </div>
-                </motion.div>
-                </>
-               )}
               
             {selectedUnit && (
               <>

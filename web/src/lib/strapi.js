@@ -26,16 +26,32 @@ const resolveMediaUrl = (media) => {
 };
 
 const setPopulate = (params, baseKey, config = {}) => {
-  params.set(baseKey, 'true');
-
   const fields = Array.isArray(config.fields) ? config.fields : [];
-  fields
-    .filter(Boolean)
-    .forEach((field, index) => {
-      params.append(`${baseKey}[fields][${index}]`, field);
-    });
 
   const nestedPopulate = config.populate && typeof config.populate === 'object' ? config.populate : {};
+  const hasNestedPopulate = Object.keys(nestedPopulate).length > 0;
+
+  // Strapi v5: when a populate entry has sub-keys (fields/populate), it must be treated as an object.
+  // Only leaf populate keys should get a value.
+  const isNestedPopulateKey = baseKey.includes('[populate][');
+  const isLeafPopulate = !fields.length && !hasNestedPopulate;
+
+  if (isLeafPopulate) {
+    // Nested populate leaf expects '*' or an object.
+    params.set(baseKey, isNestedPopulateKey ? '*' : 'true');
+  } else {
+    // Ensure we don't leave an incompatible scalar value around.
+    params.delete(baseKey);
+  }
+
+  fields
+    .filter(Boolean)
+    .forEach((field) => {
+      // Strapi v5 expects repeated `...[fields]=fieldName` entries for populated relations.
+      // (The indexed `...[fields][0]=...` format is not consistently honored for nested populates.)
+      params.append(`${baseKey}[fields]`, field);
+    });
+
   Object.entries(nestedPopulate).forEach(([relation, relationConfig]) => {
     setPopulate(params, `${baseKey}[populate][${relation}]`, relationConfig || {});
   });
@@ -50,7 +66,9 @@ const PERSON_FLAT_POPULATE = {
 const PERSON_WITH_IMAGE_POPULATE = {
   fields: PERSON_FIELDS,
   populate: {
-    portrait: {},
+    portrait: {
+      fields: ['url', 'formats', 'alternativeText'],
+    },
   },
 };
 
@@ -76,7 +94,7 @@ const PUBLICATION_POPULATE = {
 };
 
 const PROJECT_POPULATE = {
-  fields: ['title', 'slug', 'abstract', 'region', 'status', 'docUrl', 'officialUrl', 'featured'],
+  fields: ['title', 'slug', 'abstract', 'region', 'phase', 'docUrl', 'officialUrl', 'featured'],
   populate: {
     domains: DEPARTMENT_POPULATE,
     lead: PERSON_WITH_IMAGE_POPULATE,
@@ -239,6 +257,7 @@ export async function getProjects() {
   try {
     const params = new URLSearchParams();
     params.set('sort', 'title:asc');
+    params.set('publicationState', 'preview');
     setPopulate(params, 'populate[lead]', PERSON_WITH_IMAGE_POPULATE);
     setPopulate(params, 'populate[members]', PERSON_WITH_IMAGE_POPULATE);
     setPopulate(params, 'populate[domains]', DEPARTMENT_POPULATE);
@@ -268,6 +287,7 @@ export async function getProject(slug) {
     setPopulate(params, 'populate[domains]', DEPARTMENT_POPULATE);
     setPopulate(params, 'populate[themes]', { fields: ['name', 'slug'] });
     setPopulate(params, 'populate[partners]', { fields: ['name', 'slug'] });
+    params.set('publicationState', 'preview');
     setPopulate(params, 'populate[publications]', { fields: ['title', 'slug', 'year'] });
     setPopulate(params, 'populate[heroImage]');
     setPopulate(params, 'populate[body]');
@@ -724,6 +744,7 @@ export function transformProjectData(strapiProjects) {
       slug: attributes.slug || '',
       title: attributes.title || '',
       abstract: attributes.abstract || '',
+      phase: attributes.phase || attributes.status || '',
       // Map themes relation to simple array for frontend compatibility
       themes: themes.map(t => t.name).filter(Boolean),
       // Map partners relation to simple array for frontend compatibility
@@ -805,6 +826,7 @@ export function transformDepartmentData(strapiDepartments) {
       id: department?.id ?? null,
       name: attributes.name || '',
       slug: attributes.slug || '',
+      type: attributes.type || 'research',
       summary: attributes.summary || '',
       description:
         typeof attributes.description === 'string'

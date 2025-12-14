@@ -670,6 +670,10 @@ export interface ApiDepartmentDepartment extends Struct.CollectionTypeSchema {
     >;
     slug: Schema.Attribute.UID<'name'>;
     summary: Schema.Attribute.Text;
+    type: Schema.Attribute.Enumeration<
+      ['research', 'academic', 'support', 'other']
+    > &
+      Schema.Attribute.DefaultTo<'research'>;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
