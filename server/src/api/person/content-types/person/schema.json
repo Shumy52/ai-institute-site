@@ -22,16 +22,16 @@
       "targetField": "fullName",
       "required": true
     },
-    "status": {
+    "type": {
       "type": "enumeration",
+      "default": "researcher",
       "enum": [
-        "personal",
+        "staff",
         "researcher",
         "alumni",
         "visitor",
         "external"
-      ],
-      "default": "researcher"
+      ]
     },
     "titles": {
       "type": "json"
@@ -54,12 +54,14 @@
     "portrait": {
       "type": "media",
       "multiple": false,
-      "allowedTypes": ["images"]
+      "allowedTypes": [
+        "images"
+      ]
     },
     "socialLinks": {
       "type": "component",
-      "repeatable": true,
-      "component": "shared.contact-link"
+      "component": "shared.contact-link",
+      "repeatable": true
     },
     "department": {
       "type": "relation",

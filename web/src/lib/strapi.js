@@ -41,8 +41,7 @@ const setPopulate = (params, baseKey, config = {}) => {
   });
 };
 
-// Strapi schema uses camelCase field names
-const PERSON_FIELDS = ['fullName', 'slug', 'position', 'email', 'phone', 'status', 'location'];
+const PERSON_FIELDS = ['fullName', 'slug', 'position', 'email', 'phone', 'type', 'location'];
 
 const PERSON_FLAT_POPULATE = {
   fields: PERSON_FIELDS,
@@ -99,6 +98,31 @@ const NEWS_ARTICLE_POPULATE = {
     relatedProjects: PROJECT_POPULATE,
     featuredPeople: PERSON_FLAT_POPULATE,
   },
+};
+
+// Map raw type/status values to human-friendly buckets used by the UI tabs
+const STAFF_TYPE_LABELS = {
+  staff: 'Staff',
+  personal: 'Staff', // legacy name
+  researcher: 'Researchers',
+  research: 'Researchers',
+  alumni: 'Alumni',
+  alumnus: 'Alumni',
+  visiting: 'Visiting Researchers',
+  visitor: 'Visiting Researchers',
+  'visiting researcher': 'Visiting Researchers',
+  external: 'External',
+  collaborator: 'External',
+};
+
+const normalizeStaffType = (value) => {
+  const raw = value ?? '';
+  const stringValue = typeof raw === 'string' ? raw.trim() : String(raw || '').trim();
+  const key = stringValue.toLowerCase();
+  return {
+    key,
+    label: STAFF_TYPE_LABELS[key] || '',
+  };
 };
 
 /**
@@ -164,7 +188,7 @@ export async function getStaff() {
     params.append('fields[2]', 'position');
     params.append('fields[3]', 'email');
     params.append('fields[4]', 'phone');
-    params.append('fields[5]', 'status');
+    params.append('fields[5]', 'type');
     params.append('fields[6]', 'location');
     params.append('fields[7]', 'bio');
     setPopulate(params, 'populate[department]', { fields: ['name', 'slug'] });
@@ -403,6 +427,9 @@ export function transformStaffData(strapiStaff) {
   return list.map((person) => {
     // Strapi 5 returns flat objects, Strapi 4 had attributes wrapper
     const attributes = person?.attributes ?? person ?? {};
+    const { key: typeKey, label: typeLabel } = normalizeStaffType(
+      attributes.type ?? attributes.status ?? attributes.category ?? attributes.role ?? ''
+    );
     // Strapi 5: department is direct object, Strapi 4: department.data
     const departmentEntry = attributes.department?.data ?? attributes.department;
     const departmentAttributes = departmentEntry?.attributes ?? departmentEntry ?? {};
@@ -461,8 +488,9 @@ export function transformStaffData(strapiStaff) {
       title: attributes.position || attributes.title || '',
       phone: attributes.phone || '',
       email: attributes.email || '',
-      role: attributes.status || attributes.role || '',
-      category: attributes.status || attributes.category || '',
+      type: typeKey,
+      role: typeKey || attributes.role || '',
+      category: typeLabel || typeKey || '',
       department: department?.name || '',
       departmentInfo: department,
       image,
@@ -473,6 +501,21 @@ export function transformStaffData(strapiStaff) {
       _strapi: person,
     };
   });
+}
+
+export function groupStaffByType(staffList) {
+  const list = Array.isArray(staffList) ? staffList : staffList ? [staffList] : [];
+
+  return list.reduce((acc, person) => {
+    const { key, label } = normalizeStaffType(
+      person?.type ?? person?.role ?? person?.category ?? person?.status ?? ''
+    );
+
+    const bucket = label || STAFF_TYPE_LABELS[key] || 'Other';
+    if (!acc[bucket]) acc[bucket] = [];
+    acc[bucket].push(person);
+    return acc;
+  }, {});
 }
 
 /**

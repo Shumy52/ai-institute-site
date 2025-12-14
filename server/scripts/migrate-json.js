@@ -47,11 +47,32 @@ const publishDocument = async (uid, documentId) => {
   }
 };
 
-const STATUS_MAP = {
-  personal: 'personal',
-  Personal: 'personal',
+const TYPE_MAP = {
+  // staff / personal
+  personal: 'staff',
+  Personal: 'staff',
+  staff: 'staff',
+  Staff: 'staff',
+  // researchers
   researchers: 'researcher',
   Researchers: 'researcher',
+  researcher: 'researcher',
+  Researcher: 'researcher',
+  // alumni
+  alumni: 'alumni',
+  Alumni: 'alumni',
+  // visiting / visitors
+  visiting: 'visiting',
+  Visiting: 'visiting',
+  visitor: 'visiting',
+  Visitor: 'visiting',
+  'visiting researchers': 'visiting',
+  'Visiting Researchers': 'visiting',
+  // external / collaborators
+  external: 'external',
+  External: 'external',
+  collaborator: 'external',
+  Collaborator: 'external',
 };
 
 const toKey = (value) =>
@@ -275,7 +296,7 @@ async function importPeople(state) {
     const slug = String(person?.slug || '').trim() || toSlug(fullName);
     const normalizedSlug = toKey(slug);
     const categoryKey = toKey(person?.category);
-    const status = STATUS_MAP[person?.category] || STATUS_MAP[categoryKey] || 'researcher';
+    const typeValue = TYPE_MAP[person?.category] || TYPE_MAP[categoryKey] || 'staff';
 
     if (state.peopleBySlug[slug] || state.peopleByKey[normalizedSlug]) {
       continue;
@@ -305,7 +326,7 @@ async function importPeople(state) {
     const payload = {
       fullName,
       slug,
-      status,
+      type: typeValue,
       titles: person?.title ? [person.title] : [],
       position: person?.title || '',
       phone: person?.phone || '',
