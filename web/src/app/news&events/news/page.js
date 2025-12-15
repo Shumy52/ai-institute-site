@@ -5,10 +5,12 @@ export const metadata = {
 import NewsClient from "./NewsClient";
 import { getNewsArticles, transformNewsData } from "@/lib/strapi";
 
+// Force revalidate
+export const dynamic = "force-dynamic";
 export const revalidate = 600;
 
 export default async function NewsPage() {
   const news = await getNewsArticles();
-  const newsGroups = transformNewsData(news);
-  return <NewsClient newsGroups={newsGroups} />;
+  const newsItems = transformNewsData(news);
+  return <NewsClient newsItems={newsItems} />;
 }

@@ -332,7 +332,18 @@ export async function getNewsArticles() {
   try {
     const params = new URLSearchParams();
     params.set('sort', 'publishedDate:desc');
-    setPopulate(params, 'populate', NEWS_ARTICLE_POPULATE);
+    // Minimal populate to avoid invalid media keys on Strapi and keep payload light
+    params.append('fields[0]', 'title');
+    params.append('fields[1]', 'slug');
+    params.append('fields[2]', 'summary');
+    params.append('fields[3]', 'category');
+    params.append('fields[4]', 'publishedDate');
+    params.append('fields[5]', 'linkUrl');
+    params.append('fields[6]', 'tags');
+    // Only fetch hero image URL and basic metadata
+    params.append('populate[heroImage][fields][0]', 'url');
+    params.append('populate[heroImage][fields][1]', 'formats');
+    params.append('populate[heroImage][fields][2]', 'alternativeText');
     const data = await fetchAPI(`/news-articles?${params.toString()}`);
     return data.data || [];
   } catch (error) {
@@ -606,62 +617,34 @@ export function transformNewsData(strapiNews) {
   const list = Array.isArray(strapiNews) ? strapiNews : strapiNews ? [strapiNews] : [];
 
   const normalizeDate = (value) => {
-    if (!value) return null;
+    if (!value) return '';
     const d = new Date(value);
-    if (Number.isNaN(d.getTime())) return null;
-    return {
-      day: d.getUTCDate(),
-      month: d.getUTCMonth() + 1,
-      year: d.getUTCFullYear(),
-    };
+    if (Number.isNaN(d.getTime())) return '';
+    return d.toISOString();
   };
 
-  const items = list.map((item) => {
-    const attributes = item?.attributes ?? item ?? {};
-    return {
-      id: item?.id ?? null,
-      title: attributes.title || '',
-      slug: attributes.slug || '',
-      summary: attributes.summary || '',
-      category: attributes.category || 'other',
-      date: normalizeDate(attributes.publishedDate),
-      linkUrl: attributes.linkUrl || '',
-      image: resolveMediaUrl(attributes.heroImage),
-      _strapi: item,
-    };
-  });
-
-  // Group by category to preserve the existing UI structure
-  const byCategory = items.reduce((acc, item) => {
-    const key = item.category || 'other';
-    if (!acc[key]) acc[key] = [];
-    acc[key].push(item);
-    return acc;
-  }, {});
-
-  const categoryLabel = (cat) => {
-    const map = {
-      announcement: 'Announcements',
-      construction: 'Construction',
-      collaboration: 'Collaborations',
-      award: 'Awards',
-      press: 'Press',
-      other: 'Other',
-    };
-    return map[cat] || 'Other';
-  };
-
-  return Object.entries(byCategory)
-    .map(([cat, list]) => ({
-      title: categoryLabel(cat),
-      items: list.map((n) => ({
-        text: n.title,
-        url: n.linkUrl || '#',
-        date: n.date || { day: null, month: null, year: null },
-        image: n.image,
-      })),
-    }))
-    .sort((a, b) => a.title.localeCompare(b.title));
+  return list
+    .map((item) => {
+      const attributes = item?.attributes ?? item ?? {};
+      const tags = Array.isArray(attributes.tags) ? attributes.tags : [];
+      return {
+        id: item?.id ?? null,
+        title: attributes.title || '',
+        slug: attributes.slug || '',
+        summary: attributes.summary || '',
+        category: attributes.category || 'other',
+        date: normalizeDate(attributes.publishedDate),
+        linkUrl: attributes.linkUrl || '',
+        image: resolveMediaUrl(attributes.heroImage),
+        tags,
+        _strapi: item,
+      };
+    })
+    .sort((a, b) => {
+      const aTime = a.date ? new Date(a.date).getTime() : 0;
+      const bTime = b.date ? new Date(b.date).getTime() : 0;
+      return bTime - aTime;
+    });
 }
 
 /**
