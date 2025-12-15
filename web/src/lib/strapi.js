@@ -437,6 +437,22 @@ export async function getSupportUnits() {
   }
 }
 
+export async function getResearchThemes() {
+  try {
+    const params = new URLSearchParams();
+    params.set('sort', 'name:asc');
+    params.append('fields[0]', 'name');
+    params.append('fields[1]', 'slug');
+    params.append('fields[2]', 'summary');
+    params.append('fields[3]', 'color');
+    const data = await fetchAPI(`/research-themes?${params.toString()}`);
+    return data.data || [];
+  } catch (error) {
+    console.error('Failed to fetch research themes:', error);
+    return [];
+  }
+}
+
 /**
  * Helper function to transform Strapi data structure to match current app structure
  * This helps reduce the changes needed in existing components

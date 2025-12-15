@@ -3,29 +3,33 @@
 import { useMemo } from "react";
 import { motion } from "framer-motion";
 
-import { proData } from "@/app/data/proData";
-
 // Animations 
 const containerVariants = {
   hidden: { opacity: 0.9 }, visible: { opacity: 1, transition: { delayChildren: 0.1, staggerChildren: 0.08 } },
 };
 const itemVariants = { hidden: { y: 10, opacity: 0 }, visible: { y: 0, opacity: 1 } };
 
-export default function ThemesClient() {
-  const themes = useMemo(() => {
-    const set = new Set();
-    const list = Array.isArray(proData) ? proData : [];
+export default function ThemesClient({ themes = [] }) {
+  const normalizedThemes = useMemo(() => {
+    const map = new Map();
+    const list = Array.isArray(themes) ? themes : [];
 
-    for (const proj of list) {
-      const th = Array.isArray(proj?.themes) ? proj.themes : [];
-      for (const t of th) {
-        const s = String(t || "").trim();
-        if (s) set.add(s);           
+    for (const theme of list) {
+      const name = String(theme?.name || "").trim();
+      if (!name) continue;
+
+      const slug = String(theme?.slug || "").trim();
+      const summary = typeof theme?.summary === "string" ? theme.summary.trim() : "";
+      const color = typeof theme?.color === "string" ? theme.color.trim() : "";
+      const key = slug || name.toLowerCase();
+
+      if (!map.has(key)) {
+        map.set(key, { name, slug, summary, color });
       }
     }
 
-    return Array.from(set).sort((a, b) => a.localeCompare(b));
-  }, []);
+    return Array.from(map.values()).sort((a, b) => a.name.localeCompare(b.name));
+  }, [themes]);
 
   return (
     <main className="flex flex-col items-center justify-center bg-gray-50 dark:bg-gray-900 py-12">
@@ -38,17 +42,21 @@ export default function ThemesClient() {
             Themes
           </motion.h1>
 
-          {themes.length ? (
+          {normalizedThemes.length ? (
             <ul className="space-y-4">
-              {themes.map((title) => (
+              {normalizedThemes.map(({ name, slug, summary, color }) => (
                 <motion.li
-                  key={title}
+                  key={slug || name}
                   variants={itemVariants}
                   className="p-5 rounded-xl border border-gray-200 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-900 transition"
+                  style={color ? { borderLeftColor: color, borderLeftWidth: 6 } : undefined}
                 >
                   <h2 className="text-lg md:text-xl font-semibold text-gray-900 dark:text-gray-100">
-                    {title}
+                    {name}
                   </h2>
+                  {summary ? (
+                    <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">{summary}</p>
+                  ) : null}
                 </motion.li>
               ))}
             </ul>
