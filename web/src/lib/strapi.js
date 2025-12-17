@@ -193,26 +193,47 @@ export async function fetchAPI(endpoint, options = {}) {
 }
 
 /**
- * Get all staff members from Strapi
+ * Get all staff members from Strapi (handles pagination automatically)
  * @returns {Promise<Array>} Array of staff members
  */
 export async function getStaff() {
   try {
-    const params = new URLSearchParams();
-    // Use fullName (camelCase) as defined in the schema
-    params.set('sort', 'fullName:asc');
-    params.append('fields[0]', 'fullName');
-    params.append('fields[1]', 'slug');
-    params.append('fields[2]', 'position');
-    params.append('fields[3]', 'email');
-    params.append('fields[4]', 'phone');
-    params.append('fields[5]', 'type');
-    params.append('fields[6]', 'location');
-    params.append('fields[7]', 'bio');
-    setPopulate(params, 'populate[department]', { fields: ['name', 'slug'] });
-    setPopulate(params, 'populate[portrait]', { fields: ['url', 'formats', 'alternativeText'] });
-    const data = await fetchAPI(`/people?${params.toString()}`);
-    return data.data || [];
+    const allPeople = [];
+    let page = 1;
+    let pageCount = 1;
+
+    // Fetch all pages
+    while (page <= pageCount) {
+      const params = new URLSearchParams();
+      params.set('sort', 'fullName:asc');
+      params.set('pagination[page]', page.toString());
+      params.set('pagination[pageSize]', '100'); // Fetch 100 per page for efficiency
+      params.append('fields[0]', 'fullName');
+      params.append('fields[1]', 'slug');
+      params.append('fields[2]', 'position');
+      params.append('fields[3]', 'email');
+      params.append('fields[4]', 'phone');
+      params.append('fields[5]', 'type');
+      params.append('fields[6]', 'location');
+      params.append('fields[7]', 'bio');
+      setPopulate(params, 'populate[department]', { fields: ['name', 'slug'] });
+      setPopulate(params, 'populate[portrait]', { fields: ['url', 'formats', 'alternativeText'] });
+
+      const data = await fetchAPI(`/people?${params.toString()}`);
+      
+      if (data.data && data.data.length > 0) {
+        allPeople.push(...data.data);
+      }
+
+      // Update pageCount from first response
+      if (page === 1 && data.meta?.pagination?.pageCount) {
+        pageCount = data.meta.pagination.pageCount;
+      }
+
+      page++;
+    }
+
+    return allPeople;
   } catch (error) {
     console.error('Failed to fetch staff:', error);
     return [];
