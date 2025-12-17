@@ -2,6 +2,16 @@ const STRAPI_URL = (process.env.NEXT_PUBLIC_STRAPI_URL || 'http://strapi:1337').
 
 const isServer = typeof window === 'undefined';
 
+const DEFAULT_REVALIDATE_SECONDS = 600;
+
+// Buckets used by UI tabs; keep normalized values to avoid client-side filtering.
+export const PERSON_TYPE_FILTERS = {
+  staff: ['staff', 'personal'],
+  researchers: ['researcher', 'research'],
+  visiting: ['visiting', 'visitor', 'visiting researcher', 'external', 'collaborator'],
+  alumni: ['alumni', 'alumnus'], 
+};
+
 const toArray = (value) => (Array.isArray(value) ? value : value ? [value] : []);
 
 const stripHtml = (value) =>
@@ -55,6 +65,61 @@ const setPopulate = (params, baseKey, config = {}) => {
   Object.entries(nestedPopulate).forEach(([relation, relationConfig]) => {
     setPopulate(params, `${baseKey}[populate][${relation}]`, relationConfig || {});
   });
+};
+
+const appendFields = (params, fields = []) => {
+  fields.filter(Boolean).forEach((field, idx) => params.append(`fields[${idx}]`, field));
+};
+
+const appendSort = (params, sort) => {
+  if (!sort) return;
+  if (Array.isArray(sort)) {
+    sort.filter(Boolean).forEach((rule) => params.append('sort', rule));
+  } else {
+    params.set('sort', sort);
+  }
+};
+
+const appendPagination = (params, pagination = {}) => {
+  const { page, pageSize } = pagination;
+  if (typeof page === 'number') params.set('pagination[page]', page.toString());
+  if (typeof pageSize === 'number') params.set('pagination[pageSize]', pageSize.toString());
+};
+
+const appendFilters = (params, value, prefix = 'filters') => {
+  if (!value || typeof value !== 'object') return;
+  Object.entries(value).forEach(([key, val]) => {
+    if (val === undefined || val === null || val === '') return;
+    const nextPrefix = `${prefix}[${key}]`;
+    if (Array.isArray(val)) {
+      val.forEach((entry) => {
+        if (entry !== undefined && entry !== null && entry !== '') {
+          params.append(nextPrefix, entry);
+        }
+      });
+      return;
+    }
+
+    if (typeof val === 'object') {
+      appendFilters(params, val, nextPrefix);
+      return;
+    }
+
+    params.append(nextPrefix, val);
+  });
+};
+
+const createParams = ({ fields = [], populate = {}, filters = null, sort = null, pagination = null, publicationState = null }) => {
+  const params = new URLSearchParams();
+  appendFields(params, fields);
+  appendSort(params, sort);
+  appendPagination(params, pagination || {});
+  if (publicationState) params.set('publicationState', publicationState);
+  if (filters) appendFilters(params, filters);
+  Object.entries(populate || {}).forEach(([relation, relationConfig]) => {
+    setPopulate(params, `populate[${relation}]`, relationConfig || {});
+  });
+  return params;
 };
 
 const PERSON_FIELDS = ['fullName', 'slug', 'position', 'email', 'phone', 'type', 'location'];
@@ -155,9 +220,19 @@ export async function fetchAPI(endpoint, options = {}) {
   // Server-only token. Do NOT use NEXT_PUBLIC_ prefix for this value.
   const token = process.env.STRAPI_API_TOKEN || null;
 
+  const {
+    method = 'GET',
+    body,
+    headers: customHeaders = {},
+    cache = 'force-cache',
+    revalidate,
+    next,
+    ...rest
+  } = options;
+
   const headers = {
     'Content-Type': 'application/json',
-    ...(options.headers || {}),
+    ...customHeaders,
   };
 
   // Only attach the token on the server to avoid exposing it to client bundles
@@ -165,11 +240,24 @@ export async function fetchAPI(endpoint, options = {}) {
     headers['Authorization'] = `Bearer ${token}`;
   }
 
+  const shouldUseNext = cache !== 'no-store';
+  const fetchInit = {
+    method,
+    headers,
+    cache,
+    ...rest,
+  };
+
+  if (body) {
+    fetchInit.body = typeof body === 'string' ? body : JSON.stringify(body);
+  }
+
+  if (shouldUseNext) {
+    fetchInit.next = next || { revalidate: typeof revalidate === 'number' ? revalidate : DEFAULT_REVALIDATE_SECONDS };
+  }
+
   try {
-    const response = await fetch(url, {
-      headers,
-      ...options,
-    });
+    const response = await fetch(url, fetchInit);
 
     if (!response.ok) {
       // try to capture response body for better diagnostics
@@ -196,44 +284,41 @@ export async function fetchAPI(endpoint, options = {}) {
  * Get all staff members from Strapi (handles pagination automatically)
  * @returns {Promise<Array>} Array of staff members
  */
-export async function getStaff() {
+export async function getStaff(options = {}) {
   try {
-    const allPeople = [];
-    let page = 1;
-    let pageCount = 1;
+    const {
+      types,
+      departmentSlug,
+      includeBio = true,
+      page = 1,
+      pageSize = 200,
+    } = options;
 
-    // Fetch all pages
-    while (page <= pageCount) {
-      const params = new URLSearchParams();
-      params.set('sort', 'fullName:asc');
-      params.set('pagination[page]', page.toString());
-      params.set('pagination[pageSize]', '100'); // Fetch 100 per page for efficiency
-      params.append('fields[0]', 'fullName');
-      params.append('fields[1]', 'slug');
-      params.append('fields[2]', 'position');
-      params.append('fields[3]', 'email');
-      params.append('fields[4]', 'phone');
-      params.append('fields[5]', 'type');
-      params.append('fields[6]', 'location');
-      params.append('fields[7]', 'bio');
-      setPopulate(params, 'populate[department]', { fields: ['name', 'slug'] });
-      setPopulate(params, 'populate[portrait]', { fields: ['url', 'formats', 'alternativeText'] });
-
-      const data = await fetchAPI(`/people?${params.toString()}`);
-      
-      if (data.data && data.data.length > 0) {
-        allPeople.push(...data.data);
-      }
-
-      // Update pageCount from first response
-      if (page === 1 && data.meta?.pagination?.pageCount) {
-        pageCount = data.meta.pagination.pageCount;
-      }
-
-      page++;
+    const filters = {};
+    if (Array.isArray(types) && types.length) {
+      filters.type = { $in: types };
+    }
+    if (departmentSlug) {
+      filters.department = { slug: { $eq: departmentSlug } };
     }
 
-    return allPeople;
+    const fields = includeBio ? [...PERSON_FIELDS, 'bio'] : PERSON_FIELDS;
+
+    const params = createParams({
+      fields,
+      sort: 'fullName:asc',
+      pagination: { page, pageSize },
+      filters: Object.keys(filters).length ? filters : null,
+      populate: {
+        department: DEPARTMENT_POPULATE,
+        portrait: {
+          fields: ['url', 'formats', 'alternativeText'],
+        },
+      },
+    });
+
+    const data = await fetchAPI(`/people?${params.toString()}`);
+    return data.data || [];
   } catch (error) {
     console.error('Failed to fetch staff:', error);
     return [];
@@ -248,18 +333,15 @@ export async function getStaff() {
 export async function getStaffMember(slug) {
   try {
     if (!slug) return null;
-    const params = new URLSearchParams();
-    params.set('filters[slug][$eq]', slug);
-    setPopulate(params, 'populate[department]', DEPARTMENT_POPULATE);
-    setPopulate(params, 'populate[portrait]');
-    setPopulate(params, 'populate[projects]', {
-      fields: ['title', 'slug'],
-    });
-    setPopulate(params, 'populate[leading_projects]', {
-      fields: ['title', 'slug'],
-    });
-    setPopulate(params, 'populate[publications]', {
-      fields: ['title', 'slug', 'year'],
+    const params = createParams({
+      filters: { slug: { $eq: slug } },
+      populate: {
+        department: DEPARTMENT_POPULATE,
+        portrait: {},
+        projects: { fields: ['title', 'slug'] },
+        leading_projects: { fields: ['title', 'slug'] },
+        publications: { fields: ['title', 'slug', 'year'] },
+      },
     });
 
     const data = await fetchAPI(`/people?${params.toString()}`);
@@ -274,17 +356,23 @@ export async function getStaffMember(slug) {
  * Get all projects from Strapi
  * @returns {Promise<Array>} Array of projects
  */
-export async function getProjects() {
+export async function getProjects(options = {}) {
   try {
-    const params = new URLSearchParams();
-    params.set('sort', 'title:asc');
-    params.set('publicationState', 'preview');
-    setPopulate(params, 'populate[lead]', PERSON_WITH_IMAGE_POPULATE);
-    setPopulate(params, 'populate[members]', PERSON_WITH_IMAGE_POPULATE);
-    setPopulate(params, 'populate[domains]', DEPARTMENT_POPULATE);
-    setPopulate(params, 'populate[themes]', { fields: ['name', 'slug'] });
-    setPopulate(params, 'populate[partners]', { fields: ['name', 'slug'] });
-    setPopulate(params, 'populate[publications]', { fields: ['title', 'slug', 'year'] });
+    const { domainSlug, themeSlug, featured, publicationState = 'preview' } = options;
+
+    const filters = {};
+    if (domainSlug) filters.domains = { slug: { $eq: domainSlug } };
+    if (themeSlug) filters.themes = { slug: { $eq: themeSlug } };
+    if (featured !== undefined) filters.featured = { $eq: featured };
+
+    const params = createParams({
+      sort: 'title:asc',
+      publicationState,
+      filters: Object.keys(filters).length ? filters : null,
+      fields: PROJECT_POPULATE.fields,
+      populate: PROJECT_POPULATE.populate,
+    });
+
     const data = await fetchAPI(`/projects?${params.toString()}`);
     return data.data || [];
   } catch (error) {
@@ -301,17 +389,17 @@ export async function getProjects() {
 export async function getProject(slug) {
   try {
     if (!slug) return null;
-    const params = new URLSearchParams();
-    params.set('filters[slug][$eq]', slug);
-    setPopulate(params, 'populate[lead]', PERSON_WITH_IMAGE_POPULATE);
-    setPopulate(params, 'populate[members]', PERSON_WITH_IMAGE_POPULATE);
-    setPopulate(params, 'populate[domains]', DEPARTMENT_POPULATE);
-    setPopulate(params, 'populate[themes]', { fields: ['name', 'slug'] });
-    setPopulate(params, 'populate[partners]', { fields: ['name', 'slug'] });
-    params.set('publicationState', 'preview');
-    setPopulate(params, 'populate[publications]', { fields: ['title', 'slug', 'year'] });
-    setPopulate(params, 'populate[heroImage]');
-    setPopulate(params, 'populate[body]');
+    const params = createParams({
+      filters: { slug: { $eq: slug } },
+      publicationState: 'preview',
+      fields: PROJECT_POPULATE.fields,
+      populate: {
+        ...PROJECT_POPULATE.populate,
+        heroImage: {},
+        body: {},
+      },
+    });
+
     const data = await fetchAPI(`/projects?${params.toString()}`);
     return data.data?.[0] || null;
   } catch (error) {
@@ -425,20 +513,25 @@ export async function getProjectsByMember(memberSlug) {
   }
 }
 
-export async function getDepartments() {
+export async function getDepartments(options = {}) {
   try {
-    const params = new URLSearchParams();
-    params.set('sort', 'name:asc');
-    params.append('fields[0]', 'name');
-    params.append('fields[1]', 'slug');
-    params.append('fields[2]', 'summary');
-    params.append('fields[3]', 'description');
-    setPopulate(params, 'populate[focusItems]');
-    setPopulate(params, 'populate[contactLinks]');
-    setPopulate(params, 'populate[body]');
-    setPopulate(params, 'populate[heroImage]');
-    setPopulate(params, 'populate[coordinator]', PERSON_FLAT_POPULATE);
-    setPopulate(params, 'populate[coCoordinator]', PERSON_FLAT_POPULATE);
+    const { type } = options;
+    const filters = type ? { type: { $eq: type } } : null;
+
+    const params = createParams({
+      sort: 'name:asc',
+      fields: ['name', 'slug', 'summary', 'description', 'type'],
+      filters,
+      populate: {
+        focusItems: {},
+        contactLinks: {},
+        body: {},
+        heroImage: {},
+        coordinator: PERSON_FLAT_POPULATE,
+        coCoordinator: PERSON_FLAT_POPULATE,
+      },
+    });
+
     const data = await fetchAPI(`/departments?${params.toString()}`);
     return data.data || [];
   } catch (error) {
@@ -449,18 +542,19 @@ export async function getDepartments() {
 
 export async function getSupportUnits() {
   try {
-    const params = new URLSearchParams();
-    params.set('sort', 'name:asc');
-    params.append('fields[0]', 'name');
-    params.append('fields[1]', 'slug');
-    params.append('fields[2]', 'summary');
-    params.append('fields[3]', 'mission');
-    setPopulate(params, 'populate[services]');
-    setPopulate(params, 'populate[contactLinks]');
-    setPopulate(params, 'populate[body]');
-    setPopulate(params, 'populate[heroImage]');
-    setPopulate(params, 'populate[lead]', PERSON_FLAT_POPULATE);
-    setPopulate(params, 'populate[members]', PERSON_FLAT_POPULATE);
+    const params = createParams({
+      sort: 'name:asc',
+      fields: ['name', 'slug', 'summary', 'mission'],
+      populate: {
+        services: {},
+        contactLinks: {},
+        body: {},
+        heroImage: {},
+        lead: PERSON_FLAT_POPULATE,
+        members: PERSON_FLAT_POPULATE,
+      },
+    });
+
     const data = await fetchAPI(`/support-units?${params.toString()}`);
     return data.data || [];
   } catch (error) {
@@ -471,12 +565,10 @@ export async function getSupportUnits() {
 
 export async function getResearchThemes() {
   try {
-    const params = new URLSearchParams();
-    params.set('sort', 'name:asc');
-    params.append('fields[0]', 'name');
-    params.append('fields[1]', 'slug');
-    params.append('fields[2]', 'summary');
-    params.append('fields[3]', 'color');
+    const params = createParams({
+      sort: 'name:asc',
+      fields: ['name', 'slug', 'summary', 'color'],
+    });
     const data = await fetchAPI(`/research-themes?${params.toString()}`);
     return data.data || [];
   } catch (error) {

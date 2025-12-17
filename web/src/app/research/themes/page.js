@@ -5,9 +5,6 @@ export const metadata = {
 import ThemesClient from "./themesClient";
 import { getResearchThemes } from "@/lib/strapi";
 
-export const revalidate = 600; // Revalidate every 10 minutes
-export const dynamic = "force-dynamic"; // Fetch at runtime to avoid build-time staleness
-
 export default async function ThemesPage() {
   const themes = await getResearchThemes();
 

@@ -6,7 +6,7 @@ import { motion } from "framer-motion";
 import { useMemo } from "react";
 
 export default function ResearchersClient({ staffData = [] }) {
-  const researchers = staffData["Researchers"] ?? [];
+  const researchers = Array.isArray(staffData) ? staffData : [];
 
   const researchersSorted = useMemo(
     () =>

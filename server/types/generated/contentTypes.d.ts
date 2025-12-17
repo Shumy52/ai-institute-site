@@ -960,6 +960,10 @@ export interface ApiProjectProject extends Struct.CollectionTypeSchema {
     members: Schema.Attribute.Relation<'manyToMany', 'api::person.person'>;
     officialUrl: Schema.Attribute.Text;
     partners: Schema.Attribute.Relation<'manyToMany', 'api::partner.partner'>;
+    phase: Schema.Attribute.Enumeration<
+      ['planned', 'ongoing', 'completed', 'archived']
+    > &
+      Schema.Attribute.DefaultTo<'ongoing'>;
     publications: Schema.Attribute.Relation<
       'manyToMany',
       'api::publication.publication'
@@ -970,10 +974,6 @@ export interface ApiProjectProject extends Struct.CollectionTypeSchema {
     > &
       Schema.Attribute.DefaultTo<'national'>;
     slug: Schema.Attribute.UID<'title'>;
-    status: Schema.Attribute.Enumeration<
-      ['planned', 'ongoing', 'completed', 'archived']
-    > &
-      Schema.Attribute.DefaultTo<'ongoing'>;
     team: Schema.Attribute.Component<'project.team-member', true>;
     themes: Schema.Attribute.Relation<
       'manyToMany',
