@@ -208,6 +208,22 @@ const normalizeStaffType = (value) => {
   };
 };
 
+const normalizeDepartmentType = (value) => {
+  const raw = value ?? '';
+  const key = raw.toString().trim().toLowerCase();
+  const map = {
+    research: 'research',
+    'research department': 'research',
+    'research departments': 'research',
+    academic: 'academic',
+    'academic department': 'academic',
+    support: 'support',
+    'support department': 'support',
+    'support departments': 'support',
+  };
+  return map[key] || 'research';
+};
+
 /**
  * Helper function to make API calls to Strapi
  * @param {string} endpoint - The API endpoint (without /api prefix)
@@ -280,6 +296,28 @@ export async function fetchAPI(endpoint, options = {}) {
   }
 }
 
+async function fetchAllEntries(endpoint, baseOptions = {}, pageSize = 100) {
+  const results = [];
+  let page = 1;
+  let pageCount = 1;
+
+  while (page <= pageCount) {
+    const params = createParams({
+      ...baseOptions,
+      pagination: { page, pageSize },
+    });
+
+    const data = await fetchAPI(`${endpoint}?${params.toString()}`);
+    if (Array.isArray(data?.data)) results.push(...data.data);
+
+    const metaPageCount = data?.meta?.pagination?.pageCount;
+    pageCount = typeof metaPageCount === 'number' ? metaPageCount : pageCount;
+    page += 1;
+  }
+
+  return results;
+}
+
 /**
  * Get all staff members from Strapi (handles pagination automatically)
  * @returns {Promise<Array>} Array of staff members
@@ -290,8 +328,8 @@ export async function getStaff(options = {}) {
       types,
       departmentSlug,
       includeBio = true,
-      page = 1,
-      pageSize = 200,
+      page,
+      pageSize = 100,
     } = options;
 
     const filters = {};
@@ -304,10 +342,9 @@ export async function getStaff(options = {}) {
 
     const fields = includeBio ? [...PERSON_FIELDS, 'bio'] : PERSON_FIELDS;
 
-    const params = createParams({
+    const baseOptions = {
       fields,
       sort: 'fullName:asc',
-      pagination: { page, pageSize },
       filters: Object.keys(filters).length ? filters : null,
       populate: {
         department: DEPARTMENT_POPULATE,
@@ -315,10 +352,15 @@ export async function getStaff(options = {}) {
           fields: ['url', 'formats', 'alternativeText'],
         },
       },
-    });
+    };
 
-    const data = await fetchAPI(`/people?${params.toString()}`);
-    return data.data || [];
+    if (page) {
+      const params = createParams({ ...baseOptions, pagination: { page, pageSize } });
+      const data = await fetchAPI(`/people?${params.toString()}`);
+      return data.data || [];
+    }
+
+    return await fetchAllEntries('/people', baseOptions, pageSize);
   } catch (error) {
     console.error('Failed to fetch staff:', error);
     return [];
@@ -515,10 +557,10 @@ export async function getProjectsByMember(memberSlug) {
 
 export async function getDepartments(options = {}) {
   try {
-    const { type } = options;
+    const { type, page, pageSize = 100 } = options;
     const filters = type ? { type: { $eq: type } } : null;
 
-    const params = createParams({
+    const baseOptions = {
       sort: 'name:asc',
       fields: ['name', 'slug', 'summary', 'description', 'type'],
       filters,
@@ -530,10 +572,15 @@ export async function getDepartments(options = {}) {
         coordinator: PERSON_FLAT_POPULATE,
         coCoordinator: PERSON_FLAT_POPULATE,
       },
-    });
+    };
 
-    const data = await fetchAPI(`/departments?${params.toString()}`);
-    return data.data || [];
+    if (page) {
+      const params = createParams({ ...baseOptions, pagination: { page, pageSize } });
+      const data = await fetchAPI(`/departments?${params.toString()}`);
+      return data.data || [];
+    }
+
+    return await fetchAllEntries('/departments', baseOptions, pageSize);
   } catch (error) {
     console.error('Failed to fetch departments:', error);
     return [];
@@ -542,7 +589,7 @@ export async function getDepartments(options = {}) {
 
 export async function getSupportUnits() {
   try {
-    const params = createParams({
+    const baseOptions = {
       sort: 'name:asc',
       fields: ['name', 'slug', 'summary', 'mission'],
       populate: {
@@ -553,10 +600,9 @@ export async function getSupportUnits() {
         lead: PERSON_FLAT_POPULATE,
         members: PERSON_FLAT_POPULATE,
       },
-    });
+    };
 
-    const data = await fetchAPI(`/support-units?${params.toString()}`);
-    return data.data || [];
+    return await fetchAllEntries('/support-units', baseOptions, 100);
   } catch (error) {
     console.error('Failed to fetch support units:', error);
     return [];
@@ -938,7 +984,7 @@ export function transformDepartmentData(strapiDepartments) {
       id: department?.id ?? null,
       name: attributes.name || '',
       slug: attributes.slug || '',
-      type: attributes.type || 'research',
+      type: normalizeDepartmentType(attributes.type),
       summary: attributes.summary || '',
       description:
         typeof attributes.description === 'string'
