@@ -9,4 +9,5 @@ RUN npm install
 RUN npm run build
 
 EXPOSE 1337
-CMD ["npm", "run", "develop"]
+# Run in production mode (serve the built admin). Use `develop` only for local development.
+CMD ["npm", "start"]
