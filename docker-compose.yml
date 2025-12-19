@@ -50,6 +50,7 @@ services:
       - ./.env
     environment:
       NODE_ENV: production
+      PORT: "3000"
       STRAPI_API_TOKEN: ${STRAPI_API_TOKEN}
       NEXT_PUBLIC_STRAPI_URL: ${NEXT_PUBLIC_STRAPI_URL}
       REVALIDATION_SECRET: ${REVALIDATION_SECRET}
