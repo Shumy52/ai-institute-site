@@ -21,7 +21,7 @@ services:
     build: ./server
     restart: always
     env_file:
-      - ./server/.env
+      - ./.env
     environment:
       DATABASE_CLIENT: ${DATABASE_CLIENT}
       DATABASE_HOST: ${DATABASE_HOST}
@@ -46,9 +46,13 @@ services:
   nextjs:
     build: ./web
     restart: always
+    env_file:
+      - ./.env
     environment:
       NODE_ENV: production
       STRAPI_API_TOKEN: ${STRAPI_API_TOKEN}
+      NEXT_PUBLIC_STRAPI_URL: ${NEXT_PUBLIC_STRAPI_URL}
+      REVALIDATION_SECRET: ${REVALIDATION_SECRET}
     ports:
       - "3000:3000"
     depends_on:
