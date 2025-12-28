@@ -483,7 +483,7 @@ export default function StaffDetailPage() {
                         className="rounded-xl border border-gray-200 dark:border-gray-800 p-4 hover:bg-gray-50 dark:hover:bg-gray-900"
                       >
                         <Link
-                          href={`/people/staff/${encodeURIComponent(slug || "")}/${encodeURIComponent(projectSlug)}`}
+                          href={`/research/projects/${encodeURIComponent(projectSlug)}`}
                           className="block group"
                           aria-label={`Open project ${p.title || `#${i + 1}`}`}
                         >
