@@ -40,6 +40,5 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-/experiments/
-/remote_snapshots/
-/stable_releases/
+/data-feed/
+/.vscode/
