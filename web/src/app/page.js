@@ -46,7 +46,7 @@ export default function Home() {
             Under Construction
           </h2>
           <p className="text-gray-800 dark:text-gray-200 text-lg md:text-xl mb-6 text-center">
-            Our site is currently under construction.
+            AIRi@UTCN is currently under construction.
           </p>
         </section>
 
@@ -137,4 +137,5 @@ export default function Home() {
   );
 
 }
+
 
