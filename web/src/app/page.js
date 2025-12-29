@@ -3,7 +3,7 @@ import Link from "next/link";
 export const metadata = {
   title: "AIRI - Home",
   description:
-    "Advancing research, innovation, and exploration in the field of artificial intelligence at the Technical University of Cluj-Napoca.",
+    "Advancing research, innovation, and exploration in artificial intelligence at the Technical University of Cluj-Napoca AIRi@UTCN",
 };
 
 export default function Home() {
@@ -137,3 +137,4 @@ export default function Home() {
   );
 
 }
+
