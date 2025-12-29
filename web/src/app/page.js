@@ -21,7 +21,7 @@ export default function Home() {
             Artificial Intelligence Research Institute
           </h1>
           <p className="text-lg md:text-2xl font-medium mb-6 max-w-2xl mx-auto drop-shadow">
-            Advancing research, innovation, and exploration in the field of
+            Advancing research, innovation, and exploration in 
             artificial intelligence at the Technical University of Cluj-Napoca.
           </p>
           <Link
