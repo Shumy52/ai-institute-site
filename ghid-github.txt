@@ -1,0 +1,51 @@
+Standard Procedure:
+
+1. Add new person as a collaborator.
+2. Person creates a new branch with a descriptive name related to the work they will perform.
+3. Person makes a series of commits.
+4. Person reaches a stable project state where code runs, tests pass, data appears correctly, etc.
+5. Person submits a pull request to a branch (details below).
+6. Repeat from step 2 or 3, depending on the case.
+
+Commit style (keep vs squash):
+- Keep multiple commits when each commit is meaningful and tells a clear story; this makes targeted reverts (`git revert <sha>`) straightforward.
+- Squash noisy sequences (wip/fixup) or tightly coupled changes before merge so history stays clean and reviewable.
+- Default: prefer a clean, reviewable commit set; squash-and-merge is fine unless the commit history is already well-structured.
+- Reverting a merge is possible but can be messy if follow-up work depends on it; a small, coherent commit set is the safest to revert.
+
+Subrules for determining which branch to submit a pull request to:
+Case 1. If the code is deemed stable and production-ready (e.g., data-only additions or sufficient preparation/testing completed), submit a pull request to MASTER. (must be reviewed by Shumy, only one capable of approving)
+Case 2. If the work complements another feature or site section, or multiple people are working on the same feature, submit a pull request to ANOTHER BRANCH, such as feature/strapi or maintenance/general. (anyone can approve, use caution)
+
+Motivation and Warnings:
+- Rule 2 from the procedure may only be bypassed if the contribution is minimal and can fit in a single commit. Otherwise, create a new branch and submit a pull request.
+
+Examples:
+A framework vulnerability is discovered requiring an update. Checkout maintenance/general, make the change, done.
+The news retrieval section in Strapi needs refactoring. Create branch "refact/strapi-news", make changes across several commits, submit pull request to feature/strapi (preferrably squash the commits). Done.
+
+Reason: If changes cause unforeseen issues elsewhere, reversion must be straightforward. If discovered late with multiple commits from different authors, identifying and resolving the problem—or reverting if necessary—becomes difficult.
+
+
+Quick JSON changes:
+
+Primarily used for rapid data updates without reviews. Optimized for github.com interface.
+
+1. Navigate to the project main page. The selected branch should be MASTER (shown under the project title).
+2. Select the data/update-jsons branch from the dropdown. If not listed, click the "Branches" button on the right.
+3. Navigate to the file to edit and make changes.
+4. Click "Commit changes". The option "Commit directly to the data/update-jsons branch" should appear. Select it and click "Commit changes" again.
+5. Move to the production server. (ssh)
+6. Run → git checkout data/update-jsons
+7. Run → git pull
+8. Deploy with → docker compose up --build -d
+
+Notes:
+- If "Commit directly to..." doesn't appear, verify the correct branch was selected and restart from step 1.
+
+
+Non-Collaborator:
+
+1. Fork the project (https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/working-with-forks/fork-a-repo)
+2. Proceed as collaborators do. The only difference is remote repository management.
+3. Periodically sync with the original project to receive updates. Refer to Git documentation.
