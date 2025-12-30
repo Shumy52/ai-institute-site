@@ -28,7 +28,7 @@ export default function RootLayout({ children }) {
       suppressHydrationWarning // <-- adăugat
       className={`${geistSans.variable} ${geistMono.variable}`}
     >
-      <body className="antialiased min-h-screen transition-colors duration-300 bg-white text-gray-900 dark:bg-gray-900 dark:text-gray-100">
+      <body className="antialiased min-h-screen flex flex-col transition-colors duration-300 bg-white text-gray-900 dark:bg-gray-900 dark:text-gray-100">
         {/* Setează tema ÎNAINTE de hidratare ca HTML-ul serverului să coincidă cu cel al clientului */}
         <Script id="theme-init" strategy="beforeInteractive">
           {`
@@ -42,7 +42,9 @@ export default function RootLayout({ children }) {
         </Script>
 
         <Navbar />
-        {children}
+        <main className="flex-grow">
+          {children}
+        </main>
         <DarkModeBubble />
         <Footer />
       </body>
