@@ -41,7 +41,7 @@
     {
       "slug": "AncaNicoleta-Marginean",
       "name": "Mărginean Anca Nicoleta",
-      "title": "Associated Professor",
+      "title": "Associate Professor",
       "phone": "0733333333",
       "email": "Anca.Marginean@cs.utcluj.ro",
       "department": "Software and Hardware for AI",
@@ -522,6 +522,268 @@
       "phone": "0725252525",
       "email": "radu.bacila@yahoo.com",
       "department": "Cybersecurity and Space",
+      "image": ""
+    },
+    ,
+    {
+      "slug": "Cornel-Badea",
+      "name": "Badea Cornel",
+      "title": "Researcher",
+      "phone": "0725252525",
+      "email": "",
+      "department": "Software and Hardware for AI",
+      "image": ""
+    },
+    {
+      "slug": "Raluca-Portase",
+      "name": "Portase Raluca",
+      "title": "Senior Lecturer",
+      "phone": "0725252525",
+      "email": "Raluca.Portase@cs.utcluj.ro",
+      "department": "Software and Hardware for AI",
+      "image": ""
+    },
+    {
+      "slug": "Richard-Ardelean",
+      "name": "Ardelean Richard",
+      "title": "Senior Lecturer",
+      "phone": "0725252525",
+      "email": "Eugen.Ardelean@cs.utcluj.ro",
+      "department": "Software and Hardware for AI",
+      "image": ""
+    },
+    {
+      "slug": "Vlad-Negru",
+      "name": "Negru Vlad",
+      "title": "Assistant Professor",
+      "phone": "0725252525",
+      "email": "Vlad.Negru@cs.utcluj.ro",
+      "department": "Software and Hardware for AI",
+      "image": ""
+    },
+    {
+      "slug": "Vasile-Suciu",
+      "name": "Suciu Vasile",
+      "title": "Researcher",
+      "phone": "0725252525",
+      "email": "",
+      "department": "Software and Hardware for AI",
+      "image": ""
+    },
+    {
+      "slug": "Kirei-Botond",
+      "name": "Botond Kirei",
+      "title": "Associate Professor",
+      "phone": "0777777777",
+      "email": "botond.kirei@bel.utcluj.ro",
+      "department": "Microelectronics",
+      "image": ""
+    },
+    {
+      "slug": "Albert-Fazakas",
+      "name": "Fazakas Albert",
+      "title": "Associate Professor",
+      "phone": "0777777777",
+      "email": "Albert.Fazakas@bel.utcluj.ro",
+      "department": "Microelectronics",
+      "image": ""
+    },
+    {
+      "slug": "Paul-Farago",
+      "name": "Farago Paul",
+      "title": "Associate Professor",
+      "phone": "0777777777",
+      "email": "Paul.Farago@bel.utcluj.ro",
+      "department": "Microelectronics",
+      "image": ""
+    },
+    {
+      "slug": "Eduard-Vladu",
+      "name": "Vladu Eduard",
+      "title": "Researcher",
+      "phone": "0720202020",
+      "email": "",
+      "department": "Microelectronics",
+      "image": ""
+    },
+    {
+      "slug": "Vlad-Miclea",
+      "name": "Miclea Vlad",
+      "title": "Senior Lecturer",
+      "phone": "0711111111",
+      "email": "Vlad.Miclea@cs.utcluj.ro",
+      "department": "Autonomous Systems",
+      "image": ""
+    },
+    {
+      "slug": "Andra-Petrovai",
+      "name": "Petrovai Andra",
+      "title": "Senior Lecturer",
+      "phone": "0711111111",
+      "email": "andra.petrovai@cs.utcluj.ro",
+      "department": "Autonomous Systems",
+      "image": ""
+    },
+    {
+      "slug": "Horatiu-Florea",
+      "name": "Florea Horatiu",
+      "title": "Researcher",
+      "phone": "0711111111",
+      "email": "Horatiu.Florea@cs.utcluj.ro",
+      "department": "Autonomous Systems",
+      "image": ""
+    },
+    {
+      "slug": "Radu-Beche",
+      "name": "Beche Radu",
+      "title": "Researcher",
+      "phone": "0711111111",
+      "email": "radu@beche.ro",
+      "department": "Autonomous Systems",
+      "image": ""
+    },
+    {
+      "slug": "Ion-Giosan",
+      "name": "Giosan Ion",
+      "title": "Associate Professor",
+      "phone": "0711111111",
+      "email": "Ion.Giosan@cs.utcluj.ro",
+      "department": "Autonomous Systems",
+      "image": ""
+    },
+    {
+      "slug": "Vivian-Chiciudean",
+      "name": "Chiciudean Vivian",
+      "title": "Assistant Professor",
+      "phone": "0766666666",
+      "email": "Vivian.Chiciudean@cs.utcluj.ro",
+      "department": "Autonomous Systems",
+      "image": ""
+    },
+    {
+      "slug": "Mircea-Muresan",
+      "name": "Muresan Mircea",
+      "title": "Assistant Professor",
+      "phone": "0766666666",
+      "email": "Mircea.Muresan@cs.utcluj.ro",
+      "department": "Autonomous Systems",
+      "image": ""
+    },
+    {
+      "slug": "Stefan-Pirje",
+      "name": "Pirje Stefan",
+      "title": "Researcher",
+      "phone": "0725252525",
+      "email": "stefan.pirje@aut.utcluj",
+      "department": "Software and Hardware for AI",
+      "image": ""
+    },
+    {
+      "slug": "Razvan-Itu",
+      "name": "Itu Răzvan",
+      "title": "Senior Lecturer",
+      "phone": "0712121212",
+      "email": "Razvan.Itu@cs.utcluj.ro",
+      "department": "Autonomous Systems",
+      "image": ""
+    },
+    {
+      "slug": "Attila-Fuzes",
+      "name": "Fuzes Attila",
+      "title": "Assistant Professor",
+      "phone": "0712121212",
+      "email": "Attila.Fuzes@cs.utcluj.ro",
+      "department": "Autonomous Systems",
+      "image": ""
+    },
+    {
+      "slug": "Adrian-Sabou",
+      "name": "Sabou Adrian",
+      "title": "Senior Lecturer",
+      "phone": "0713131313",
+      "email": "Adrian.Sabou@cs.utcluj.ro",
+      "department": "",
+      "image": ""
+    },
+    {
+      "slug": "Teodor-Stefanut",
+      "name": "Stefanut Teodor",
+      "title": "Associate Professor",
+      "phone": "0713131313",
+      "email": "teodor.stefanut@cs.utcluj.ro",
+      "department": "",
+      "image": ""
+    },
+    {
+      "slug": "Victor-Bacu",
+      "name": "Bâcu Victor",
+      "title": "Associate Professor",
+      "phone": "0713131313",
+      "email": "Victor.Bacu@cs.utcluj.ro",
+      "department": "",
+      "image": ""
+    },
+    {
+      "slug": "Constantin-Nandra",
+      "name": "Nandra Constantin",
+      "title": "Senior Lecturer",
+      "phone": "0713131313",
+      "email": "constantin.nandra@cs.utcluj.ro",
+      "department": "",
+      "image": ""
+    },
+    {
+      "slug": "Dan-Mitrea",
+      "name": "Mitrea Dan",
+      "title": "Assistant Professor",
+      "phone": "0725252525",
+      "email": "Dan.Mitrea@cs.utcluj.ro",
+      "department": "Software and Hardware for AI",
+      "image": ""
+    },
+    {
+      "slug": "Liana-Todorean",
+      "name": "Todorean Liana",
+      "title": "Assistant Professor",
+      "phone": "0725252525",
+      "email": "Liana.Todorean@cs.utcluj.ro",
+      "department": "Software and Hardware for AI",
+      "image": ""
+    },
+    {
+      "slug": "Delia-Mitrea",
+      "name": "Mitrea Delia",
+      "title": "Associate Professor",
+      "phone": "0714141414",
+      "email": "Delia.Mitrea@cs.utcluj.ro",
+      "department": "Robotics for healthcare",
+      "image": ""
+    },
+    {
+      "slug": "Raluca-Brehar",
+      "name": "Brehar Raluca",
+      "title": "Associate Professor",
+      "phone": "0714141414",
+      "email": "raluca.brehar@cs.utcluj.ro",
+      "department": "Robotics for healthcare",
+      "image": ""
+    },
+    {
+      "slug": "Cristian-Vancea",
+      "name": "Vancea Cristian",
+      "title": "Professor",
+      "phone": "0714141414",
+      "email": "Cristian.Vancea@cs.utcluj.ro",
+      "department": "Robotics for healthcare",
+      "image": ""
+    },
+    {
+      "slug": "Zsofia-Lendek",
+      "name": "Lendek Zsofia",
+      "title": "Associate Professor",
+      "phone": "0725252525",
+      "email": "zsofia.lendek@aut.utcluj.ro",
+      "department": "Robotics for healthcare",
       "image": ""
     }
   ]
