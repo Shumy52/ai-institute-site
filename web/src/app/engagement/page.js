@@ -8,7 +8,6 @@ const items = [
   { href: "/engagement/high-school", title: "High-school engagement", desc: "Competitii, evenimente, resurse pentru elevi." },
   { href: "/engagement/partners", title: "Partners", desc: "CLAIRE, ELLIS, AIoD, euRobotics, ADRA, AI4Europe, BDVA." },
   { href: "/engagement/industrial-phd", title: "Industrial PhD", desc: "Programe doctorale cu parteneri industriali." },
-  { href: "/engagement/hpc-ai", title: "HPC-AI services", desc: "HPC, suport si training pentru AI." },
 ];
 
 export default function EngagementPage() {

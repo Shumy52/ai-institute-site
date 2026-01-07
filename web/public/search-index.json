@@ -25,7 +25,6 @@
   { "title": "Engagement – Industry engagement", "route": "/engagement/industry", "tags": ["engagement","industry"], "snippet": "Colaborare cu industria." },
   { "title": "Engagement – High‑school engagement", "route": "/engagement/high-school", "tags": ["engagement","high-school","outreach"], "snippet": "Activități pentru licee." },
   { "title": "Engagement – Partners", "route": "/engagement/partners", "tags": ["engagement","partners"], "snippet": "Parteneri și colaboratori." },
-  { "title": "Engagement – HPC‑AI services", "route": "/engagement/hpc-ai-services", "tags": ["engagement","hpc","ai services"], "snippet": "Servicii HPC‑AI." },
   { "title": "Engagement – Industrial PhD", "route": "/engagement/industrial-phd", "tags": ["engagement","industrial phd","doctoral"], "snippet": "Doctorat industrial." },
 
   { "title": "People – Researchers", "route": "/people/researchers", "tags": ["people","researchers"], "snippet": "Cercetători." },
