@@ -10,6 +10,7 @@ import { allStaff } from "@/app/data/staffData";
 import { proData } from "@/app/data/proData";
 import { pubData } from "@/app/data/pubData";
 import { techTransferPage } from "./TechTransferClient.js";
+import { hpcAIPage } from "./HPCAIServicesClient.js"
 
 const researchUnits = Array.isArray(units) ? units : [];
 const supportUnits = Array.isArray(supUnits) ? supUnits : [];
@@ -617,6 +618,9 @@ export default function DepartmentsClient() {
                     <motion.div variants={itemVariants} className="space-y-4">
                       {selectedUnit.name==="Technology Transfer & Development Unit" && (
                         <>{techTransferPage}</>
+                      )}
+                      {selectedUnit.name==="HPC-AI Services" && (
+                        <>{hpcAIPage}</>
                       )}
                       {selectedUnit.description && (
                         <p className="text-gray-700 dark:text-gray-300">{selectedUnit.description}</p>
