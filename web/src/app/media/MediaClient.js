@@ -83,7 +83,7 @@ export default function MediaClient() {
       <Head>
         <title>ICIA - Media</title>
       </Head>
-      <main className="flex flex-col items-center justify-center bg-gray-100 dark:bg-gray-900 py-12 transition-colors duration-300">
+      <main className="flex flex-col items-center justify-center bg-gray-50 dark:bg-gray-900 py-12 transition-colors duration-300">
         <motion.div
           className="max-w-5xl mx-auto bg-white dark:bg-gray-950 rounded-3xl shadow-xl overflow-hidden"
           variants={containerVariants}

@@ -42,7 +42,7 @@ export default function RootLayout({ children }) {
         </Script>
 
         <Navbar />
-        <main className="flex-grow">
+        <main className="flex-grow bg-gray-50 dark:bg-gray-900">
           {children}
         </main>
         <DarkModeBubble />
