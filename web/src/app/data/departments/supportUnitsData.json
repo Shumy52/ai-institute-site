@@ -14,14 +14,6 @@
             "Custom tool development, tailored to specific data formats, project goals, or industrial requirements."
 
         ],
-        "elements": [
-            {
-                "text": "",
-                "content": [
-                    ""
-                ]
-            }
-        ],
         "type": "support" 
     },
     {
@@ -39,14 +31,11 @@
             "Through these services, the center helps transform compliance into an engine for innovation, ensuring AI technologies are developed and deployed safely, ethically, and successfully."
 
         ],
-        "elements": [
-            {
-                "text": "",
-                "content": [
-                    ""
-                ]
-            }
-        ],
+        "type": "support" 
+    },
+    {
+        "name": "Technology Transfer & Development Unit",
+        "description": [],
         "type": "support" 
     }
 ]

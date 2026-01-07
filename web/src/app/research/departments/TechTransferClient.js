@@ -11,23 +11,18 @@ const itemVariants = {
   visible: { y: 0, opacity: 1, transition: { duration: 0.45, ease: "easeOut" } },
 };
 
+export const techTransferPage = Client();
+
 export default function Client() {
   return (
-    <main className="flex flex-col items-center justify-center bg-gray-50 dark:bg-gray-900 py-12">
+    <main>
       <motion.div
-        className="container max-w-6xl mx-auto bg-white dark:bg-gray-950 rounded-2xl shadow-xl"
+        className="container max-w-6xl mx-auto bg-white dark:bg-gray-950 rounded-2xl"
         variants={containerVariants}
         initial="hidden"
         animate="visible"
       >
-        <section className="p-6 md:p-8">
-          <motion.h1
-            className="text-2xl md:text-3xl font-extrabold mb-2 text-blue-600 dark:text-yellow-400 tracking-tight text-center"
-            variants={itemVariants}
-          >
-            Technology Transfer & Development Unit
-          </motion.h1>
-
+        <section>
           <motion.p
             className="text-gray-700 dark:text-gray-300 mb-6"
             variants={itemVariants}
