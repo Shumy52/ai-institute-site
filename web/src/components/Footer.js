@@ -1,17 +1,42 @@
-import Link from "next/link";
+'use client';
+
+import { useEffect, useState } from "react";
+import Image from "next/image";
+import Logo5 from "../../public/media/Logos/Logo5.svg";
+import Logo5White from "../../public/media/Logos/Logo3.png";
 
 export default function Footer() {
-  return (
-    <footer className="bg-gray-100 dark:bg-gray-950 text-black dark:text-white mt-12 border-t-2 border-gray-300 dark:border-gray-800 w-full mt-auto" >
-      <div className="container mx-auto p-6 grid grid-cols-1 md:grid-cols-3 gap-8 text-center md:text-left">
+  const [isDark, setIsDark] = useState(false);
 
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    const updateTheme = () => {
+      setIsDark(document.documentElement.classList.contains("dark"));
+    };
+
+    updateTheme();
+    const observer = new MutationObserver(updateTheme);
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["class"],
+    });
+
+    return () => observer.disconnect();
+  }, []);
+
+  return (
+    <footer className="bg-gray-100 dark:bg-gray-950 text-black dark:text-white mt-12 border-t-2 border-gray-300 dark:border-gray-800 w-full mt-auto">
+      <div className="container mx-auto p-6 grid grid-cols-1 md:grid-cols-3 gap-8 text-center md:text-left">
         <div className="flex flex-col items-center gap-4">
           <a href="/" aria-label="Home">
-            <img
-              src="/media/Logos/Logo5.svg"
+            <Image
+              src={isDark && Logo5White ? Logo5White : Logo5}
               alt="AI Institute Logo"
               width={150}
               height={150}
+              style={{ filter: !Logo5White && isDark ? "invert(1) brightness(2)" : undefined }}
+              priority
             />
           </a>
 
