@@ -11,23 +11,18 @@ const itemVariants = {
   visible: { y: 0, opacity: 1, transition: { duration: 0.45, ease: "easeOut" } },
 };
 
+export const hpcAIPage = Client();
+
 export default function Client() {
   return (
-    <main className="flex flex-col items-center justify-center bg-gray-50 dark:bg-gray-900 py-12">
+    <main className="flex flex-col items-center justify-center">
       <motion.div
-        className="container max-w-6xl mx-auto bg-white dark:bg-gray-950 rounded-2xl shadow-xl"
+        className="container max-w-6xl mx-auto bg-white dark:bg-gray-950"
         variants={containerVariants}
         initial="hidden"
         animate="visible"
       >
-        <section className="p-6 md:p-10 space-y-6">
-          <motion.h1
-            className="text-2xl md:text-3xl font-extrabold text-blue-600 dark:text-yellow-400 tracking-tight text-center"
-            variants={itemVariants}
-          >
-            HPC-AI services
-          </motion.h1>
-
+        <section className="space-y-6">
           <motion.p className="text-gray-700 dark:text-gray-300" variants={itemVariants}>
             UTCN has designed, within AIRi@UTCN, a computing infrastructure consisting of 32 GPU Node
             servers (each with 8 GPUs), along with control servers, storage, and networking equipment, arranged

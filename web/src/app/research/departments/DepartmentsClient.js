@@ -9,6 +9,8 @@ import supUnits from "@/app/data/departments/supportUnitsData.json";
 import { allStaff } from "@/app/data/staffData";
 import { proData } from "@/app/data/proData";
 import { pubData } from "@/app/data/pubData";
+import { techTransferPage } from "./TechTransferClient.js";
+import { hpcAIPage } from "./HPCAIServicesClient.js"
 
 const researchUnits = Array.isArray(units) ? units : [];
 const supportUnits = Array.isArray(supUnits) ? supUnits : [];
@@ -434,6 +436,7 @@ export default function DepartmentsClient() {
     selectedUnit?.co_coordinator ||
     "";
   const elements = Array.isArray(selectedUnit?.elements) ? selectedUnit.elements : [];
+  const isSupportUnit = selectedUnit?.type === "support" ? true : false;
 
   const unitMembersSorted = useMemo(
     () =>
@@ -507,7 +510,7 @@ export default function DepartmentsClient() {
                 </>
                )}
               
-            {selectedUnit && (
+            {selectedUnit && !isSupportUnit && (
               <>
                 <h2
                   ref={titleRef}
@@ -598,6 +601,33 @@ export default function DepartmentsClient() {
                 {unitView === "projects" && renderProjects(unitProjects)}
                 {unitView === "members" && renderMembersCards(unitMembersSorted)}
                 {unitView === "publications" && renderPublications(unitPublications)}
+              </>
+            )}
+            
+            {selectedUnit && isSupportUnit && (
+              <>
+                <h2
+                  ref={titleRef}
+                  className="text-xl md:text-2xl font-bold text-gray-900 dark:text-gray-100 mb-4"
+                >
+                  {selectedUnit.name}
+                </h2>
+
+                {unitView === "details" && (
+                  <motion.div variants={containerVariants} initial="hidden" animate="visible">
+                    <motion.div variants={itemVariants} className="space-y-4">
+                      {selectedUnit.name==="Technology Transfer & Development Unit" && (
+                        <>{techTransferPage}</>
+                      )}
+                      {selectedUnit.name==="HPC-AI Services" && (
+                        <>{hpcAIPage}</>
+                      )}
+                      {selectedUnit.description && (
+                        <p className="text-gray-700 dark:text-gray-300">{selectedUnit.description}</p>
+                      )}
+                    </motion.div>
+                  </motion.div>
+                )}
               </>
             )}
           </section>
