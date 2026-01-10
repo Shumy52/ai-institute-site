@@ -127,7 +127,8 @@ export default function Footer() {
           <ul>
             <li><a href='/research/projects' className="underline" >Projects</a></li>
             <li><a href='/about/sitemap' className="underline" >Sitemap</a></li>
-            <li><a href="https://www.utcluj.ro/termeni-si-conditii/" className="underline" target="_blank" rel="noopener noreferrer">Privacy Policy</a></li>
+            <li><a href="https://didatec.sharepoint.com/sites/UTCNRooms/SitePages/UTCN-AIRI-OBSERVATOR-CLUJ.aspx?csf=1&web=1&e=1KDf0F&CID=8d5db74e-8c12-43de-8556-93adf5bbba81" className="underline" target="_blank" rel="noopener noreferrer">Rooms</a></li>
+            <li><a href="https://didatec-my.sharepoint.com/personal/airi_campus_utcluj_ro/_layouts/15/onedrive.aspx?id=%2Fpersonal%2Fairi%5Fcampus%5Futcluj%5Fro%2FDocuments%2FAIRi%2Don%2DDemand%20%E2%80%93%20Communication%20and%20Dissemination%20Materials&ga=1" className="underline" >Dissemination</a></li>
             <li><a href='/contact' className="underline" >Contact Us</a></li>
           </ul>
         </div>
