@@ -56,7 +56,7 @@ export default function Footer() {
             </li>
             <li>
               <a
-                href="https://www.youtube.com/channel/UCKpee9L9pHMWH7dVMS2kvlw"
+                href="https://www.youtube.com/@AIRiAIInstitute"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-blue-700 hover:text-blue-900 transition-colors duration-200"
