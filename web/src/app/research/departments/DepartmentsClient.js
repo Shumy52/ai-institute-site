@@ -414,6 +414,8 @@ export default function DepartmentsClient({
       <p className="text-gray-500">No themes found.</p>
     );
 
+  const descriptionText = selectedUnit?.description || selectedUnit?.descriere || "";
+  
   const coordinator =
     selectedUnit?.coordinator ||
     selectedUnit?.coordonator ||
