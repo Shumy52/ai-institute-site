@@ -34,8 +34,6 @@ const SECTIONS = [
       { label: "Industry engagement", href: "/engagement/industry" },
       { label: "High-school engagement", href: "/engagement/high-school" },
       { label: "Partners", href: "/engagement/partners" },
-      { label: "Technology transfer & development", href: "/engagement/tech-transfer" },
-      { label: "HPC-AI services", href: "/engagement/hpc-ai" },
       { label: "Industrial PhD", href: "/engagement/industrial-phd" },
     ],
   },

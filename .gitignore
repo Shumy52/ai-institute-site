@@ -46,3 +46,5 @@ next-env.d.ts
 web/src/app/research/publications/publicationsClient.js.backup
 web/src/app/people/staff/\[slug]/page.js.backup
 .vscode/
+/data-feed/
+/.vscode/

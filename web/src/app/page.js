@@ -3,7 +3,7 @@ import Link from "next/link";
 export const metadata = {
   title: "AIRI - Home",
   description:
-    "Advancing research, innovation, and exploration in the field of artificial intelligence at the Technical University of Cluj-Napoca.",
+    "Advancing research, innovation, and exploration in artificial intelligence at the Technical University of Cluj-Napoca - AIRi@UTCN",
 };
 
 export default function Home() {
@@ -46,7 +46,7 @@ export default function Home() {
             Under Construction
           </h2>
           <p className="text-gray-800 dark:text-gray-200 text-lg md:text-xl mb-6 text-center">
-            Our site is currently under construction.
+            AIRi@UTCN is currently under construction.
           </p>
         </section>
 
@@ -68,7 +68,8 @@ export default function Home() {
           needs across disciplines, (iii) impact of UTCN research through business and public co-creation partnerships
         </p>
       </section>
-
+       <div class='sk-ww-linkedin-page-post' data-embed-id='25627872'></div><script src='https://widgets.sociablekit.com/linkedin-page-posts/widget.js' defer></script>
+            
       {/* Quick Links Section */}
       <section className="container mx-auto px-4 pb-16 max-w-5xl">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -134,4 +135,7 @@ export default function Home() {
       </section>
     </main>
   );
+
 }
+
+
