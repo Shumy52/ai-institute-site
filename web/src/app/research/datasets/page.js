@@ -3,9 +3,16 @@ export const metadata = {
 };
 
 import DatasetsClient from "./datasetsClient";
-import {getStaff} from "@/lib/strapi";
+import { getDatasets, getStaff, transformDatasetData, transformStaffData } from "@/lib/strapi";
 
 export default async function DatasetsPage() {
-  const staffData = await getStaff(); // TODO: Should I use Promise here?
-  return <DatasetsClient staffData={staffData} />;
+  const [staffData, datasetsData] = await Promise.all([
+     getStaff(),
+     getDatasets()
+  ]);
+  
+  const staff = transformStaffData(staffData);
+  const datasets = transformDatasetData(datasetsData);
+
+  return <DatasetsClient staffData={staff} datasets={datasets} />;
 }

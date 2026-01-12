@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import {
-  getProject,
+  getProjectBySlug,
   getStaffMember,
   transformProjectData,
   transformPublicationData,
@@ -74,7 +74,7 @@ export default async function ProjectDetailPage({ params }) {
   let projectStrapi = projectEntry?._strapi ?? null;
 
   if (!projectEntry || !projectStrapi) {
-    const fetchedProject = await getProject(projectParam);
+    const fetchedProject = await getProjectBySlug(projectParam);
     if (!fetchedProject) {
       notFound();
     }

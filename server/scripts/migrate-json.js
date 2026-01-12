@@ -702,6 +702,106 @@ async function importDatasets(state) {
   }
 }
 
+async function importEvents(state) {
+  try {
+    const events = await readJson('news&events', 'eventsData.json');
+    console.log(`\n⏳ Importing events (${events.length} records found)`);
+
+    for (const evt of events) {
+      const title = String(evt?.title || '').trim();
+      if (!title) continue;
+
+      const slug = toSlug(title);
+      
+      const existing = await findDocument('api::event.event', {
+        slug: { $eqi: slug },
+      });
+
+      if (existing) {
+        await publishDocument('api::event.event', getDocId(existing));
+        continue;
+      }
+
+      const payload = {
+        title,
+        slug,
+        description: '', // JSON has no description
+        startDate: nowISO(), // Default to now as JSON has no date
+        location: '', 
+        category: 'event',
+        ctaLabel: 'See Post',
+        ctaUrl: evt?.url || '',
+        publishedAt: nowISO(),
+      };
+
+      const created = await strapi.documents('api::event.event').create({
+        data: payload,
+      });
+      await publishDocument('api::event.event', getDocId(created));
+      console.log(`  ✅ created event: ${title}`);
+    }
+  } catch (err) {
+    if (err.message.includes('Missing JSON')) {
+      console.log('  ⚠️  No eventsData.json found - skipping.');
+    } else {
+      throw err;
+    }
+  }
+}
+
+async function importSeminars(state) {
+  try {
+    const seminars = await readJson('news&events', 'seminarsData.json');
+    console.log(`\n⏳ Importing seminars (${seminars.length} records found)`);
+
+    for (const sem of seminars) {
+      const title = String(sem?.title || '').trim();
+      if (!title) continue;
+
+      const slug = toSlug(title);
+
+      const existing = await findDocument('api::seminar.seminar', {
+        slug: { $eqi: slug },
+      });
+
+      if (existing) {
+        await publishDocument('api::seminar.seminar', getDocId(existing));
+        continue;
+      }
+
+      const summary = extractString(sem?.about);
+      const modules = (sem?.modules || []).map(m => ({
+        __component: 'shared.focus-item',
+        title: String(m).trim(),
+        description: ''
+      }));
+
+      const payload = {
+        title,
+        slug,
+        provider: 'Coursera', // JSON links imply Coursera
+        summary: summary,
+        modules,
+        ctaUrl: sem?.url || '',
+        ctaLabel: 'See Course',
+        publishedAt: nowISO(),
+      };
+
+      const created = await strapi.documents('api::seminar.seminar').create({
+        data: payload,
+      });
+      await publishDocument('api::seminar.seminar', getDocId(created));
+      console.log(`  ✅ created seminar: ${title}`);
+    }
+  } catch (err) {
+    if (err.message.includes('Missing JSON')) {
+      console.log('  ⚠️  No seminarsData.json found - skipping.');
+    } else {
+      throw err;
+    }
+  }
+}
+
 async function runMigration() {
   const state = {
     departments: {},
@@ -724,6 +824,8 @@ async function runMigration() {
   await importPublications(state);
   await importProjects(state);
   await importDatasets(state);
+  await importEvents(state);
+  await importSeminars(state);
 
   console.log('\n🎉 JSON migration script finished.');
 }

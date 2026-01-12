@@ -428,7 +428,7 @@ export async function getProjects(options = {}) {
  * @param {string} slug - The project's slug
  * @returns {Promise<Object|null>} Project object or null
  */
-export async function getProject(slug) {
+export async function getProjectBySlug(slug) {
   try {
     if (!slug) return null;
     const params = createParams({
@@ -619,6 +619,65 @@ export async function getResearchThemes() {
     return data.data || [];
   } catch (error) {
     console.error('Failed to fetch research themes:', error);
+    return [];
+  }
+}
+
+/* --- Added Fetchers for Migration --- */
+
+export async function getDatasets() {
+  const DATASET_POPULATE = {
+    fields: ['title', 'slug', 'description', 'summary', 'source_url', 'platform', 'tags'],
+    populate: {
+      authors: PERSON_FLAT_POPULATE,
+    },
+  };
+  
+  try {
+    return await fetchAllEntries('/datasets', {
+      populate: DATASET_POPULATE,
+      sort: 'title:asc',
+    });
+  } catch (error) {
+    console.error('Failed to fetch datasets:', error);
+    return [];
+  }
+}
+
+export async function getEvents() {
+  const EVENT_POPULATE = {
+    fields: ['title', 'slug', 'startDate', 'endDate', 'ctaLabel', 'ctaUrl', 'description'],
+    populate: {
+       heroImage: { fields: ['url'] }
+    }
+  };
+  try {
+    return await fetchAllEntries('/events', {
+      populate: EVENT_POPULATE,
+      sort: 'startDate:desc',
+    });
+  } catch (error) {
+    console.error('Failed to fetch events:', error);
+    return [];
+  }
+}
+
+export async function getSeminars() {
+  const SEMINAR_POPULATE = {
+    fields: ['title', 'slug', 'provider', 'summary', 'ctaLabel', 'ctaUrl'],
+    populate: {
+      modules: {
+        populate: '*',
+      },
+    },
+  };
+  try {
+     return await fetchAllEntries('/seminars', {
+      populate: SEMINAR_POPULATE,
+      sort: 'title:asc',
+    });
+  } catch (error) {
+    console.error('Failed to fetch seminars:', error);
     return [];
   }
 }
@@ -1072,6 +1131,70 @@ export function transformSupportUnitData(strapiSupportUnits) {
       coordinatorSlug: leadData.slug || '',
       members,
       _strapi: unit,
+    };
+  });
+}
+
+export function transformDatasetData(strapiDatasets) {
+  const list = Array.isArray(strapiDatasets) ? strapiDatasets : strapiDatasets ? [strapiDatasets] : [];
+
+  return list.map((ds) => {
+    const attributes = ds?.attributes ?? ds ?? {};
+    const authors = toArray(attributes.authors?.data ?? attributes.authors).map((a) => {
+       const aAttr = a?.attributes ?? a ?? {};
+       return {
+         name: aAttr.fullName || aAttr.name || '',
+         slug: aAttr.slug || '',
+       };
+    });
+    
+    return {
+      id: ds?.id ?? null,
+      title: attributes.title || '',
+      slug: attributes.slug || '',
+      summary: attributes.summary || '',
+      description: attributes.description || '',
+      url: attributes.source_url || '',
+      platform: attributes.platform || '',
+      tags: attributes.tags || [],
+      authors,
+      authorName: authors[0]?.name || '',
+      authorSlug: authors[0]?.slug || '',
+      year: attributes.publishedAt ? new Date(attributes.publishedAt).getFullYear() : null,
+      _strapi: ds,
+    };
+  });
+}
+
+export function transformEventData(strapiEvents) {
+  const list = Array.isArray(strapiEvents) ? strapiEvents : strapiEvents ? [strapiEvents] : [];
+  return list.map((evt) => {
+    const attributes = evt?.attributes ?? evt ?? {};
+    return {
+      id: evt?.id ?? null,
+      title: attributes.title || '',
+      slug: attributes.slug || '',
+      url: attributes.ctaUrl || '',
+      date: attributes.startDate || attributes.publishedAt,
+      _strapi: evt,
+    };
+  });
+}
+
+export function transformSeminarData(strapiSeminars) {
+  const list = Array.isArray(strapiSeminars) ? strapiSeminars : strapiSeminars ? [strapiSeminars] : [];
+  return list.map((sem) => {
+    const attributes = sem?.attributes ?? sem ?? {};
+    const modules = toArray(attributes.modules).map(m => m.title || m.heading || '');
+    
+    return {
+      id: sem?.id ?? null,
+      title: attributes.title || '',
+      slug: attributes.slug || '',
+      about: attributes.summary ? [attributes.summary] : [],
+      modules,
+      url: attributes.ctaUrl || '',
+      _strapi: sem,
     };
   });
 }

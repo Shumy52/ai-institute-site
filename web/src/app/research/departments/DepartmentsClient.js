@@ -4,11 +4,6 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
-import units from "@/app/data/departments/researchUnitsData.json";
-import supUnits from "@/app/data/departments/supportUnitsData.json";
-import { allStaff } from "@/app/data/staffData";
-import { proData } from "@/app/data/proData";
-import { pubData } from "@/app/data/pubData";
 import { techTransferPage } from "./TechTransferClient.js";
 import { hpcAIPage } from "./HPCAIServicesClient.js"
 

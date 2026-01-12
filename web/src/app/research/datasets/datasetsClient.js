@@ -2,13 +2,6 @@
 
 import { useMemo, useState } from "react";
 import { motion } from "framer-motion";
-import { getStaff } from "@/lib/strapi";
-
-// import staffData from "@/app/data/staff/staffData.json";
-import dataverseMap from "@/app/data/staff/dataverseData.json";
-
-// TODO: When migrating to Strapi, the logic on sorting and displaying datasets should be moved to the server side (getDatasets function in strapi.js)
-// For now, Migrate staff only and use old json processing logic
 
 /* Animations */
 const containerVariants = {
@@ -16,46 +9,8 @@ const containerVariants = {
 };
 const itemVariants = { hidden: { y: 10, opacity: 0 }, visible: { y: 0, opacity: 1 } };
 
-/* Helpers */
-const buildStaffLookup = (staffJson) => {
-  const arr = Array.isArray(staffJson) ? staffJson : Object.values(staffJson || {}).flat();
-  const bySlug = new Map();
-  const byName = new Map();
-  for (const p of arr) {
-    const slug = String(p?.slug || "").trim();
-    const name = String(p?.name || p?.slug || "").trim();
-    if (slug) bySlug.set(slug, name || slug);
-    if (name) byName.set(name.toLowerCase(), name);
-  }
-  return { bySlug, byName };
-};
-
-export default function DatasetsClient({ staffData = [] }) {
-  const { byName: staffByName } = useMemo(() => buildStaffLookup(staffData), []);
-
-  const allDatasets = useMemo(() => {
-    const out = [];
-    const entries = Array.isArray(dataverseMap) ? dataverseMap : [];
-
-    for (const entry of entries) {
-      const authorName = staffByName.get(entry.name.toLowerCase()) || entry.name;
-      const list = Array.isArray(entry.elements) ? entry.elements : [];
-
-      for (const el of list) {
-        if (!el?.title) continue;
-        out.push({
-          title: el.title,
-          description: el.description || "",
-          authorName,
-          authorSlug: entry.name,
-          year: undefined,
-          kind: undefined,
-          domain: undefined,
-        });
-      }
-    }
-    return out;
-  }, [staffByName]);
+export default function DatasetsClient({ datasets = [] }) {
+  const allDatasets = datasets;
 
   /* --- State filtre --- */
   const [q, setQ] = useState("");
