@@ -15,7 +15,7 @@ export const hpcAIPage = Client();
 
 export default function Client() {
   return (
-    <main className="flex flex-col items-center justify-center">
+    <div className="flex flex-col items-center justify-center">
       <motion.div
         className="container max-w-6xl mx-auto bg-white dark:bg-gray-950"
         variants={containerVariants}
@@ -114,7 +114,7 @@ export default function Client() {
           </motion.p>
         </section>
       </motion.div>
-    </main>
+    </div>
   );
 }
 

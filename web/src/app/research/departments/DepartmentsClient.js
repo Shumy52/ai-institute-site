@@ -160,7 +160,39 @@ export default function DepartmentsClient({
   projects = [],
   publications = [],
 }) {
-  const supportUnitsList = Array.isArray(supportUnits) ? supportUnits : [];
+  const supportUnitsList = useMemo(() => {
+    const passed = Array.isArray(supportUnits) ? supportUnits : [];
+    
+    // Check if static units are already present to avoid duplicates
+    const hasTech = passed.some(u => u.name === "Technology Transfer & Development Unit");
+    const hasHPC = passed.some(u => u.name === "HPC-AI Services");
+
+    const extra = [];
+    if (!hasTech) {
+      extra.push({
+        name: "Technology Transfer & Development Unit",
+        slug: "technology-transfer-development-unit",
+        type: "support",
+        // Minimum fields to prevent potential access errors before detail view override
+        description: "",
+        coordinator: "",
+      });
+    }
+
+    if (!hasHPC) {
+      extra.push({
+        name: "HPC-AI Services",
+        slug: "hpc-ai-services",
+        type: "support",
+         // Minimum fields
+        description: "",
+        coordinator: "",
+      });
+    }
+    
+    return [...passed, ...extra];
+  }, [supportUnits]);
+
   const [selectedUnit, setSelectedUnit] = useState(null);
   const [unitView, setUnitView] = useState("details");
 
@@ -613,14 +645,14 @@ export default function DepartmentsClient({
                 {unitView === "details" && (
                   <motion.div variants={containerVariants} initial="hidden" animate="visible">
                     <motion.div variants={itemVariants} className="space-y-4">
-                      {selectedUnit.name==="Technology Transfer & Development Unit" && (
+                      {selectedUnit.name === "Technology Transfer & Development Unit" ? (
                         <>{techTransferPage}</>
-                      )}
-                      {selectedUnit.name==="HPC-AI Services" && (
+                      ) : selectedUnit.name === "HPC-AI Services" ? (
                         <>{hpcAIPage}</>
-                      )}
-                      {selectedUnit.description && (
-                        <p className="text-gray-700 dark:text-gray-300">{selectedUnit.description}</p>
+                      ) : (
+                        selectedUnit.description && (
+                          <p className="text-gray-700 dark:text-gray-300">{selectedUnit.description}</p>
+                        )
                       )}
                     </motion.div>
                   </motion.div>

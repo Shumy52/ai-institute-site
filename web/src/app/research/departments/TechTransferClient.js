@@ -15,7 +15,7 @@ export const techTransferPage = Client();
 
 export default function Client() {
   return (
-    <main>
+    <div>
       <motion.div
         className="container max-w-6xl mx-auto bg-white dark:bg-gray-950 rounded-2xl"
         variants={containerVariants}
@@ -54,6 +54,6 @@ export default function Client() {
           </motion.div>
         </section>
       </motion.div>
-    </main>
+    </div>
   );
 }
