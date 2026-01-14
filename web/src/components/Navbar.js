@@ -1,11 +1,12 @@
-'use client';
+"use client";
 
-import { useEffect, useState } from 'react';
+import { useState } from "react";
 import Link from 'next/link';
 import Image from 'next/image';
 import { FaBars, FaTimes } from 'react-icons/fa';
 import Logo5 from '../../public/media/Logos/Logo5.svg';
 import Logo5White from '../../public/media/Logos/Logo3.png';
+import { useTheme } from "@/components/ThemeProvider";
 
 const navLinks = [
   { href: '/research', label: 'Research' },
@@ -112,7 +113,7 @@ function DesktopDropdown({ link, open, setOpen, items, alignRight = false }) {
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
-  const [isDark, setIsDark] = useState(false);
+  const { isDark } = useTheme();
 
   const [isPeopleOpen, setIsPeopleOpen] = useState(false);
   const [engOpen, setEngOpen] = useState(false);
@@ -127,20 +128,6 @@ export default function Navbar() {
   const [newsMobileOpen, setNewsMobileOpen] = useState(false);
   const [aboutMobileOpen, setAboutMobileOpen] = useState(false);
   const [searchMobileOpen, setSearchMobileOpen] = useState(false);
-
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      setIsDark(document.documentElement.classList.contains('dark'));
-      const observer = new MutationObserver(() => {
-        setIsDark(document.documentElement.classList.contains('dark'));
-      });
-      observer.observe(document.documentElement, {
-        attributes: true,
-        attributeFilter: ['class'],
-      });
-      return () => observer.disconnect();
-    }
-  }, []);
 
   const desktopDropdowns = {
     'People':        { open: isPeopleOpen, setOpen: setIsPeopleOpen, items: peopleMenu },
