@@ -1,6 +1,11 @@
-const STRAPI_URL = (process.env.NEXT_PUBLIC_STRAPI_URL || 'http://strapi:1337').replace(/\/$/, '');
-
 const isServer = typeof window === 'undefined';
+
+const INTERNAL_STRAPI_URL = (process.env.STRAPI_API_URL || 'http://strapi:1337').replace(/\/$/, '');
+const PUBLIC_STRAPI_URL = (process.env.NEXT_PUBLIC_STRAPI_URL || 'http://localhost:1337').replace(/\/$/, '');
+
+const getStrapiURL = () => isServer ? INTERNAL_STRAPI_URL : PUBLIC_STRAPI_URL;
+
+const STRAPI_URL = getStrapiURL();
 
 const DEFAULT_REVALIDATE_SECONDS = 600;
 
@@ -32,7 +37,7 @@ const resolveMediaUrl = (media) => {
   if (!url) return '';
 
   if (/^https?:\/\//i.test(url)) return url;
-  return `${STRAPI_URL}${url.startsWith('/') ? url : `/${url}`}`;
+  return `${PUBLIC_STRAPI_URL}${url.startsWith('/') ? url : `/${url}`}`;
 };
 
 const setPopulate = (params, baseKey, config = {}) => {
@@ -159,8 +164,11 @@ const PUBLICATION_POPULATE = {
 };
 
 const PROJECT_POPULATE = {
-  fields: ['title', 'slug', 'abstract', 'region', 'phase', 'docUrl', 'officialUrl', 'featured'],
+  fields: ['title', 'slug', 'abstract', 'region', 'phase', 'docUrl', 'officialUrl', 'featured', 'isIndustryEngagement'],
   populate: {
+    heroImage: {
+      fields: ['url', 'alternativeText', 'width', 'height', 'formats'],
+    },
     domains: DEPARTMENT_POPULATE,
     lead: PERSON_WITH_IMAGE_POPULATE,
     members: PERSON_WITH_IMAGE_POPULATE,
@@ -169,6 +177,11 @@ const PROJECT_POPULATE = {
     },
     partners: {
       fields: ['name', 'slug'],
+      populate: {
+        logo: {
+          fields: ['url', 'alternativeText', 'width', 'height', 'formats'],
+        },
+      },
     },
   },
 };
@@ -231,7 +244,7 @@ const normalizeDepartmentType = (value) => {
  * @returns {Promise} - Parsed JSON response
  */
 export async function fetchAPI(endpoint, options = {}) {
-  const url = `${STRAPI_URL}/api${endpoint}`;
+  const url = `${getStrapiURL()}/api${endpoint}`;
 
   // Server-only token. Do NOT use NEXT_PUBLIC_ prefix for this value.
   const token = process.env.STRAPI_API_TOKEN || null;
@@ -898,6 +911,7 @@ export function transformProjectData(strapiProjects) {
         id: partner?.id ?? null,
         slug: partnerData.slug || '',
         name: partnerData.name || '',
+        logo: resolveMediaUrl(partnerData.logo),
       };
     });
 
@@ -980,6 +994,8 @@ export function transformProjectData(strapiProjects) {
       // Map docUrl (schema) to docUrl (frontend)
       docUrl: attributes.docUrl || attributes.doc_url || '',
       // Map officialUrl (schema) to oficialUrl (legacy frontend typo)
+      isIndustryEngagement: attributes.isIndustryEngagement || false,
+      heroImage: resolveMediaUrl(attributes.heroImage),
       oficialUrl: attributes.officialUrl || attributes.oficial_url || attributes.official_url || '',
       teams: members.map((member) => ({ name: member.slug, title: member.title, fullName: member.name })),
       _strapi: project,
