@@ -4,16 +4,10 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
-import units from "@/app/data/departments/researchUnitsData.json";
-import supUnits from "@/app/data/departments/supportUnitsData.json";
-import { allStaff } from "@/app/data/staffData";
-import { proData } from "@/app/data/proData";
-import { pubData } from "@/app/data/pubData";
 import { techTransferPage } from "./TechTransferClient.js";
 import { hpcAIPage } from "./HPCAIServicesClient.js"
 
-const researchUnits = Array.isArray(units) ? units : [];
-const supportUnits = Array.isArray(supUnits) ? supUnits : [];
+// TODO: Remove slug creators, can be integrated into Strapi
 
 /* --- Animations --- */
 const containerVariants = {
@@ -32,89 +26,83 @@ const slugify = (s) =>
     .replace(/\s+/g, "-")
     .replace(/-+/g, "-");
 
-const normalizeKey = (s) =>
-  String(s || "")
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .toLowerCase()
-    .replace(/[^a-z0-9]/g, "");
-
-function projectsForPersonSlug(personSlug, personName) {
-  const list = Array.isArray(proData) ? proData : [];
-  const meKey = normalizeKey(personSlug);
-  const meNameKey = normalizeKey(personName);
-
+const buildProjectRows = (projects = []) => {
   const rows = [];
+  for (const project of projects) {
+    if (!project?.title) continue;
+    const domains = Array.isArray(project?.domains)
+      ? project.domains
+      : Array.isArray(project?.domain)
+      ? project.domain.filter(Boolean).map((name) => ({ name, slug: slugify(name) }))
+      : [];
+    const themes = Array.isArray(project?.themes) ? project.themes.filter(Boolean) : [];
+    const projectSlug = project?.slug || slugify(project?.title);
+    const fallbackMember = Array.isArray(project?.members) ? project.members[0] : null;
+    const personSlug = project?.leadSlug || fallbackMember?.slug || "";
+    const personName = project?.leadName || fallbackMember?.name || project?.lead || "";
+    const lead = project?.leadName || project?.lead || personName;
 
-  for (const proj of list) {
-    const teams = Array.isArray(proj?.teams) ? proj.teams : [];
-    const isInTeam = teams.some((t) => {
-      const tk = normalizeKey(t?.name);
-      return tk === meKey || tk === meNameKey;
-    });
-    const isLead = normalizeKey(proj?.lead) === meKey || normalizeKey(proj?.lead) === meNameKey;
+    if (!domains.length) {
+      rows.push({
+        personName,
+        personSlug,
+        title: project.title,
+        lead,
+        domain: "",
+        domainSlug: "",
+        projectSlug,
+        themes,
+      });
+      continue;
+    }
 
-    if (!isInTeam && !isLead) continue;
-
-    const domains = Array.isArray(proj?.domain)
-      ? proj.domain.filter((d) => typeof d === "string" && d.trim().length > 0)
-      : proj?.domain
-      ? [String(proj.domain)]
-      : [""];
-
-    const themes = Array.isArray(proj?.themes) ? proj.themes.filter(Boolean) : [];
-
-    if (themes.length) {
-      for (const th of themes) {
-        for (const d of domains) {
-          rows.push({
-            title: proj?.title ?? "",
-            lead: proj?.lead ?? "",
-            domain: d || "",
-            theme: th || undefined,
-            abstract: proj?.abstract ?? "",
-          });
-        }
-      }
-    } else {
-      for (const d of domains) {
-        rows.push({
-          title: proj?.title ?? "",
-          lead: proj?.lead ?? "",
-          domain: d || "",
-          theme: undefined,
-          abstract: proj?.abstract ?? "",
-        });
-      }
+    for (const domain of domains) {
+      const domainName = domain?.name || domain;
+      const domainSlug = domain?.slug || slugify(domainName || "");
+      rows.push({
+        personName,
+        personSlug,
+        title: project.title,
+        lead,
+        domain: domainName,
+        domainSlug,
+        projectSlug,
+        themes,
+      });
     }
   }
-
   return rows;
-}
+};
 
-function publicationsForPersonSlug(personSlug, personName) {
-  const list = Array.isArray(pubData) ? pubData : [];
-  const meKey = normalizeKey(personSlug);
-  const meNameKey = normalizeKey(personName);
+const buildPublicationRows = (publications = []) => {
+  const rows = [];
+  for (const publication of publications) {
+    if (!publication?.title) continue;
+    const authors = Array.isArray(publication?.authors) ? publication.authors : [];
+    const entry = {
+      title: publication.title,
+      year: publication.year,
+      kind: publication.kind,
+      description: publication.description,
+      domain: publication.domain,
+      docUrl: publication.docUrl,
+    };
 
-  return list.filter((it) => {
-    const authors = Array.isArray(it?.authors) ? it.authors : [];
-    return authors.some((a) => {
-      const ak = normalizeKey(a);
-      return ak === meKey || ak === meNameKey;
-    });
-  });
-}
+    if (!authors.length) {
+      rows.push({ ...entry, personName: "", personSlug: "" });
+      continue;
+    }
 
-const normalizeProject = (p) =>
-  typeof p === "string"
-    ? { title: p, lead: undefined, domain: undefined, theme: undefined, abstract: undefined }
-    : p;
-
-const normalizePublication = (pb) =>
-  typeof pb === "string"
-    ? { title: pb, year: undefined, domain: undefined, kind: undefined, description: undefined, docUrl: undefined }
-    : pb;
+    for (const author of authors) {
+      rows.push({
+        ...entry,
+        personName: author?.name || "",
+        personSlug: author?.slug || "",
+      });
+    }
+  }
+  return rows;
+};
 
 function Chevron({ open }) {
   return (
@@ -165,29 +153,77 @@ function SectionToggle({ label, children, defaultOpen = false }) {
   );
 }
 
-function pickPersonSlugForProject(project) {
-  const team = Array.isArray(project?.teams) ? project.teams : [];
-  for (const t of team) {
-    const slug = String(t?.name || "").trim();
-    if (slug && allStaff.some((s) => s.slug === slug)) return slug;
-  }
-  const lead = String(project?.lead || "");
-  if (lead) {
-    const leadKey = normalizeKey(lead);
-    const found = allStaff.find(
-      (s) => normalizeKey(s.slug) === leadKey || normalizeKey(s.name) === leadKey
-    );
-    if (found) return found.slug;
-  }
-  return null;
-}
+export default function DepartmentsClient({
+  staffData = [],
+  departments = [],
+  supportUnits = [],
+  projects = [],
+  publications = [],
+}) {
+  const supportUnitsList = useMemo(() => {
+    const passed = Array.isArray(supportUnits) ? supportUnits : [];
+    
+    // Check if static units are already present to avoid duplicates
+    const hasTech = passed.some(u => u.name === "Technology Transfer & Development Unit");
+    const hasHPC = passed.some(u => u.name === "HPC-AI Services");
 
-export default function DepartmentsClient() {
+    const extra = [];
+    if (!hasTech) {
+      extra.push({
+        name: "Technology Transfer & Development Unit",
+        slug: "technology-transfer-development-unit",
+        type: "support",
+        // Minimum fields to prevent potential access errors before detail view override
+        description: "",
+        coordinator: "",
+      });
+    }
+
+    if (!hasHPC) {
+      extra.push({
+        name: "HPC-AI Services",
+        slug: "hpc-ai-services",
+        type: "support",
+         // Minimum fields
+        description: "",
+        coordinator: "",
+      });
+    }
+    
+    return [...passed, ...extra];
+  }, [supportUnits]);
+
   const [selectedUnit, setSelectedUnit] = useState(null);
   const [unitView, setUnitView] = useState("details");
 
   const titleRef = useRef(null);        
   const mobileBarRef = useRef(null);
+
+  const departmentList = Array.isArray(departments) ? departments : [];
+  const departmentGroups = useMemo(() => {
+    const groups = {};
+    for (const dept of departmentList) {
+      const type = (dept?.type || "research").toString();
+      if (!groups[type]) groups[type] = [];
+      groups[type].push(dept);
+    }
+    // sort each group by name
+    Object.values(groups).forEach((list) => list.sort((a, b) => (a?.name || "").localeCompare(b?.name || "", "ro", { sensitivity: "base", numeric: true })));
+    return groups;
+  }, [departmentList]);
+
+  const typeLabel = (type) => {
+    const map = {
+      research: "Research departments",
+      academic: "Academic departments",
+      support: "Support departments",
+      other: "Departments",
+    };
+    return map[type] || type || "Departments";
+  };
+  const staffList = Array.isArray(staffData) ? staffData : [];
+  const projectList = Array.isArray(projects) ? projects : [];
+  const publicationList = Array.isArray(publications) ? publications : [];
 
   const handleUnitClick = (unit) => {
     setSelectedUnit(unit);
@@ -210,46 +246,12 @@ export default function DepartmentsClient() {
   }, [selectedUnit]);
 
   /* --- Global aggregates --- */
-  const globalProjects = useMemo(() => {
-    const rows = [];
-    for (const person of allStaff) {
-      const projs = projectsForPersonSlug(person.slug, person.name).map(normalizeProject);
-      for (const p of projs) {
-        if (!p?.title) continue;
-        rows.push({
-          personName: person.name,
-          personSlug: person.slug,
-          title: p.title,
-          lead: p.lead,
-          domain: p.domain,
-          theme: p.theme,
-          projectSlug: slugify(p.title),
-        });
-      }
-    }
-    return rows;
-  }, []);
+  const globalProjects = useMemo(() => buildProjectRows(projectList), [projectList]);
 
-  const globalPublications = useMemo(() => {
-    const rows = [];
-    for (const person of allStaff) {
-      const pubs = publicationsForPersonSlug(person.slug, person.name).map(normalizePublication);
-      for (const pb of pubs) {
-        if (!pb?.title) continue;
-        rows.push({
-          personName: person.name,
-          personSlug: person.slug,
-          title: pb.title,
-          year: pb.year,
-          kind: pb.kind,
-          description: pb.description,
-          domain: pb.domain,
-          docUrl: pb.docUrl,
-        });
-      }
-    }
-    return rows;
-  }, []);
+  const globalPublications = useMemo(
+    () => buildPublicationRows(publicationList),
+    [publicationList]
+  );
 
   /* --- Themes --- */
   const unitThemes = useMemo(() => {
@@ -257,22 +259,20 @@ export default function DepartmentsClient() {
     const seen = new Set();
     const themesOut = [];
 
-    const list = Array.isArray(proData) ? proData : [];
-    for (const proj of list) {
-      const domains = Array.isArray(proj?.domain) ? proj.domain : proj?.domain ? [proj.domain] : [];
+    for (const proj of projectList) {
+      const domains = Array.isArray(proj?.domain) ? proj.domain : [];
       if (!domains.includes(selectedUnit.name)) continue;
 
       const themes = Array.isArray(proj?.themes) ? proj.themes.filter(Boolean) : [];
       for (const th of themes) {
         const t = String(th).trim();
-        if (!t) continue;
-        if (seen.has(t)) continue;
+        if (!t || seen.has(t)) continue;
         seen.add(t);
         themesOut.push({ theme: t });
       }
     }
     return themesOut;
-  }, [selectedUnit]);
+  }, [selectedUnit, projectList]);
 
   /* --- Unit-scoped aggregates --- */
   const unitProjects = useMemo(() => {
@@ -281,8 +281,11 @@ export default function DepartmentsClient() {
     const unique = [];
 
     for (const row of globalProjects) {
-      if (row.domain !== selectedUnit.name) continue;
-      const key = `${row.projectSlug}|${row.domain || ""}`;
+      const matchesName = row.domain && selectedUnit.name && row.domain.trim().toLowerCase() === selectedUnit.name.trim().toLowerCase();
+      const matchesSlug = row.domainSlug && selectedUnit.slug && row.domainSlug === selectedUnit.slug;
+      if (!matchesName && !matchesSlug) continue;
+
+      const key = `${row.projectSlug}|${row.domainSlug || row.domain || ""}`;
       if (seen.has(key)) continue;
       seen.add(key);
       unique.push(row);
@@ -308,12 +311,16 @@ export default function DepartmentsClient() {
   const unitMembers = useMemo(() => {
     if (!selectedUnit) return [];
     const unitName = String(selectedUnit.name || "").trim().toLowerCase();
+    const unitSlug = String(selectedUnit.slug || "").trim();
 
-    return (Array.isArray(allStaff) ? allStaff : []).filter((p) => {
-      const dep = String(p?.department || "").trim();
-      return dep && dep.toLowerCase() === unitName;
+    return staffList.filter((p) => {
+      const depName = String(p?.department || "").trim();
+      const depSlug = String(p?.departmentInfo?.slug || "").trim();
+      const matchesName = depName && depName.toLowerCase() === unitName;
+      const matchesSlug = depSlug && unitSlug && depSlug === unitSlug;
+      return matchesName || matchesSlug;
     });
-  }, [selectedUnit]);
+  }, [selectedUnit, staffList]);
 
   /* --- Render helpers --- */
   const renderProjects = (rows) =>
@@ -324,19 +331,30 @@ export default function DepartmentsClient() {
             key={`${row.personSlug}-${row.projectSlug}-${i}`}
             className="rounded-xl border border-gray-200 dark:border-gray-800 p-4 hover:bg-gray-50 dark:hover:bg-gray-900"
           >
-            <Link
-              href={`/people/staff/${encodeURIComponent(row.personSlug)}/${encodeURIComponent(row.projectSlug)}`}
-              className="block group"
-            >
-              <div className="font-medium group-hover:underline text-gray-900 dark:text-gray-100">
-                {row.title}
-              </div>
-              {row.lead && (
-                <div className="mt-1 text-sm text-gray-700 dark:text-gray-300">
-                  <span className="font-medium">Lead:</span> {row.lead}
+            {row.personSlug ? (
+              <Link
+                href={`/people/staff/${encodeURIComponent(row.personSlug)}/${encodeURIComponent(row.projectSlug || slugify(row.title || ""))}`}
+                className="block group"
+              >
+                <div className="font-medium group-hover:underline text-gray-900 dark:text-gray-100">
+                  {row.title}
                 </div>
-              )}
-            </Link>
+                {row.lead && (
+                  <div className="mt-1 text-sm text-gray-700 dark:text-gray-300">
+                    <span className="font-medium">Lead:</span> {row.lead}
+                  </div>
+                )}
+              </Link>
+            ) : (
+              <div className="block">
+                <div className="font-medium text-gray-900 dark:text-gray-100">{row.title}</div>
+                {row.lead && (
+                  <div className="mt-1 text-sm text-gray-700 dark:text-gray-300">
+                    <span className="font-medium">Lead:</span> {row.lead}
+                  </div>
+                )}
+              </div>
+            )}
           </li>
         ))}
       </ul>
@@ -428,9 +446,15 @@ export default function DepartmentsClient() {
       <p className="text-gray-500">No themes found.</p>
     );
 
+  const descriptionText = selectedUnit?.description || selectedUnit?.descriere || "";
+  
   const coordinator =
-    selectedUnit?.coordonator || selectedUnit?.coordinator || selectedUnit?.["coordonator"] || "";
+    selectedUnit?.coordinator ||
+    selectedUnit?.coordonator ||
+    selectedUnit?.["coordonator"] ||
+    "";
   const coCoordinator =
+    selectedUnit?.coCoordinator ||
     selectedUnit?.["co-coordonator"] ||
     selectedUnit?.coCoordonator ||
     selectedUnit?.co_coordinator ||
@@ -458,57 +482,62 @@ export default function DepartmentsClient() {
           <section className="p-6 md:p-8">
             {!selectedUnit && (
               <>
-                <motion.h1
-                  variants={itemVariants}
-                  className="text-4xl font-extrabold text-center mb-8 text-blue-600 dark:text-yellow-400 tracking-tight text-center"
-                >
-                   Research departments
-                </motion.h1>
+                {Object.entries(departmentGroups).map(([type, units]) => (
+                  <div key={type} className="mb-10">
+                    <motion.h1
+                      variants={itemVariants}
+                      className="text-4xl font-extrabold text-center mb-6 text-blue-600 dark:text-yellow-400 tracking-tight"
+                    >
+                      {typeLabel(type)}
+                    </motion.h1>
 
-                <motion.div variants={containerVariants} initial="hidden" animate="visible">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
-                    {researchUnits.map((unit, index) => (
-                      <motion.div
-                        key={index}
-                        variants={itemVariants}
-                        className="bg-white dark:bg-gray-900 rounded-lg shadow-md p-4 md:p-5 border cursor-pointer"
-                        onClick={() => handleUnitClick(unit)}
-                      >
-                        <h2 className="text-lg md:text-xl font-bold text-gray-900 dark:text-gray-100 flex items-center gap-3">
-                          {unit.name}
-                        </h2>
-                      </motion.div>
-                    ))}
+                    <motion.div variants={containerVariants} initial="hidden" animate="visible">
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
+                        {units.map((unit, index) => (
+                          <motion.div
+                            key={`${type}-${unit.slug || index}`}
+                            variants={itemVariants}
+                            className="bg-white dark:bg-gray-900 rounded-lg shadow-md p-4 md:p-5 border cursor-pointer"
+                            onClick={() => handleUnitClick(unit)}
+                          >
+                            <h2 className="text-lg md:text-xl font-bold text-gray-900 dark:text-gray-100 flex items-center gap-3">
+                              {unit.name}
+                            </h2>
+                          </motion.div>
+                        ))}
+                      </div>
+                    </motion.div>
                   </div>
-                </motion.div>
+                ))}
+
+                {supportUnitsList.length > 0 && (
+                  <div className="mb-6">
+                    <motion.h1
+                      variants={itemVariants}
+                      className="text-4xl font-extrabold text-center mb-6 text-blue-600 dark:text-yellow-400 tracking-tight"
+                    >
+                      Support departments
+                    </motion.h1>
+                    <motion.div variants={containerVariants} initial="hidden" animate="visible">
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
+                        {supportUnitsList.map((unit, index) => (
+                          <motion.div
+                            key={`support-${unit.slug || index}`}
+                            variants={itemVariants}
+                            className="bg-white dark:bg-gray-900 rounded-lg shadow-md p-4 md:p-5 border cursor-pointer"
+                            onClick={() => handleUnitClick(unit)}
+                          >
+                            <h2 className="text-lg md:text-xl font-bold text-gray-900 dark:text-gray-100 flex items-center gap-3">
+                              {unit.name}
+                            </h2>
+                          </motion.div>
+                        ))}
+                      </div>
+                    </motion.div>
+                  </div>
+                )}
               </>
             )}
-            {!selectedUnit && (
-              <>
-             <motion.h1
-                  variants={itemVariants}
-                  className="mt-8 text-4xl font-extrabold text-center mb-8 text-blue-600 dark:text-yellow-400 tracking-tight text-center"
-                >
-                   Support departments
-                </motion.h1>
-                <motion.div variants={containerVariants} initial="hidden" animate="visible">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
-                    {supportUnits.map((unit, index) => (
-                      <motion.div
-                        key={index}
-                        variants={itemVariants}
-                        className="bg-white dark:bg-gray-900 rounded-lg shadow-md p-4 md:p-5 border cursor-pointer"
-                        onClick={() => handleUnitClick(unit)}
-                      >
-                        <h2 className="text-lg md:text-xl font-bold text-gray-900 dark:text-gray-100 flex items-center gap-3">
-                          {unit.name}
-                        </h2>
-                      </motion.div>
-                    ))}
-                  </div>
-                </motion.div>
-                </>
-               )}
               
             {selectedUnit && !isSupportUnit && (
               <>
@@ -555,8 +584,8 @@ export default function DepartmentsClient() {
                 {unitView === "details" && (
                   <motion.div variants={containerVariants} initial="hidden" animate="visible">
                     <motion.div variants={itemVariants} className="space-y-4">
-                      {selectedUnit.description && (
-                        <p className="text-gray-700 dark:text-gray-300">{selectedUnit.description}</p>
+                      {descriptionText && (
+                        <p className="text-gray-700 dark:text-gray-300">{descriptionText}</p>
                       )}
 
                       {!!coordinator && (
@@ -616,14 +645,14 @@ export default function DepartmentsClient() {
                 {unitView === "details" && (
                   <motion.div variants={containerVariants} initial="hidden" animate="visible">
                     <motion.div variants={itemVariants} className="space-y-4">
-                      {selectedUnit.name==="Technology Transfer & Development Unit" && (
+                      {selectedUnit.name === "Technology Transfer & Development Unit" ? (
                         <>{techTransferPage}</>
-                      )}
-                      {selectedUnit.name==="HPC-AI Services" && (
+                      ) : selectedUnit.name === "HPC-AI Services" ? (
                         <>{hpcAIPage}</>
-                      )}
-                      {selectedUnit.description && (
-                        <p className="text-gray-700 dark:text-gray-300">{selectedUnit.description}</p>
+                      ) : (
+                        selectedUnit.description && (
+                          <p className="text-gray-700 dark:text-gray-300">{selectedUnit.description}</p>
+                        )
                       )}
                     </motion.div>
                   </motion.div>

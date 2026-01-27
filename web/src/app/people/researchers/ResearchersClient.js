@@ -4,10 +4,9 @@ import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { useMemo } from "react";
-import { staffData } from "@/app/data/staffData";
 
-export default function ResearchersClient() {
-  const researchers = staffData["Researchers"] ?? [];
+export default function ResearchersClient({ staffData = [] }) {
+  const researchers = Array.isArray(staffData) ? staffData : [];
 
   const researchersSorted = useMemo(
     () =>

@@ -1,41 +1,64 @@
 services:
-  # postgres:
-  #   image: postgres:16
-  #   restart: always
-  #   environment:
-  #     POSTGRES_USER: ${POSTGRES_USER}
-  #     POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-  #     POSTGRES_DB: ${POSTGRES_DB}
-  #   volumes:
-  #     - pgdata:/var/lib/postgresql/data
-  #   ports:
-  #     - "5432:5432"
+  postgres:
+    image: mirror.gcr.io/library/postgres:16
+    restart: always
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    volumes:  
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
 
-  # strapi:
-  #   build: ./server
-  #   restart: always
-  #   environment:
-  #     DATABASE_CLIENT: ${DATABASE_CLIENT}
-  #     DATABASE_HOST: ${DATABASE_HOST}
-  #     DATABASE_PORT: ${DATABASE_PORT}
-  #     DATABASE_NAME: ${DATABASE_NAME}
-  #     DATABASE_USERNAME: ${DATABASE_USERNAME}
-  #     DATABASE_PASSWORD: ${DATABASE_PASSWORD}
-  #     NODE_ENV: ${NODE_ENV}
-  #   ports:
-  #     - "1337:1337"
-  #   depends_on:
-  #     - postgres
+  strapi:
+    build: ./server
+    restart: always
+    env_file:
+      - ./.env
+    environment:
+      DATABASE_CLIENT: ${DATABASE_CLIENT}
+      DATABASE_HOST: ${DATABASE_HOST}
+      DATABASE_PORT: ${DATABASE_PORT}
+      DATABASE_NAME: ${DATABASE_NAME}
+      DATABASE_USERNAME: ${DATABASE_USERNAME}
+      DATABASE_PASSWORD: ${DATABASE_PASSWORD}
+      NODE_ENV: ${NODE_ENV}
+    ports:
+      - "1337:1337"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      # The fucking health check kept failing. This is an ugly workaround.
+      test: ["CMD-SHELL", "netstat -tln | grep 1337 || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
 
   nextjs:
     build: ./web
     restart: always
+    env_file:
+      - ./.env
     environment:
       NODE_ENV: production
+      PORT: "3000"
+      STRAPI_API_TOKEN: ${STRAPI_API_TOKEN}
+      NEXT_PUBLIC_STRAPI_URL: ${NEXT_PUBLIC_STRAPI_URL}
+      REVALIDATION_SECRET: ${REVALIDATION_SECRET}
     ports:
       - "3000:3000"
-    # depends_on:
-    #   - strapi
+    depends_on:
+      strapi:
+        condition: service_healthy
 
-# volumes:
-#   pgdata:
+volumes:
+  pgdata:
