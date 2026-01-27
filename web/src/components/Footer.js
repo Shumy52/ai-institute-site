@@ -1,29 +1,12 @@
-'use client';
+"use client";
 
-import { useEffect, useState } from "react";
 import Image from "next/image";
 import Logo5 from "../../public/media/Logos/Logo5.svg";
 import Logo5White from "../../public/media/Logos/Logo3.png";
+import { useTheme } from "@/components/ThemeProvider";
 
 export default function Footer() {
-  const [isDark, setIsDark] = useState(false);
-
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-
-    const updateTheme = () => {
-      setIsDark(document.documentElement.classList.contains("dark"));
-    };
-
-    updateTheme();
-    const observer = new MutationObserver(updateTheme);
-    observer.observe(document.documentElement, {
-      attributes: true,
-      attributeFilter: ["class"],
-    });
-
-    return () => observer.disconnect();
-  }, []);
+  const { isDark } = useTheme();
 
   return (
     <footer className="bg-gray-100 dark:bg-gray-950 text-black dark:text-white mt-12 border-t-2 border-gray-300 dark:border-gray-800 w-full mt-auto">

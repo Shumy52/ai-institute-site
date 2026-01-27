@@ -2,8 +2,9 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import DarkModeBubble from "../components/DarkModeBubble";
-import Script from "next/script"; // <-- adăugat
+import DarkModeBubble from "@/components/DarkModeBubble";
+import ThemeProvider from "@/components/ThemeProvider";
+import Script from "next/script";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -30,28 +31,30 @@ export default function RootLayout({ children }) {
   return (
     <html
       lang="en"
-      suppressHydrationWarning // <-- adăugat
+      suppressHydrationWarning
       className={`${geistSans.variable} ${geistMono.variable}`}
     >
       <body className="antialiased min-h-screen flex flex-col transition-colors duration-300 bg-white text-gray-900 dark:bg-gray-900 dark:text-gray-100">
-        {/* Setează tema ÎNAINTE de hidratare ca HTML-ul serverului să coincidă cu cel al clientului */}
         <Script id="theme-init" strategy="beforeInteractive">
           {`
             try {
-              const stored = localStorage.getItem('theme'); // 'dark' | 'light' | null
+              const stored = localStorage.getItem('theme');
               const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
               const isDark = stored ? stored === 'dark' : prefersDark;
               document.documentElement.classList.toggle('dark', isDark);
+              document.documentElement.dataset.theme = isDark ? 'dark' : 'light';
             } catch (e) {}
           `}
         </Script>
 
-        <Navbar />
-        <main className="flex-grow bg-gray-50 dark:bg-gray-900">
-          {children}
-        </main>
-        <DarkModeBubble />
-        <Footer />
+        <ThemeProvider>
+          <Navbar />
+          <main className="flex-grow bg-gray-50 dark:bg-gray-900">
+            {children}
+          </main>
+          <DarkModeBubble />
+          <Footer />
+        </ThemeProvider>
       </body>
     </html>
   );
