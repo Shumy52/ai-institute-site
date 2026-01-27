@@ -10,7 +10,8 @@ const MODEL_PATH_MAP = {
     "/people/alumni",
     "/research/departments",
   ],
-  "api::project.project": ["/research/projects", "/research/departments"],
+  // To add here more, to be updated on webook receive. 
+  "api::project.project": ["/research/projects", "/research/departments", "/engagement/industry"],
   "api::department.department": ["/research/departments"],
   "api::research-theme.research-theme": ["/research/themes"],
   "api::news-article.news-article": ["/news&events/news"],
