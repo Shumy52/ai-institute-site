@@ -32,6 +32,8 @@ services:
       NODE_ENV: ${NODE_ENV}
     ports:
       - "1337:1337"
+    volumes:
+      - ./server/public/uploads:/app/public/uploads
     depends_on:
       postgres:
         condition: service_healthy
@@ -52,7 +54,6 @@ services:
       NODE_ENV: production
       PORT: "3000"
       STRAPI_API_TOKEN: ${STRAPI_API_TOKEN}
-      NEXT_PUBLIC_STRAPI_URL: ${NEXT_PUBLIC_STRAPI_URL}
       REVALIDATION_SECRET: ${REVALIDATION_SECRET}
     ports:
       - "3000:3000"
