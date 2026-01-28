@@ -25,7 +25,7 @@ const getStrapiApiBaseUrl = () => {
   return getStrapiPublicUrl();
 };
 
-const DEFAULT_REVALIDATE_SECONDS = 600;
+const DEFAULT_REVALIDATE_SECONDS = 60; // 1 minute
 
 // Buckets used by UI tabs; keep normalized values to avoid client-side filtering.
 export const PERSON_TYPE_FILTERS = {
