@@ -183,8 +183,11 @@ const PUBLICATION_POPULATE = {
 };
 
 const PROJECT_POPULATE = {
-  fields: ['title', 'slug', 'abstract', 'region', 'phase', 'docUrl', 'officialUrl', 'featured'],
+  fields: ['title', 'slug', 'abstract', 'region', 'phase', 'docUrl', 'officialUrl', 'featured', 'isIndustryEngagement'],
   populate: {
+    heroImage: {
+      fields: ['url', 'formats', 'alternativeText'],
+    },
     domains: DEPARTMENT_POPULATE,
     lead: PERSON_WITH_IMAGE_POPULATE,
     members: PERSON_WITH_IMAGE_POPULATE,
@@ -193,6 +196,11 @@ const PROJECT_POPULATE = {
     },
     partners: {
       fields: ['name', 'slug'],
+      populate: {
+        logo: {
+          fields: ['url', 'formats', 'alternativeText'],
+        },
+      },
     },
   },
 };
@@ -926,6 +934,7 @@ export function transformProjectData(strapiProjects) {
         id: partner?.id ?? null,
         slug: partnerData.slug || '',
         name: partnerData.name || '',
+        logo: resolveMediaUrl(partnerData.logo) || partnerData.logo || '',
       };
     });
 
@@ -990,6 +999,8 @@ export function transformProjectData(strapiProjects) {
       title: attributes.title || '',
       abstract: attributes.abstract || '',
       phase: attributes.phase || attributes.status || '',
+      isIndustryEngagement: !!attributes.isIndustryEngagement,
+      heroImage: resolveMediaUrl(attributes.heroImage) || attributes.heroImage || '',
       // Map themes relation to simple array for frontend compatibility
       themes: themes.map(t => t.name).filter(Boolean),
       // Map partners relation to simple array for frontend compatibility
