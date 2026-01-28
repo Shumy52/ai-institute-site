@@ -5,6 +5,7 @@ import {
   transformStaffData,
   transformPublicationData,
   transformProjectData,
+  isLocalImageUrl,
 } from "@/lib/strapi";
 import StaffDetailClient from "./StaffDetailClient";
 
@@ -113,6 +114,7 @@ export default async function StaffDetailPage({ params }) {
             alt={person.name}
             fill
             sizes="144px"
+            unoptimized={isLocalImageUrl(person.image)}
             className="rounded-full object-cover"
           />
         </div>

@@ -48,15 +48,33 @@ const stripHtml = (value) =>
 const resolveMediaUrl = (media) => {
   if (!media) return '';
 
+  if (typeof media === 'string') {
+    const rawUrl = media.trim();
+    if (!rawUrl) return '';
+    if (/^https?:\/\//i.test(rawUrl)) return rawUrl;
+    const baseUrl = getStrapiPublicUrl();
+    return `${baseUrl}${rawUrl.startsWith('/') ? rawUrl : `/${rawUrl}`}`;
+  }
+
   const data = Array.isArray(media?.data) ? media.data[0] : media?.data ?? media;
   if (!data) return '';
 
   const url = data?.attributes?.url || data?.url;
-  if (!url) return '';
+  if (!url || typeof url !== 'string') return '';
 
   if (/^https?:\/\//i.test(url)) return url;
   const baseUrl = getStrapiPublicUrl();
   return `${baseUrl}${url.startsWith('/') ? url : `/${url}`}`;
+};
+
+export const isLocalImageUrl = (value) => {
+  if (!value || typeof value !== 'string') return false;
+  try {
+    const { hostname } = new URL(value);
+    return ['localhost', '127.0.0.1', '::1'].includes(hostname);
+  } catch {
+    return false;
+  }
 };
 
 const setPopulate = (params, baseKey, config = {}) => {
@@ -778,7 +796,7 @@ export function transformStaffData(strapiStaff) {
     });
 
     // Use 'portrait' field from schema
-    const image = resolveMediaUrl(attributes.portrait) || attributes.portrait || '';
+    const image = resolveMediaUrl(attributes.portrait);
 
     return {
       id: person?.id ?? null,
@@ -934,13 +952,13 @@ export function transformProjectData(strapiProjects) {
         id: partner?.id ?? null,
         slug: partnerData.slug || '',
         name: partnerData.name || '',
-        logo: resolveMediaUrl(partnerData.logo) || partnerData.logo || '',
+        logo: resolveMediaUrl(partnerData.logo),
       };
     });
 
     const members = toArray(attributes.members?.data ?? attributes.members).map((member) => {
       const memberAttr = member?.attributes ?? member ?? {};
-      const image = resolveMediaUrl(memberAttr.portrait) || memberAttr.portrait || '';
+      const image = resolveMediaUrl(memberAttr.portrait);
       return {
         id: member?.id ?? null,
         slug: memberAttr.slug || '',
@@ -976,7 +994,7 @@ export function transformProjectData(strapiProjects) {
           title: leadAttr.position || leadAttr.title || '',
           email: leadAttr.email || '',
           phone: leadAttr.phone || '',
-          image: resolveMediaUrl(leadAttr.portrait) || leadAttr.portrait || '',
+          image: resolveMediaUrl(leadAttr.portrait),
         }
       : typeof attributes.lead === 'string' && attributes.lead.trim().length
       ? {
@@ -1000,7 +1018,7 @@ export function transformProjectData(strapiProjects) {
       abstract: attributes.abstract || '',
       phase: attributes.phase || attributes.status || '',
       isIndustryEngagement: !!attributes.isIndustryEngagement,
-      heroImage: resolveMediaUrl(attributes.heroImage) || attributes.heroImage || '',
+      heroImage: resolveMediaUrl(attributes.heroImage),
       // Map themes relation to simple array for frontend compatibility
       themes: themes.map(t => t.name).filter(Boolean),
       // Map partners relation to simple array for frontend compatibility

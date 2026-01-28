@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { useMemo } from "react";
+import { isLocalImageUrl } from "@/lib/strapi";
 
 export default function ResearchersClient({ staffData = [] }) {
   const researchers = Array.isArray(staffData) ? staffData : [];
@@ -78,6 +79,7 @@ export default function ResearchersClient({ staffData = [] }) {
                     alt={person.name}
                     fill
                     sizes="144px"
+                    unoptimized={isLocalImageUrl(person.image)}
                     className="rounded-full object-cover"
                   />
                 </div>
