@@ -22,7 +22,9 @@ export default function MissionClient() {
       </motion.h1>
 
       <motion.p className="text-gray-700 dark:text-gray-300 text-center max-w-3xl mx-auto" variants={item}>
-        Mission paragraph...
+        The Artificial Intelligence Research Institute (AIRi) is a nexus for collaborative research at the Technical University of Cluj-Napoca.
+        AIRi@UTCN promotes excellence in AI theory and practice, bringing together researchers across UTCN around a vision of open collaboration.
+        Our work spans interdisciplinary research, AI literacy across disciplines, and impact through business and public co-creation partnerships.
       </motion.p>
     </motion.section>
   );
