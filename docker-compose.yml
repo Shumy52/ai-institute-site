@@ -18,10 +18,12 @@ services:
       start_period: 10s
 
   strapi:
-    build: ./server
+    build:
+      context: ./server
+      args:
+        PUBLIC_STRAPI_URL: ${PUBLIC_STRAPI_URL}
+        STRAPI_ADMIN_URL: ${STRAPI_ADMIN_URL}
     restart: always
-    env_file:
-      - ./.env
     environment:
       DATABASE_CLIENT: ${DATABASE_CLIENT}
       DATABASE_HOST: ${DATABASE_HOST}
@@ -30,6 +32,14 @@ services:
       DATABASE_USERNAME: ${DATABASE_USERNAME}
       DATABASE_PASSWORD: ${DATABASE_PASSWORD}
       NODE_ENV: ${NODE_ENV}
+      PUBLIC_STRAPI_URL: ${PUBLIC_STRAPI_URL}
+      STRAPI_ADMIN_URL: ${STRAPI_ADMIN_URL}
+      ADMIN_JWT_SECRET: ${ADMIN_JWT_SECRET}
+      JWT_SECRET: ${JWT_SECRET}
+      ENCRYPTION_KEY: ${ENCRYPTION_KEY}
+      API_TOKEN_SALT: ${API_TOKEN_SALT}
+      APP_KEYS: ${APP_KEYS}
+      TRANSFER_TOKEN_SALT: ${TRANSFER_TOKEN_SALT}
     ports:
       - "1337:1337"
     volumes:
@@ -48,13 +58,19 @@ services:
   nextjs:
     build: ./web
     restart: always
-    env_file:
-      - ./.env
     environment:
       NODE_ENV: production
       PORT: "3000"
       STRAPI_API_TOKEN: ${STRAPI_API_TOKEN}
       REVALIDATION_SECRET: ${REVALIDATION_SECRET}
+      PUBLIC_STRAPI_URL: ${PUBLIC_STRAPI_URL}
+      # Browser/public base URL (used to prefix media URLs): should be reachable by end users.
+      # Example prod: https://airi.utcluj.ro/strapi
+      NEXT_PUBLIC_STRAPI_URL: ${NEXT_PUBLIC_STRAPI_URL:-${PUBLIC_STRAPI_URL}}
+
+      # Server-to-server base URL inside the Docker network.
+      # Example: http://strapi:1337
+      STRAPI_INTERNAL_URL: ${STRAPI_INTERNAL_URL:-http://strapi:1337}
     ports:
       - "3000:3000"
     depends_on:

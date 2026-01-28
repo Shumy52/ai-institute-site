@@ -1,6 +1,29 @@
-const STRAPI_URL = (process.env.NEXT_PUBLIC_STRAPI_URL || 'http://strapi:1337').replace(/\/$/, '');
+import { getEnv, normalizeBaseUrl, requireEnv } from './env';
 
 const isServer = typeof window === 'undefined';
+
+const getStrapiPublicUrl = () => {
+  const raw = requireEnv(['NEXT_PUBLIC_STRAPI_URL', 'PUBLIC_STRAPI_URL'], {
+    where: 'Strapi public base URL (used for media URLs returned to the browser)',
+  });
+  return normalizeBaseUrl(raw);
+};
+
+const getStrapiInternalUrl = () => {
+  const raw = getEnv('STRAPI_INTERNAL_URL', 'STRAPI_URL');
+  return raw ? normalizeBaseUrl(raw) : '';
+};
+
+const getStrapiApiBaseUrl = () => {
+  if (!isServer) return getStrapiPublicUrl();
+
+  const internal = getStrapiInternalUrl();
+  if (internal) return internal;
+
+  // Fall back to the public URL on the server only if an internal URL isn't provided.
+  // In Docker, this usually means you should set STRAPI_INTERNAL_URL=http://strapi:1337.
+  return getStrapiPublicUrl();
+};
 
 const DEFAULT_REVALIDATE_SECONDS = 600;
 
@@ -32,7 +55,8 @@ const resolveMediaUrl = (media) => {
   if (!url) return '';
 
   if (/^https?:\/\//i.test(url)) return url;
-  return `${STRAPI_URL}${url.startsWith('/') ? url : `/${url}`}`;
+  const baseUrl = getStrapiPublicUrl();
+  return `${baseUrl}${url.startsWith('/') ? url : `/${url}`}`;
 };
 
 const setPopulate = (params, baseKey, config = {}) => {
@@ -231,7 +255,8 @@ const normalizeDepartmentType = (value) => {
  * @returns {Promise} - Parsed JSON response
  */
 export async function fetchAPI(endpoint, options = {}) {
-  const url = `${STRAPI_URL}/api${endpoint}`;
+  const baseUrl = getStrapiApiBaseUrl();
+  const url = `${baseUrl}/api${endpoint}`;
 
   // Server-only token. Do NOT use NEXT_PUBLIC_ prefix for this value.
   const token = process.env.STRAPI_API_TOKEN || null;

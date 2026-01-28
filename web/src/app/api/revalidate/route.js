@@ -1,7 +1,5 @@
 import { revalidatePath, revalidateTag } from "next/cache";
 
-const ALLOWED_SECRET = process.env.REVALIDATION_SECRET;
-
 const MODEL_PATH_MAP = {
   "api::person.person": [
     "/people/staff",
@@ -49,6 +47,7 @@ async function revalidateItems({ paths = [], tags = [] }) {
 
 export async function POST(req) {
   try {
+    const ALLOWED_SECRET = process.env.REVALIDATION_SECRET;
     if (!ALLOWED_SECRET) {
       return new Response(JSON.stringify({ error: "REVALIDATION_SECRET not set" }), { status: 500 });
     }

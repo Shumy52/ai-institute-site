@@ -6,7 +6,8 @@ A modern, responsive website for the Artificial Intelligence Research Institute 
 ## Strapi: quick dev-to-dev
 
 - Strapi is a headless CMS running in `server/` (Strapi v5). It exposes REST APIs under `http://localhost:1337/api/*` when running.
-- Admin UI lives at `http://localhost:1337/admin`. First run will prompt you to create an admin user.
+- Admin UI lives at `http://localhost:1337/strapi/admin` in this repo (configurable via `STRAPI_ADMIN_URL`).
+    First run will prompt you to create an admin user.
 - Content is draft by default; use Publish to make it live. We often query with `publicationState=preview` during development to see both drafts and published.
 - Schema/content-type changes (editing files under `server/src/api/**/content-types/*`) only take effect when Strapi boots and builds its types. If you're running via Docker, you need to rebuild or run Strapi locally to regenerate. Mounting endpoints alone won't propagate schema changes.
 
@@ -36,7 +37,7 @@ What to expect:
 
 ## Accessing Strapi and the site
 
-- Strapi Admin: `http://localhost:1337/admin`
+- Strapi Admin: `http://localhost:1337/strapi/admin`
 - Strapi REST: `http://localhost:1337/api/projects`, `.../people`, etc. Use `?populate=...` for relations.
 - Frontend (Next.js): typically `http://localhost:3000` when running locally.
 
