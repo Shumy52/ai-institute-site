@@ -648,7 +648,8 @@ export async function getDatasets() {
   
   try {
     return await fetchAllEntries('/datasets', {
-      populate: DATASET_POPULATE,
+      fields: DATASET_POPULATE.fields,
+      populate: DATASET_POPULATE.populate,
       sort: 'title:asc',
     });
   } catch (error) {
@@ -666,7 +667,8 @@ export async function getEvents() {
   };
   try {
     return await fetchAllEntries('/events', {
-      populate: EVENT_POPULATE,
+      fields: EVENT_POPULATE.fields,
+      populate: EVENT_POPULATE.populate,
       sort: 'startDate:desc',
     });
   } catch (error) {
@@ -685,8 +687,9 @@ export async function getSeminars() {
     },
   };
   try {
-     return await fetchAllEntries('/seminars', {
-      populate: SEMINAR_POPULATE,
+    return await fetchAllEntries('/seminars', {
+      fields: SEMINAR_POPULATE.fields,
+      populate: SEMINAR_POPULATE.populate,
       sort: 'title:asc',
     });
   } catch (error) {
