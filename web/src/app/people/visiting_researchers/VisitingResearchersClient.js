@@ -75,10 +75,11 @@ export default function VisitingResearchersClient({ staffData = [] }) {
                 <div className="relative w-36 h-36 mx-auto">
                   {(() => {
                     const imageSrc = person.image || "/people/Basic_avatar_image.png";
+                    const optimizedSrc = person.imageInternal || imageSrc;
                     const shouldUnoptimize = isLocalImageUrl(imageSrc) || isRelativeImageUrl(imageSrc);
                     return (
                       <Image
-                        src={imageSrc}
+                        src={shouldUnoptimize ? imageSrc : optimizedSrc}
                         alt={person.name}
                         fill
                         sizes="144px"

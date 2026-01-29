@@ -67,6 +67,33 @@ const resolveMediaUrl = (media) => {
   return `${baseUrl}${url.startsWith('/') ? url : `/${url}`}`;
 };
 
+const resolveMediaUrlInternal = (media) => {
+  const internalBaseUrl = getStrapiInternalUrl();
+  const publicBaseUrl = getStrapiPublicUrl();
+
+  const extractUrl = (value) => {
+    if (!value) return '';
+    if (typeof value === 'string') return value.trim();
+    const data = Array.isArray(value?.data) ? value.data[0] : value?.data ?? value;
+    if (!data) return '';
+    return data?.attributes?.url || data?.url || '';
+  };
+
+  const rawUrl = extractUrl(media);
+  if (!rawUrl || typeof rawUrl !== 'string') return '';
+
+  if (/^https?:\/\//i.test(rawUrl)) {
+    if (internalBaseUrl && publicBaseUrl && rawUrl.startsWith(publicBaseUrl)) {
+      return `${internalBaseUrl}${rawUrl.slice(publicBaseUrl.length)}`;
+    }
+    return rawUrl;
+  }
+
+  const baseUrl = internalBaseUrl || publicBaseUrl;
+  if (!baseUrl) return rawUrl;
+  return `${baseUrl}${rawUrl.startsWith('/') ? rawUrl : `/${rawUrl}`}`;
+};
+
 export const isLocalImageUrl = (value) => {
   if (!value || typeof value !== 'string') return false;
   try {
@@ -802,6 +829,7 @@ export function transformStaffData(strapiStaff) {
 
     // Use 'portrait' field from schema
     const image = resolveMediaUrl(attributes.portrait);
+    const imageInternal = resolveMediaUrlInternal(attributes.portrait);
 
     return {
       id: person?.id ?? null,
@@ -818,6 +846,7 @@ export function transformStaffData(strapiStaff) {
       department: department?.name || '',
       departmentInfo: department,
       image,
+      imageInternal,
       bio: stripHtml(attributes.bio) || '',
       leadingProjects,
       memberProjects,
@@ -964,6 +993,7 @@ export function transformProjectData(strapiProjects) {
     const members = toArray(attributes.members?.data ?? attributes.members).map((member) => {
       const memberAttr = member?.attributes ?? member ?? {};
       const image = resolveMediaUrl(memberAttr.portrait);
+      const imageInternal = resolveMediaUrlInternal(memberAttr.portrait);
       return {
         id: member?.id ?? null,
         slug: memberAttr.slug || '',
@@ -974,6 +1004,7 @@ export function transformProjectData(strapiProjects) {
         email: memberAttr.email || '',
         phone: memberAttr.phone || '',
         image,
+        imageInternal,
       };
     });
 
@@ -1000,6 +1031,7 @@ export function transformProjectData(strapiProjects) {
           email: leadAttr.email || '',
           phone: leadAttr.phone || '',
           image: resolveMediaUrl(leadAttr.portrait),
+          imageInternal: resolveMediaUrlInternal(leadAttr.portrait),
         }
       : typeof attributes.lead === 'string' && attributes.lead.trim().length
       ? {

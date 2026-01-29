@@ -409,10 +409,11 @@ export default function DepartmentsClient({
               <div className="relative w-16 h-16">
                 {(() => {
                   const imageSrc = m.image || "/people/Basic_avatar_image.png";
+                  const optimizedSrc = m.imageInternal || imageSrc;
                   const shouldUnoptimize = isLocalImageUrl(imageSrc) || isRelativeImageUrl(imageSrc);
                   return (
                     <Image
-                      src={imageSrc}
+                      src={shouldUnoptimize ? imageSrc : optimizedSrc}
                       alt={m.name}
                       fill
                       sizes="64px"

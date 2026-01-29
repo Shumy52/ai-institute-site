@@ -307,12 +307,13 @@ export default function ProjectDetailClient({
 
 function MemberCard({ member }) {
   const avatar = member?.image || FALLBACK_AVATAR;
+  const optimizedAvatar = member?.imageInternal || avatar;
   const shouldUnoptimize = isLocalImageUrl(avatar) || isRelativeImageUrl(avatar);
   return (
     <>
       <div className="relative w-36 h-36 mx-auto">
         <Image
-          src={avatar}
+          src={shouldUnoptimize ? avatar : optimizedAvatar}
           alt={member?.name || "Team member"}
           fill
           sizes="144px"
