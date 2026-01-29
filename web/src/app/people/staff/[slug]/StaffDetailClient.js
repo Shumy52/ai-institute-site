@@ -308,7 +308,7 @@ export default function StaffDetailClient({ person, publications, projects, slug
                         className="rounded-xl border border-gray-200 dark:border-gray-800 p-4 hover:bg-gray-50 dark:hover:bg-gray-900"
                       >
                         <Link
-                          href={`/people/staff/${encodeURIComponent(slug)}/${encodeURIComponent(projectSlug)}`}
+                          href={`/research/projects/${encodeURIComponent(projectSlug)}`}
                           className="block group"
                         >
                           <div className="font-medium group-hover:underline">{p.title}</div>

@@ -332,7 +332,7 @@ export default function DepartmentsClient({
           >
             {row.personSlug ? (
               <Link
-                href={`/people/staff/${encodeURIComponent(row.personSlug)}/${encodeURIComponent(row.projectSlug || slugify(row.title || ""))}`}
+                href={`/research/projects/${encodeURIComponent(row.projectSlug || slugify(row.title || ""))}`}
                 className="block group"
               >
                 <div className="font-medium group-hover:underline text-gray-900 dark:text-gray-100">
