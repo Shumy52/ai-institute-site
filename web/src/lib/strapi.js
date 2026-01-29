@@ -77,6 +77,11 @@ export const isLocalImageUrl = (value) => {
   }
 };
 
+export const isRelativeImageUrl = (value) => {
+  if (!value || typeof value !== 'string') return false;
+  return value.startsWith('/');
+};
+
 const setPopulate = (params, baseKey, config = {}) => {
   const fields = Array.isArray(config.fields) ? config.fields : [];
 

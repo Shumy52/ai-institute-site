@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { isLocalImageUrl, isRelativeImageUrl } from "@/lib/strapi";
 
 const FALLBACK_AVATAR = "/people/Basic_avatar_image.png";
 
@@ -306,6 +307,7 @@ export default function ProjectDetailClient({
 
 function MemberCard({ member }) {
   const avatar = member?.image || FALLBACK_AVATAR;
+  const shouldUnoptimize = isLocalImageUrl(avatar) || isRelativeImageUrl(avatar);
   return (
     <>
       <div className="relative w-36 h-36 mx-auto">
@@ -314,6 +316,7 @@ function MemberCard({ member }) {
           alt={member?.name || "Team member"}
           fill
           sizes="144px"
+          unoptimized={shouldUnoptimize}
           className="rounded-full object-cover"
         />
       </div>

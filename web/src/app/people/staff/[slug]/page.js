@@ -6,6 +6,7 @@ import {
   transformPublicationData,
   transformProjectData,
   isLocalImageUrl,
+  isRelativeImageUrl,
 } from "@/lib/strapi";
 import StaffDetailClient from "./StaffDetailClient";
 
@@ -109,14 +110,20 @@ export default async function StaffDetailPage({ params }) {
       {/* Header */}
       <div className="flex flex-col items-center text-center mb-8">
         <div className="relative w-36 h-36 mx-auto mb-4">
-          <Image
-            src={person.image || "/people/Basic_avatar_image.png"}
-            alt={person.name}
-            fill
-            sizes="144px"
-            unoptimized={isLocalImageUrl(person.image)}
-            className="rounded-full object-cover"
-          />
+          {(() => {
+            const imageSrc = person.image || "/people/Basic_avatar_image.png";
+            const shouldUnoptimize = isLocalImageUrl(imageSrc) || isRelativeImageUrl(imageSrc);
+            return (
+              <Image
+                src={imageSrc}
+                alt={person.name}
+                fill
+                sizes="144px"
+                unoptimized={shouldUnoptimize}
+                className="rounded-full object-cover"
+              />
+            );
+          })()}
         </div>
         <h1 className="text-3xl font-bold text-blue-700 dark:text-blue-300 mb-2">{person.name}</h1>
         {person.title && <p className="text-lg">{person.title}</p>}

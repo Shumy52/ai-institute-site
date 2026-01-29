@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { useMemo } from "react";
-import { isLocalImageUrl } from "@/lib/strapi";
+import { isLocalImageUrl, isRelativeImageUrl } from "@/lib/strapi";
 
 export default function ResearchersClient({ staffData = [] }) {
   const researchers = Array.isArray(staffData) ? staffData : [];
@@ -74,14 +74,20 @@ export default function ResearchersClient({ staffData = [] }) {
             >
               <Link href={`/people/staff/${encodeURIComponent(person.slug)}`} className="block text-center">
                 <div className="relative w-36 h-36 mx-auto">
-                  <Image
-                    src={person.image || "/people/Basic_avatar_image.png"}
-                    alt={person.name}
-                    fill
-                    sizes="144px"
-                    unoptimized={isLocalImageUrl(person.image)}
-                    className="rounded-full object-cover"
-                  />
+                  {(() => {
+                    const imageSrc = person.image || "/people/Basic_avatar_image.png";
+                    const shouldUnoptimize = isLocalImageUrl(imageSrc) || isRelativeImageUrl(imageSrc);
+                    return (
+                      <Image
+                        src={imageSrc}
+                        alt={person.name}
+                        fill
+                        sizes="144px"
+                        unoptimized={shouldUnoptimize}
+                        className="rounded-full object-cover"
+                      />
+                    );
+                  })()}
                 </div>
                 <h2 className="mt-4 text-lg font-semibold">{person.name}</h2>
                 {person.title && (
