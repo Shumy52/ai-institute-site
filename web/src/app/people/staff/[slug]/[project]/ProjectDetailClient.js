@@ -2,6 +2,7 @@
 
 import { useMemo } from "react";
 import Link from "next/link";
+import Markdown from "markdown-to-jsx";
 
 const FALLBACK_AVATAR = "/people/Basic_avatar_image.png";
 
@@ -64,13 +65,29 @@ export default function ProjectDetailClient({
   const timeline = Array.isArray(project?.timeline) ? project.timeline : [];
   const hasBody = bodyBlocks.length > 0;
 
-  const renderRichText = (html, key) =>
-    html ? (
+  const renderRichText = (markdown, key) =>
+    markdown ? (
       <div
         key={key}
         className="prose prose-lg dark:prose-invert max-w-none text-gray-700 dark:text-gray-300 [&_a]:text-blue-600 dark:[&_a]:text-blue-400 hover:[&_a]:underline"
-        dangerouslySetInnerHTML={{ __html: html }}
-      />
+      >
+        <Markdown options={{
+            overrides: {
+                img: {
+                    component: (props) => (
+                        <img {...props} className="rounded-xl shadow-md my-4 max-w-full h-auto" />
+                    )
+                },
+                a: {
+                    component: (props) => (
+                        <a {...props} className="text-blue-600 hover:underline break-words" target="_blank" rel="noopener noreferrer" />
+                    )
+                }
+            }
+        }}>
+            {markdown}
+        </Markdown>
+      </div>
     ) : null;
 
   const renderBlock = (block, index) => {

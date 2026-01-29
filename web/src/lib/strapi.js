@@ -479,7 +479,13 @@ export async function getProjectBySlug(slug) {
       populate: {
         ...PROJECT_POPULATE.populate,
         heroImage: {},
-        body: {},
+        body: {
+          populate: {
+            media: { fields: ['url', 'alternativeText', 'caption', 'width', 'height'] },
+            file: { fields: ['url', 'alternativeText', 'caption', 'width', 'height'] },
+            files: { fields: ['url', 'alternativeText', 'caption', 'width', 'height'] },
+          },
+        },
         team: {
           populate: {
             person: PERSON_WITH_IMAGE_POPULATE,
