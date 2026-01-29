@@ -486,6 +486,9 @@ export async function getProjectBySlug(slug) {
           },
         },
         timeline: {},
+        datasets: {
+          fields: ['title', 'slug', 'source_url', 'platform'],
+        },
       },
     });
 
@@ -1040,6 +1043,17 @@ export function transformProjectData(strapiProjects) {
       };
     });
 
+    const datasets = toArray(attributes.datasets?.data ?? attributes.datasets).map((ds) => {
+      const dsAttrs = ds?.attributes ?? ds ?? {};
+      return {
+        id: ds?.id ?? null,
+        title: dsAttrs.title || '',
+        slug: dsAttrs.slug || '',
+        url: dsAttrs.source_url || '',
+        platform: dsAttrs.platform || '',
+      };
+    });
+
     const leadEntry = attributes.lead?.data ?? attributes.lead;
     const leadAttr = leadEntry?.attributes ?? leadEntry ?? {};
     const leadDetails = leadEntry
@@ -1091,6 +1105,7 @@ export function transformProjectData(strapiProjects) {
       team: normalizeTeamEntries(attributes.team),
       timeline: normalizeTimelineEntries(attributes.timeline),
       publications,
+      datasets,
       lead: leadName,
       leadName,
       leadSlug,
