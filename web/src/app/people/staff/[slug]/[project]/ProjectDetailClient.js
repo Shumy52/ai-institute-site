@@ -1,7 +1,6 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import Image from "next/image";
 import Link from "next/link";
 
 const FALLBACK_AVATAR = "/people/Basic_avatar_image.png";
@@ -309,12 +308,13 @@ function MemberCard({ member }) {
   return (
     <>
       <div className="relative w-36 h-36 mx-auto">
-        <Image
+        <img
           src={avatar}
           alt={member?.name || "Team member"}
-          fill
-          sizes="144px"
-          className="rounded-full object-cover"
+          width={144}
+          height={144}
+          loading="lazy"
+          className="absolute inset-0 w-full h-full rounded-full object-cover"
         />
       </div>
       <h3 className="mt-4 text-lg font-semibold">{member?.name || "Unknown member"}</h3>

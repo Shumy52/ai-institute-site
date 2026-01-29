@@ -1,7 +1,6 @@
 "use client";
 
 import { motion } from "framer-motion";
-import Image from "next/image";
 import Link from "next/link";
 import { useMemo } from "react";
 
@@ -72,13 +71,19 @@ export default function StaffClient({ staffData = [] }) {
             >
               <Link href={`/people/staff/${encodeURIComponent(person.slug)}`} className="block text-center">
                 <div className="relative w-36 h-36 mx-auto">
-                  <Image
-                    src={person.image || "/people/Basic_avatar_image.png"}
-                    alt={person.name}
-                    fill
-                    sizes="144px"
-                    className="rounded-full object-cover"
-                  />
+                  {(() => {
+                    const imageSrc = person.image || "/people/Basic_avatar_image.png";
+                    return (
+                      <img
+                        src={imageSrc}
+                        alt={person.name}
+                        width={144}
+                        height={144}
+                        loading="lazy"
+                        className="absolute inset-0 w-full h-full rounded-full object-cover"
+                      />
+                    );
+                  })()}
                 </div>
                 <h2 className="mt-4 text-lg font-semibold">{person.name}</h2>
                 {person.title && (

@@ -18,6 +18,7 @@ export default function Home() {
           fill
           priority
           sizes="100vw"
+          unoptimized
           className="absolute inset-0 object-cover opacity-70"
         />
         <div
@@ -47,6 +48,7 @@ export default function Home() {
             height={192}
             className="w-32 h-32 md:w-48 md:h-48 object-contain rounded-xl shadow-xl border-4 border-white dark:border-gray-800"
             priority
+            unoptimized
           />
         </div>
       </section>
@@ -118,6 +120,7 @@ export default function Home() {
             width={128}
             height={128}
             className="w-32 h-32 object-cover rounded-lg border border-gray-200 dark:border-gray-700"
+            unoptimized
           />
           <div>
             <h3 className="text-2xl font-bold text-yellow-700 dark:text-yellow-400 mb-2">

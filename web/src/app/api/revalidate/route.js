@@ -1,7 +1,5 @@
 import { revalidatePath, revalidateTag } from "next/cache";
 
-const ALLOWED_SECRET = process.env.REVALIDATION_SECRET;
-
 const MODEL_PATH_MAP = {
   "api::person.person": [
     "/people/staff",
@@ -20,6 +18,19 @@ const MODEL_PATH_MAP = {
 };
 
 const DEFAULT_PATHS = ["/"];
+
+export async function GET(req) {
+  const url = new URL(req.url);
+  return new Response(
+    JSON.stringify({
+      ok: false,
+      error: "Use POST",
+      hint: "This endpoint expects POST with ?secret=... (or header x-revalidate-secret).",
+      example: `${url.origin}${url.pathname}?secret=YOUR_REVALIDATION_SECRET`,
+    }),
+    { status: 405, headers: { "Content-Type": "application/json" } }
+  );
+}
 
 function derivePathsFromPayload(payload) {
   if (!payload || typeof payload !== "object") return [];
@@ -49,15 +60,24 @@ async function revalidateItems({ paths = [], tags = [] }) {
 
 export async function POST(req) {
   try {
+    const ALLOWED_SECRET = process.env.REVALIDATION_SECRET;
     if (!ALLOWED_SECRET) {
+      console.error("Revalidate: REVALIDATION_SECRET not set");
       return new Response(JSON.stringify({ error: "REVALIDATION_SECRET not set" }), { status: 500 });
     }
 
     const url = new URL(req.url);
     const secret = url.searchParams.get("secret") || req.headers.get("x-revalidate-secret");
     if (secret !== ALLOWED_SECRET) {
+      console.warn("Revalidate: unauthorized", {
+        path: url.pathname,
+        hasSecretParam: url.searchParams.has("secret"),
+        hasHeader: !!req.headers.get("x-revalidate-secret"),
+      });
       return new Response(JSON.stringify({ error: "Unauthorized" }), { status: 401 });
     }
+
+    console.info("Revalidate: accepted", { path: url.pathname });
 
     const body = await req.json().catch(() => ({}));
     const explicitPaths = body.paths || (body.path ? [body.path] : []);

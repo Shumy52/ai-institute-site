@@ -51,6 +51,10 @@
         "images"
       ]
     },
+    "isIndustryEngagement": {
+      "type": "boolean",
+      "default": false
+    },
     "body": {
       "type": "dynamiczone",
       "components": [

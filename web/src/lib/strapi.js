@@ -1,8 +1,31 @@
-const STRAPI_URL = (process.env.NEXT_PUBLIC_STRAPI_URL || 'http://strapi:1337').replace(/\/$/, '');
+import { getEnv, normalizeBaseUrl, requireEnv } from './env';
 
 const isServer = typeof window === 'undefined';
 
-const DEFAULT_REVALIDATE_SECONDS = 600;
+const getStrapiPublicUrl = () => {
+  const raw = requireEnv(['NEXT_PUBLIC_STRAPI_URL', 'PUBLIC_STRAPI_URL'], {
+    where: 'Strapi public base URL (used for media URLs returned to the browser)',
+  });
+  return normalizeBaseUrl(raw);
+};
+
+const getStrapiInternalUrl = () => {
+  const raw = getEnv('STRAPI_INTERNAL_URL', 'STRAPI_URL');
+  return raw ? normalizeBaseUrl(raw) : '';
+};
+
+const getStrapiApiBaseUrl = () => {
+  if (!isServer) return getStrapiPublicUrl();
+
+  const internal = getStrapiInternalUrl();
+  if (internal) return internal;
+
+  // Fall back to the public URL on the server only if an internal URL isn't provided.
+  // In Docker, this usually means you should set STRAPI_INTERNAL_URL=http://strapi:1337.
+  return getStrapiPublicUrl();
+};
+
+const DEFAULT_REVALIDATE_SECONDS = 60; // 1 minute
 
 // Buckets used by UI tabs; keep normalized values to avoid client-side filtering.
 export const PERSON_TYPE_FILTERS = {
@@ -25,14 +48,23 @@ const stripHtml = (value) =>
 const resolveMediaUrl = (media) => {
   if (!media) return '';
 
+  if (typeof media === 'string') {
+    const rawUrl = media.trim();
+    if (!rawUrl) return '';
+    if (/^https?:\/\//i.test(rawUrl)) return rawUrl;
+    const baseUrl = getStrapiPublicUrl();
+    return `${baseUrl}${rawUrl.startsWith('/') ? rawUrl : `/${rawUrl}`}`;
+  }
+
   const data = Array.isArray(media?.data) ? media.data[0] : media?.data ?? media;
   if (!data) return '';
 
   const url = data?.attributes?.url || data?.url;
-  if (!url) return '';
+  if (!url || typeof url !== 'string') return '';
 
   if (/^https?:\/\//i.test(url)) return url;
-  return `${STRAPI_URL}${url.startsWith('/') ? url : `/${url}`}`;
+  const baseUrl = getStrapiPublicUrl();
+  return `${baseUrl}${url.startsWith('/') ? url : `/${url}`}`;
 };
 
 const setPopulate = (params, baseKey, config = {}) => {
@@ -159,8 +191,11 @@ const PUBLICATION_POPULATE = {
 };
 
 const PROJECT_POPULATE = {
-  fields: ['title', 'slug', 'abstract', 'region', 'phase', 'docUrl', 'officialUrl', 'featured'],
+  fields: ['title', 'slug', 'abstract', 'region', 'phase', 'docUrl', 'officialUrl', 'featured', 'isIndustryEngagement'],
   populate: {
+    heroImage: {
+      fields: ['url', 'formats', 'alternativeText'],
+    },
     domains: DEPARTMENT_POPULATE,
     lead: PERSON_WITH_IMAGE_POPULATE,
     members: PERSON_WITH_IMAGE_POPULATE,
@@ -169,6 +204,11 @@ const PROJECT_POPULATE = {
     },
     partners: {
       fields: ['name', 'slug'],
+      populate: {
+        logo: {
+          fields: ['url', 'formats', 'alternativeText'],
+        },
+      },
     },
   },
 };
@@ -231,7 +271,8 @@ const normalizeDepartmentType = (value) => {
  * @returns {Promise} - Parsed JSON response
  */
 export async function fetchAPI(endpoint, options = {}) {
-  const url = `${STRAPI_URL}/api${endpoint}`;
+  const baseUrl = getStrapiApiBaseUrl();
+  const url = `${baseUrl}/api${endpoint}`;
 
   // Server-only token. Do NOT use NEXT_PUBLIC_ prefix for this value.
   const token = process.env.STRAPI_API_TOKEN || null;
@@ -635,7 +676,8 @@ export async function getDatasets() {
   
   try {
     return await fetchAllEntries('/datasets', {
-      populate: DATASET_POPULATE,
+      fields: DATASET_POPULATE.fields,
+      populate: DATASET_POPULATE.populate,
       sort: 'title:asc',
     });
   } catch (error) {
@@ -653,7 +695,8 @@ export async function getEvents() {
   };
   try {
     return await fetchAllEntries('/events', {
-      populate: EVENT_POPULATE,
+      fields: EVENT_POPULATE.fields,
+      populate: EVENT_POPULATE.populate,
       sort: 'startDate:desc',
     });
   } catch (error) {
@@ -672,8 +715,9 @@ export async function getSeminars() {
     },
   };
   try {
-     return await fetchAllEntries('/seminars', {
-      populate: SEMINAR_POPULATE,
+    return await fetchAllEntries('/seminars', {
+      fields: SEMINAR_POPULATE.fields,
+      populate: SEMINAR_POPULATE.populate,
       sort: 'title:asc',
     });
   } catch (error) {
@@ -742,7 +786,7 @@ export function transformStaffData(strapiStaff) {
     });
 
     // Use 'portrait' field from schema
-    const image = resolveMediaUrl(attributes.portrait) || attributes.portrait || '';
+    const image = resolveMediaUrl(attributes.portrait);
 
     return {
       id: person?.id ?? null,
@@ -898,12 +942,13 @@ export function transformProjectData(strapiProjects) {
         id: partner?.id ?? null,
         slug: partnerData.slug || '',
         name: partnerData.name || '',
+        logo: resolveMediaUrl(partnerData.logo),
       };
     });
 
     const members = toArray(attributes.members?.data ?? attributes.members).map((member) => {
       const memberAttr = member?.attributes ?? member ?? {};
-      const image = resolveMediaUrl(memberAttr.portrait) || memberAttr.portrait || '';
+      const image = resolveMediaUrl(memberAttr.portrait);
       return {
         id: member?.id ?? null,
         slug: memberAttr.slug || '',
@@ -939,7 +984,7 @@ export function transformProjectData(strapiProjects) {
           title: leadAttr.position || leadAttr.title || '',
           email: leadAttr.email || '',
           phone: leadAttr.phone || '',
-          image: resolveMediaUrl(leadAttr.portrait) || leadAttr.portrait || '',
+          image: resolveMediaUrl(leadAttr.portrait),
         }
       : typeof attributes.lead === 'string' && attributes.lead.trim().length
       ? {
@@ -962,6 +1007,8 @@ export function transformProjectData(strapiProjects) {
       title: attributes.title || '',
       abstract: attributes.abstract || '',
       phase: attributes.phase || attributes.status || '',
+      isIndustryEngagement: !!attributes.isIndustryEngagement,
+      heroImage: resolveMediaUrl(attributes.heroImage),
       // Map themes relation to simple array for frontend compatibility
       themes: themes.map(t => t.name).filter(Boolean),
       // Map partners relation to simple array for frontend compatibility

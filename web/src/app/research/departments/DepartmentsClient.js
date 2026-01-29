@@ -2,7 +2,6 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
-import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { techTransferPage } from "./TechTransferClient.js";
 import { hpcAIPage } from "./HPCAIServicesClient.js"
@@ -406,13 +405,19 @@ export default function DepartmentsClient({
           >
             <div className="flex items-center gap-4">
               <div className="relative w-16 h-16">
-                <Image
-                  src={m.image || "/people/Basic_avatar_image.png"}
-                  alt={m.name}
-                  fill
-                  sizes="64px"
-                  className="rounded-full object-cover"
-                />
+                {(() => {
+                  const imageSrc = m.image || "/people/Basic_avatar_image.png";
+                  return (
+                    <img
+                      src={imageSrc}
+                      alt={m.name}
+                      width={64}
+                      height={64}
+                      loading="lazy"
+                      className="absolute inset-0 w-full h-full rounded-full object-cover"
+                    />
+                  );
+                })()}
               </div>
               <div>
                 <div className="font-semibold group-hover:underline text-gray-900 dark:text-gray-100">{m.name}</div>
