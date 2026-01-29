@@ -76,6 +76,7 @@ const normalizeProject = (p) => {
     domainNames,
     members: memberNames.length ? memberNames : normalizeTeams(p),
     memberSlugs,
+    isIndustryEngagement: Boolean(p?.isIndustryEngagement),
   };
 };
 
@@ -89,7 +90,9 @@ export default function ProjectsClient({ projects: rawProjects = [] }) {
 
   const projects = useMemo(() => {
     const src = Array.isArray(rawProjects) ? rawProjects : [];
-    return src.map(normalizeProject).filter((p) => p.title);
+    return src
+      .map(normalizeProject)
+      .filter((p) => p.title && !p.isIndustryEngagement);
   }, [rawProjects]);
 
   const { regionOptions, domainOptions, leadOptions, memberOptions } = useMemo(() => {

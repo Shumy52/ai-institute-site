@@ -39,6 +39,19 @@ export default function Footer() {
             </li>
             <li>
               <a
+                href="https://www.flickr.com/people/203870795@N08/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-blue-700 hover:text-blue-900 transition-colors duration-200"
+                aria-label="Flickr"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-7 h-7">
+                  <path d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm0 18a8 8 0 1 1 0-16 8 8 0 0 1 0 16zm-5-9a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm10 0a3 3 0 1 0 0-6 3 3 0 0 0 0 6z" />
+                </svg>
+              </a>
+            </li>
+            <li>
+              <a
                 href="https://www.youtube.com/@AIRiAIInstitute"
                 target="_blank"
                 rel="noopener noreferrer"
