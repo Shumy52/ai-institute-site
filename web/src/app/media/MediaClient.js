@@ -124,6 +124,7 @@ export default function MediaClient() {
                       alt={item.alt}
                       width={600}
                       height={400}
+                      unoptimized
                       className="w-full h-full object-cover object-center"
                     />
                   ) : item.thumbnail ? (
@@ -132,6 +133,7 @@ export default function MediaClient() {
                       alt={item.alt}
                       width={600}
                       height={400}
+                      unoptimized
                       className="w-full h-full object-cover object-center"
                     />
                   ) : (
@@ -195,6 +197,7 @@ export default function MediaClient() {
                       alt={selectedMedia.alt}
                       width={1920}
                       height={1080}
+                      unoptimized
                       className="w-full h-full object-cover object-center rounded-2xl"
                     />
                     {/* <div className="absolute bottom-4 right-4 flex space-x-2"> */}

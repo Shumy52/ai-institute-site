@@ -2,11 +2,9 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
-import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { techTransferPage } from "./TechTransferClient.js";
 import { hpcAIPage } from "./HPCAIServicesClient.js"
-import { isLocalImageUrl, isRelativeImageUrl } from "@/lib/strapi";
 
 // TODO: Remove slug creators, can be integrated into Strapi
 
@@ -409,16 +407,14 @@ export default function DepartmentsClient({
               <div className="relative w-16 h-16">
                 {(() => {
                   const imageSrc = m.image || "/people/Basic_avatar_image.png";
-                  const optimizedSrc = m.imageInternal || imageSrc;
-                  const shouldUnoptimize = isLocalImageUrl(imageSrc) || isRelativeImageUrl(imageSrc);
                   return (
-                    <Image
-                      src={shouldUnoptimize ? imageSrc : optimizedSrc}
+                    <img
+                      src={imageSrc}
                       alt={m.name}
-                      fill
-                      sizes="64px"
-                      unoptimized={shouldUnoptimize}
-                      className="rounded-full object-cover"
+                      width={64}
+                      height={64}
+                      loading="lazy"
+                      className="absolute inset-0 w-full h-full rounded-full object-cover"
                     />
                   );
                 })()}

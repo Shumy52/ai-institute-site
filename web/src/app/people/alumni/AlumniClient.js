@@ -1,10 +1,8 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { useMemo } from "react";
-import { isLocalImageUrl, isRelativeImageUrl } from "@/lib/strapi";
 
 export default function AlumniClient({ staffData = [] }) {
   const people = Array.isArray(staffData) ? staffData : [];
@@ -75,16 +73,14 @@ export default function AlumniClient({ staffData = [] }) {
                 <div className="relative w-36 h-36 mx-auto">
                   {(() => {
                     const imageSrc = person.image || "/people/Basic_avatar_image.png";
-                    const optimizedSrc = person.imageInternal || imageSrc;
-                    const shouldUnoptimize = isLocalImageUrl(imageSrc) || isRelativeImageUrl(imageSrc);
                     return (
-                      <Image
-                        src={shouldUnoptimize ? imageSrc : optimizedSrc}
+                      <img
+                        src={imageSrc}
                         alt={person.name}
-                        fill
-                        sizes="144px"
-                        unoptimized={shouldUnoptimize}
-                        className="rounded-full object-cover"
+                        width={144}
+                        height={144}
+                        loading="lazy"
+                        className="absolute inset-0 w-full h-full rounded-full object-cover"
                       />
                     );
                   })()}

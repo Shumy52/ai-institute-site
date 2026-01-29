@@ -1,12 +1,9 @@
-import Image from "next/image";
 import { notFound } from "next/navigation";
 import {
   getStaffMember,
   transformStaffData,
   transformPublicationData,
   transformProjectData,
-  isLocalImageUrl,
-  isRelativeImageUrl,
 } from "@/lib/strapi";
 import StaffDetailClient from "./StaffDetailClient";
 
@@ -112,16 +109,14 @@ export default async function StaffDetailPage({ params }) {
         <div className="relative w-36 h-36 mx-auto mb-4">
           {(() => {
             const imageSrc = person.image || "/people/Basic_avatar_image.png";
-            const optimizedSrc = person.imageInternal || imageSrc;
-            const shouldUnoptimize = isLocalImageUrl(imageSrc) || isRelativeImageUrl(imageSrc);
             return (
-              <Image
-                src={shouldUnoptimize ? imageSrc : optimizedSrc}
+              <img
+                src={imageSrc}
                 alt={person.name}
-                fill
-                sizes="144px"
-                unoptimized={shouldUnoptimize}
-                className="rounded-full object-cover"
+                width={144}
+                height={144}
+                loading="lazy"
+                className="absolute inset-0 w-full h-full rounded-full object-cover"
               />
             );
           })()}
