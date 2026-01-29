@@ -86,6 +86,14 @@ export default async function ProjectDetailPage({ params }) {
     notFound();
   }
 
+  if (!Array.isArray(projectEntry.body) || projectEntry.body.length === 0) {
+    const fullProject = await getProjectBySlug(projectEntry.slug || projectParam);
+    if (fullProject) {
+      projectEntry = transformProjectData([fullProject])[0];
+      projectStrapi = fullProject;
+    }
+  }
+
   const leadSlug = projectEntry.leadSlug || projectEntry.leadDetails?.slug || "";
   const leadName = projectEntry.leadName || projectEntry.lead || projectEntry.leadDetails?.name || "";
 

@@ -480,6 +480,12 @@ export async function getProjectBySlug(slug) {
         ...PROJECT_POPULATE.populate,
         heroImage: {},
         body: {},
+        team: {
+          populate: {
+            person: PERSON_WITH_IMAGE_POPULATE,
+          },
+        },
+        timeline: {},
       },
     });
 
@@ -915,6 +921,68 @@ export function transformNewsData(strapiNews) {
 export function transformProjectData(strapiProjects) {
   const list = Array.isArray(strapiProjects) ? strapiProjects : strapiProjects ? [strapiProjects] : [];
 
+  const normalizeBodyBlocks = (blocks) =>
+    toArray(blocks)
+      .map((block) => {
+        if (!block || typeof block !== 'object') return null;
+        switch (block.__component) {
+          case 'shared.media':
+            return {
+              ...block,
+              file: resolveMediaUrl(block.file),
+            };
+          case 'shared.section':
+            return {
+              ...block,
+              media: resolveMediaUrl(block.media),
+            };
+          case 'shared.slider':
+            return {
+              ...block,
+              files: toArray(block.files).map(resolveMediaUrl).filter(Boolean),
+            };
+          default:
+            return block;
+        }
+      })
+      .filter(Boolean);
+
+  const normalizeTeamEntries = (items) =>
+    toArray(items)
+      .map((entry) => {
+        if (!entry) return null;
+        const personEntry = entry?.person?.data ?? entry?.person;
+        const personAttr = personEntry?.attributes ?? personEntry ?? {};
+        return {
+          role: entry?.role || '',
+          isLead: !!entry?.isLead,
+          person: personEntry
+            ? {
+                id: personEntry?.id ?? null,
+                slug: personAttr.slug || '',
+                name: personAttr.fullName || personAttr.name || '',
+                title: personAttr.position || personAttr.title || '',
+                email: personAttr.email || '',
+                phone: personAttr.phone || '',
+                image: resolveMediaUrl(personAttr.portrait),
+              }
+            : null,
+        };
+      })
+      .filter(Boolean);
+
+  const normalizeTimelineEntries = (items) =>
+    toArray(items)
+      .map((entry) => {
+        if (!entry) return null;
+        return {
+          label: entry?.label || '',
+          date: entry?.date || '',
+          description: entry?.description || '',
+        };
+      })
+      .filter(Boolean);
+
   return list.map((project) => {
     const attributes = project?.attributes ?? project ?? {};
 
@@ -1006,6 +1074,7 @@ export function transformProjectData(strapiProjects) {
       slug: attributes.slug || '',
       title: attributes.title || '',
       abstract: attributes.abstract || '',
+      body: normalizeBodyBlocks(attributes.body),
       phase: attributes.phase || attributes.status || '',
       isIndustryEngagement: !!attributes.isIndustryEngagement,
       heroImage: resolveMediaUrl(attributes.heroImage),
@@ -1019,6 +1088,8 @@ export function transformProjectData(strapiProjects) {
       domains,
       domain: domains.map((d) => d.name).filter(Boolean),
       members,
+      team: normalizeTeamEntries(attributes.team),
+      timeline: normalizeTimelineEntries(attributes.timeline),
       publications,
       lead: leadName,
       leadName,

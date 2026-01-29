@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 import Link from "next/link";
 
 const FALLBACK_AVATAR = "/people/Basic_avatar_image.png";
@@ -30,8 +30,6 @@ export default function ProjectDetailClient({
   publications = [],
   teamMembers = [],
 }) {
-  const [tab, setTab] = useState("description");
-
   const domainList = useMemo(
     () => (Array.isArray(project?.domain) ? project.domain : []),
     [project?.domain]
@@ -64,6 +62,75 @@ export default function ProjectDetailClient({
 
   const leadName = project?.leadName || project?.lead || project?.leadDetails?.name || "";
   const leadSlug = project?.leadSlug || project?.leadDetails?.slug || "";
+
+  const bodyBlocks = Array.isArray(project?.body) ? project.body : [];
+  const timeline = Array.isArray(project?.timeline) ? project.timeline : [];
+  const hasBody = bodyBlocks.length > 0;
+
+  const renderRichText = (html, key) =>
+    html ? (
+      <div
+        key={key}
+        className="text-sm leading-relaxed text-gray-700 dark:text-gray-300 [&_p]:mb-3 [&_ul]:list-disc [&_ul]:ml-5 [&_ol]:list-decimal [&_ol]:ml-5"
+        dangerouslySetInnerHTML={{ __html: html }}
+      />
+    ) : null;
+
+  const renderBlock = (block, index) => {
+    if (!block) return null;
+    switch (block.__component) {
+      case "shared.rich-text":
+        return renderRichText(block.body, `rich-${index}`);
+      case "shared.section":
+        return (
+          <section key={`section-${index}`} className="space-y-3">
+            {block.heading ? (
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
+                {block.heading}
+              </h3>
+            ) : null}
+            {block.subheading ? (
+              <p className="text-sm text-gray-600 dark:text-gray-400">{block.subheading}</p>
+            ) : null}
+            {renderRichText(block.body, `section-body-${index}`)}
+            {block.media ? (
+              <img
+                src={block.media}
+                alt={block.heading || "Project media"}
+                className="w-full rounded-xl border border-gray-200 dark:border-gray-800"
+                loading="lazy"
+              />
+            ) : null}
+          </section>
+        );
+      case "shared.media":
+        return block.file ? (
+          <img
+            key={`media-${index}`}
+            src={block.file}
+            alt="Project media"
+            className="w-full rounded-xl border border-gray-200 dark:border-gray-800"
+            loading="lazy"
+          />
+        ) : null;
+      case "shared.slider":
+        return Array.isArray(block.files) && block.files.length ? (
+          <div key={`slider-${index}`} className="grid gap-3 sm:grid-cols-2">
+            {block.files.map((file, idx) => (
+              <img
+                key={`slider-${index}-${idx}`}
+                src={file}
+                alt="Project media"
+                className="w-full rounded-xl border border-gray-200 dark:border-gray-800"
+                loading="lazy"
+              />
+            ))}
+          </div>
+        ) : null;
+      default:
+        return null;
+    }
+  };
 
   return (
     <main className="max-w-4xl mx-auto p-6 bg-white dark:bg-gray-950 text-black dark:text-white rounded-lg shadow-lg">
@@ -119,217 +186,169 @@ export default function ProjectDetailClient({
         )}
       </div>
 
-      {/* Tabs */}
-      <div className="mt-2 mb-6">
-        <div className="flex justify-center md:justify-start">
-          <div className="inline-flex rounded-xl border border-gray-200 dark:border-gray-800 overflow-hidden max-w-full overflow-x-auto whitespace-nowrap">
-            {["description", "themes", "publications", "team"].map((item) => {
-              const labelMap = {
-                description: "Description",
-                themes: "Themes",
-                publications: "Publications",
-                team: "Team Members",
-              };
-              const isActive = tab === item;
-              return (
-                <button
-                  key={item}
-                  type="button"
-                  onClick={() => setTab(item)}
-                  className={`px-4 py-2 text-sm font-medium focus:outline-none ${
-                    isActive
-                      ? "bg-blue-600 text-white dark:bg-blue-500"
-                      : "bg-transparent text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-900"
-                  }`}
-                  aria-pressed={isActive}
-                >
-                  {labelMap[item]}
-                </button>
-              );
-            })}
-          </div>
-        </div>
-      </div>
+      <section className="border-t border-gray-200 dark:border-gray-800 pt-4 space-y-4">
+        <h3 className="text-xl font-semibold text-gray-900 dark:text-gray-100">Overview</h3>
 
-      {/* Description */}
-      {tab === "description" && (
-        <div className="pt-2 border-t border-gray-200 dark:border-gray-800">
-          {project?.abstract ? (
-            <>
-              <p className="mt-4 text-base leading-relaxed text-gray-800 dark:text-gray-200">
-                {project.abstract}
-              </p>
+        {hasBody ? (
+          <div className="space-y-6">{bodyBlocks.map(renderBlock)}</div>
+        ) : project?.abstract ? (
+          <p className="text-base leading-relaxed text-gray-800 dark:text-gray-200 whitespace-pre-line">
+            {project.abstract}
+          </p>
+        ) : (
+          <p className="text-gray-600 dark:text-gray-400">No description available.</p>
+        )}
 
-              {project.docUrl ? (
-                <a
-                  href={project.docUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="mt-4 inline-flex items-center gap-2 px-3 py-2 rounded-md border border-gray-300 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-900 transition text-sm"
-                  aria-label="Open project presentation"
-                >
-                  Presentation
-                </a>
-              ) : null}
-            </>
-          ) : (
-            <p className="mt-4 text-gray-600 dark:text-gray-400">No description available.</p>
-          )}
-        </div>
-      )}
+        {project.docUrl ? (
+          <a
+            href={project.docUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 px-3 py-2 rounded-md border border-gray-300 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-900 transition text-sm"
+            aria-label="Open project presentation"
+          >
+            Presentation
+          </a>
+        ) : null}
 
-      {/* Themes */}
-      {tab === "themes" && (
-        <div className="pt-2 border-t border-gray-200 dark:border-gray-800">
-          {themesList.length ? (
-            <ul className="mt-4 space-y-2">
+        {themesList.length ? (
+          <div className="space-y-2">
+            <h4 className="text-sm font-semibold text-gray-900 dark:text-gray-100">Themes</h4>
+            <div className="flex flex-wrap gap-2">
               {themesList.map((theme, index) => (
-                <li
+                <span
                   key={`${theme}-${index}`}
-                  className="px-3 py-2 rounded-md border border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-900 text-sm"
+                  className="px-2.5 py-1 rounded-full border border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-900 text-xs"
                 >
                   {theme}
-                </li>
+                </span>
               ))}
-            </ul>
-          ) : (
-            <p className="mt-4 text-gray-600 dark:text-gray-400">No themes listed for this project.</p>
-          )}
-        </div>
-      )}
-
-      {/* Publications */}
-      {tab === "publications" && (
-        <div className="pt-2 border-t border-gray-200 dark:border-gray-800">
-          {publicationsList.length ? (
-            <ul className="mt-4 space-y-4">
-              {publicationsList.map((pub, index) => (
-                <li
-                  key={pub?.slug || pub?.id || index}
-                  className="rounded-xl border border-gray-200 dark:border-gray-800 p-4"
-                >
-                  <div className="flex items-baseline gap-2">
-                    <div className="font-medium">{pub?.title || `Publication ${index + 1}`}</div>
-                    {typeof pub?.year !== "undefined" && pub?.year !== null && (
-                      <span className="text-sm opacity-70">({pub.year})</span>
-                    )}
-                  </div>
-
-                  <div className="mt-2 flex flex-wrap gap-2 text-xs">
-                    {pub?.kind && (
-                      <span className="px-2 py-1 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 rounded">
-                        {pub.kind}
-                      </span>
-                    )}
-                    {pub?.domain && (
-                      <span className="px-2 py-1 bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 rounded">
-                        {pub.domain}
-                      </span>
-                    )}
-                  </div>
-
-                  {authorsToText(pub?.authors) && (
-                    <p className="mt-2 text-sm text-gray-700 dark:text-gray-300">
-                      <span className="font-medium">Authors:</span> {authorsToText(pub.authors)}
-                    </p>
-                  )}
-
-                  {pub?.description && (
-                    <p className="mt-2 text-sm text-gray-700 dark:text-gray-300">
-                      {pub.description}
-                    </p>
-                  )}
-
-                  {pub?.docUrl && (
-                    <a
-                      href={pub.docUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="mt-3 inline-flex items-center gap-2 px-3 py-2 rounded-md border border-gray-300 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-900 transition text-sm"
-                      aria-label="Open publication documentation"
-                    >
-                      View document
-                    </a>
-                  )}
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <p className="mt-4 text-gray-600 dark:text-gray-400">
-              No publications listed for this project.
-            </p>
-          )}
-        </div>
-      )}
-
-      {/* Team Members */}
-      {tab === "team" && (
-        <div className="pt-2 border-t border-gray-200 dark:border-gray-800">
-          {teamMembersSorted.length ? (
-            <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {teamMembersSorted.map((member) => {
-                const isActive = member?.slug === staffSlug;
-                return (
-                  <article
-                    key={member?.slug || member?.id || member?.name}
-                    className={`border border-gray-200 dark:border-gray-800 rounded-xl p-4 bg-white dark:bg-gray-900 hover:shadow-lg transition-shadow ${
-                      isActive ? "ring-2 ring-blue-500" : ""
-                    }`}
-                  >
-                    {member?.slug ? (
-                      <Link
-                        href={`/people/staff/${encodeURIComponent(member.slug)}`}
-                        className="block text-center"
-                      >
-                        <MemberCard member={member} />
-                      </Link>
-                    ) : (
-                      <div className="block text-center">
-                        <MemberCard member={member} />
-                      </div>
-                    )}
-                  </article>
-                );
-              })}
             </div>
-          ) : (
-            <p className="mt-4 text-gray-600 dark:text-gray-400">
-              No team members found in our directory.
-            </p>
-          )}
-        </div>
-      )}
-    </main>
-  );
-}
+          </div>
+        ) : null}
 
-function MemberCard({ member }) {
-  const avatar = member?.image || FALLBACK_AVATAR;
-  return (
-    <>
-      <div className="relative w-36 h-36 mx-auto">
-        <img
-          src={avatar}
-          alt={member?.name || "Team member"}
-          width={144}
-          height={144}
-          loading="lazy"
-          className="absolute inset-0 w-full h-full rounded-full object-cover"
-        />
-      </div>
-      <h3 className="mt-4 text-lg font-semibold">{member?.name || "Unknown member"}</h3>
-      {member?.title && (
-        <p className="text-sm text-gray-600 dark:text-gray-400">{member.title}</p>
-      )}
-      {member?.email && <p className="text-sm mt-1">{member.email}</p>}
-      {member?.phone && (
-        <p className="text-sm text-gray-600 dark:text-gray-400">Phone: {member.phone}</p>
-      )}
-      {member?.isLead && (
-        <p className="text-xs mt-2 inline-block px-2 py-1 rounded-full bg-yellow-100 dark:bg-yellow-900 text-yellow-800 dark:text-yellow-200">
-          Lead
-        </p>
-      )}
-    </>
+        {timeline.length ? (
+          <div className="space-y-2">
+            <h4 className="text-sm font-semibold text-gray-900 dark:text-gray-100">Timeline</h4>
+            <ul className="space-y-2">
+              {timeline.map((entry, idx) => (
+                <li key={`${entry.label}-${idx}`} className="text-sm text-gray-700 dark:text-gray-300">
+                  <span className="font-medium">{entry.label}</span>
+                  {entry.date ? <span className="ml-2 text-xs opacity-70">{entry.date}</span> : null}
+                  {entry.description ? (
+                    <div className="mt-1 text-sm text-gray-600 dark:text-gray-400">
+                      {entry.description}
+                    </div>
+                  ) : null}
+                </li>
+              ))}
+            </ul>
+          </div>
+        ) : null}
+      </section>
+
+      <section className="border-t border-gray-200 dark:border-gray-800 pt-4 mt-6 space-y-4">
+        <h3 className="text-xl font-semibold text-gray-900 dark:text-gray-100">Team & publications</h3>
+
+        {teamMembersSorted.length ? (
+          <ul className="space-y-3">
+            {teamMembersSorted.map((member) => (
+              <li
+                key={member.slug || member.name}
+                className={`flex items-center gap-3 p-3 rounded-lg border border-gray-200 dark:border-gray-800 ${
+                  member.isPrimary
+                    ? "bg-blue-50 dark:bg-blue-950"
+                    : "bg-white dark:bg-gray-950"
+                }`}
+              >
+                <img
+                  src={member.image || FALLBACK_AVATAR}
+                  alt={member.name || "Team member"}
+                  className="w-10 h-10 rounded-full object-cover border border-gray-200 dark:border-gray-700"
+                />
+                <div>
+                  {member.slug ? (
+                    <Link
+                      href={`/people/staff/${encodeURIComponent(member.slug)}`}
+                      className="font-medium hover:underline"
+                    >
+                      {member.name || "Unknown"}
+                    </Link>
+                  ) : (
+                    <div className="font-medium">{member.name || "Unknown"}</div>
+                  )}
+                  {member.title && (
+                    <div className="text-sm text-gray-600 dark:text-gray-400">{member.title}</div>
+                  )}
+                  {member.isLead && (
+                    <div className="text-xs text-blue-600 dark:text-blue-300 font-semibold">Lead</div>
+                  )}
+                </div>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p className="text-gray-600 dark:text-gray-400">
+            No team members found in our directory.
+          </p>
+        )}
+
+        {publicationsList.length ? (
+          <ul className="space-y-4">
+            {publicationsList.map((pub, index) => (
+              <li
+                key={pub?.slug || pub?.id || index}
+                className="rounded-xl border border-gray-200 dark:border-gray-800 p-4"
+              >
+                <div className="flex items-baseline gap-2">
+                  <div className="font-medium">{pub?.title || `Publication ${index + 1}`}</div>
+                  {typeof pub?.year !== "undefined" && pub?.year !== null && (
+                    <span className="text-sm opacity-70">({pub.year})</span>
+                  )}
+                </div>
+
+                <div className="mt-2 flex flex-wrap gap-2 text-xs">
+                  {pub?.kind && (
+                    <span className="px-2 py-1 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 rounded">
+                      {pub.kind}
+                    </span>
+                  )}
+                  {pub?.domain && (
+                    <span className="px-2 py-1 bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 rounded">
+                      {pub.domain}
+                    </span>
+                  )}
+                </div>
+
+                {authorsToText(pub?.authors) && (
+                  <p className="mt-2 text-sm text-gray-700 dark:text-gray-300">
+                    <span className="font-medium">Authors:</span> {authorsToText(pub.authors)}
+                  </p>
+                )}
+
+                {pub?.description && (
+                  <p className="mt-2 text-sm text-gray-700 dark:text-gray-300">
+                    {pub.description}
+                  </p>
+                )}
+
+                {pub?.docUrl && (
+                  <a
+                    href={pub.docUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="mt-2 inline-flex items-center gap-2 text-sm underline"
+                  >
+                    View documentation
+                  </a>
+                )}
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p className="text-gray-600 dark:text-gray-400">No publications linked to this project.</p>
+        )}
+      </section>
+    </main>
   );
 }

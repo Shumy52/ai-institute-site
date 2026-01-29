@@ -230,7 +230,7 @@ export default function ProjectsClient({ projects: rawProjects = [] }) {
               {filtered.length ? (
                 <ul className="space-y-4">
                   {filtered.map((p, i) => {
-                    const projectSlug = slugify(p.title);
+                    const projectSlug = p.slug || slugify(p.title);
                     const content = (
                       <div>
                         <div className="text-lg md:text-xl font-semibold text-gray-900 dark:text-gray-100 group-hover:underline">
