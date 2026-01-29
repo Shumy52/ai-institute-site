@@ -71,7 +71,8 @@ const setPopulate = (params, baseKey, config = {}) => {
   const fields = Array.isArray(config.fields) ? config.fields : [];
 
   const nestedPopulate = config.populate && typeof config.populate === 'object' ? config.populate : {};
-  const hasNestedPopulate = Object.keys(nestedPopulate).length > 0;
+  const fragments = config.on && typeof config.on === 'object' ? config.on : {};
+  const hasNestedPopulate = Object.keys(nestedPopulate).length > 0 || Object.keys(fragments).length > 0;
 
   // Strapi v5: when a populate entry has sub-keys (fields/populate), it must be treated as an object.
   // Only leaf populate keys should get a value.
@@ -96,6 +97,10 @@ const setPopulate = (params, baseKey, config = {}) => {
 
   Object.entries(nestedPopulate).forEach(([relation, relationConfig]) => {
     setPopulate(params, `${baseKey}[populate][${relation}]`, relationConfig || {});
+  });
+
+  Object.entries(fragments).forEach(([componentUid, fragmentConfig]) => {
+    setPopulate(params, `${baseKey}[on][${componentUid}]`, fragmentConfig || {});
   });
 };
 
@@ -480,10 +485,26 @@ export async function getProjectBySlug(slug) {
         ...PROJECT_POPULATE.populate,
         heroImage: {},
         body: {
-          populate: {
-            media: { fields: ['url', 'alternativeText', 'caption', 'width', 'height'] },
-            file: { fields: ['url', 'alternativeText', 'caption', 'width', 'height'] },
-            files: { fields: ['url', 'alternativeText', 'caption', 'width', 'height'] },
+          on: {
+            'shared.rich-text': {
+              fields: ['body'],
+            },
+            'shared.section': {
+              fields: ['heading', 'subheading', 'body'],
+              populate: {
+                media: { fields: ['url', 'alternativeText', 'caption', 'width', 'height'] },
+              },
+            },
+            'shared.media': {
+              populate: {
+                file: { fields: ['url', 'alternativeText', 'caption', 'width', 'height'] },
+              },
+            },
+            'shared.slider': {
+              populate: {
+                files: { fields: ['url', 'alternativeText', 'caption', 'width', 'height'] },
+              },
+            },
           },
         },
         team: {

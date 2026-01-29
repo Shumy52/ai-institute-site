@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Markdown from "markdown-to-jsx";
 
 export default function ProjectDetailsClient({ project }) {
   if (!project) return <div className="p-6">Project not found.</div>;
@@ -44,14 +45,53 @@ export default function ProjectDetailsClient({ project }) {
     (a?.name || "").localeCompare(b?.name || "", "ro", { sensitivity: "base", numeric: true })
   );
 
-  const renderRichText = (html, key) =>
-    html ? (
-      <div
-        key={key}
-        className="text-sm leading-relaxed text-gray-700 dark:text-gray-300 [&_p]:mb-3 [&_ul]:list-disc [&_ul]:ml-5 [&_ol]:list-decimal [&_ol]:ml-5"
-        dangerouslySetInnerHTML={{ __html: html }}
-      />
-    ) : null;
+  const renderRichText = (content, key) => {
+    if (!content) return null;
+    const hasHtml = typeof content === "string" && /<\/?[a-z][\s\S]*>/i.test(content);
+    const richTextClass =
+      "text-sm leading-relaxed text-gray-700 dark:text-gray-300 [&_p]:mb-4 [&_p:last-child]:mb-0 [&_ul]:list-disc [&_ul]:ml-6 [&_ul]:space-y-2 [&_ol]:list-decimal [&_ol]:ml-6 [&_ol]:space-y-2 [&_li]:marker:text-gray-500 dark:[&_li]:marker:text-gray-400 [&_hr]:my-6 [&_hr]:border-t-2 [&_hr]:border-gray-200 dark:[&_hr]:border-gray-700 [&_blockquote]:border-l-4 [&_blockquote]:border-gray-200 dark:[&_blockquote]:border-gray-700 [&_blockquote]:pl-4 [&_blockquote]:italic";
+
+    if (hasHtml) {
+      return (
+        <div
+          key={key}
+          className={richTextClass}
+          dangerouslySetInnerHTML={{ __html: content }}
+        />
+      );
+    }
+
+    return (
+      <div key={key} className={richTextClass}>
+        <Markdown
+          options={{
+            overrides: {
+              img: {
+                component: (props) => (
+                  <img
+                    {...props}
+                    className="rounded-xl border border-gray-200 dark:border-gray-800"
+                  />
+                ),
+              },
+              a: {
+                component: (props) => (
+                  <a
+                    {...props}
+                    className="text-blue-600 dark:text-blue-400 hover:underline break-words"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  />
+                ),
+              },
+            },
+          }}
+        >
+          {content}
+        </Markdown>
+      </div>
+    );
+  };
 
   const renderBlock = (block, index) => {
     if (!block) return null;
