@@ -68,7 +68,7 @@ const normalizeProject = (p) => {
 
   return {
     title: p?.title || "",
-    slug: p?.slug || slugify(p?.title),
+    slug: p?.slug || "",
     lead: leadName,
     leadSlug,
     regions: p?.region ? [String(p.region)] : [],
@@ -230,7 +230,7 @@ export default function ProjectsClient({ projects: rawProjects = [] }) {
               {filtered.length ? (
                 <ul className="space-y-4">
                   {filtered.map((p, i) => {
-                    const projectSlug = p.slug || slugify(p.title);
+                    const projectSlug = p.slug;
                     const content = (
                       <div>
                         <div className="text-lg md:text-xl font-semibold text-gray-900 dark:text-gray-100 group-hover:underline">
@@ -267,13 +267,17 @@ export default function ProjectsClient({ projects: rawProjects = [] }) {
                         variants={itemVariants}
                         className="rounded-xl border border-gray-200 dark:border-gray-800 p-5 hover:bg-gray-50 dark:hover:bg-gray-900 transition"
                       >
-                        <Link
-                          href={`/research/projects/${encodeURIComponent(projectSlug)}`}
-                          className="block group"
-                          aria-label={`Open project ${p.title || `#${i + 1}`}`}
-                        >
-                          {content}
-                        </Link>
+                        {projectSlug ? (
+                          <Link
+                            href={`/research/projects/${encodeURIComponent(projectSlug)}`}
+                            className="block group"
+                            aria-label={`Open project ${p.title || `#${i + 1}`}`}
+                          >
+                            {content}
+                          </Link>
+                        ) : (
+                          <div className="block group">{content}</div>
+                        )}
                       </motion.li>
                     );
                   })}

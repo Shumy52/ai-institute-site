@@ -301,38 +301,64 @@ export default function StaffDetailClient({ person, publications, projects, slug
               {filteredProjects.length ? (
                 <ul className="space-y-4">
                   {filteredProjects.map((p, i) => {
-                    const projectSlug = p?.slug || (p?.title ? slugify(p.title) : `project-${i}`);
+                    const projectSlug = p?.slug || "";
                     return (
                       <li
                         key={p.slug || `${p.title}-${i}` || i}
                         className="rounded-xl border border-gray-200 dark:border-gray-800 p-4 hover:bg-gray-50 dark:hover:bg-gray-900"
                       >
-                        <Link
-                          href={`/research/projects/${encodeURIComponent(projectSlug)}`}
-                          className="block group"
-                        >
-                          <div className="font-medium group-hover:underline">{p.title}</div>
-                          {getLeadName(p) && (
-                            <div className="mt-1 text-sm text-gray-700 dark:text-gray-300">
-                              <span className="font-medium">Lead:</span> {getLeadName(p)}
+                        {projectSlug ? (
+                          <Link
+                            href={`/research/projects/${encodeURIComponent(projectSlug)}`}
+                            className="block group"
+                          >
+                            <div className="font-medium group-hover:underline">{p.title}</div>
+                            {getLeadName(p) && (
+                              <div className="mt-1 text-sm text-gray-700 dark:text-gray-300">
+                                <span className="font-medium">Lead:</span> {getLeadName(p)}
+                              </div>
+                            )}
+                            {p.abstract && (
+                              <p className="mt-2 text-sm text-gray-600 dark:text-gray-400 line-clamp-3">
+                                {p.abstract}
+                              </p>
+                            )}
+                            <div className="mt-2 flex flex-wrap gap-1">
+                              {Array.isArray(p.domain) && p.domain.map((domain, idx) => (
+                                <span
+                                  key={idx}
+                                  className="px-2 py-1 bg-purple-100 dark:bg-purple-900 text-purple-800 dark:text-purple-200 rounded text-xs"
+                                >
+                                  {domain}
+                                </span>
+                              ))}
                             </div>
-                          )}
-                          {p.abstract && (
-                            <p className="mt-2 text-sm text-gray-600 dark:text-gray-400 line-clamp-3">
-                              {p.abstract}
-                            </p>
-                          )}
-                          <div className="mt-2 flex flex-wrap gap-1">
-                            {Array.isArray(p.domain) && p.domain.map((domain, idx) => (
-                              <span
-                                key={idx}
-                                className="px-2 py-1 bg-purple-100 dark:bg-purple-900 text-purple-800 dark:text-purple-200 rounded text-xs"
-                              >
-                                {domain}
-                              </span>
-                            ))}
+                          </Link>
+                        ) : (
+                          <div className="block group">
+                            <div className="font-medium">{p.title}</div>
+                            {getLeadName(p) && (
+                              <div className="mt-1 text-sm text-gray-700 dark:text-gray-300">
+                                <span className="font-medium">Lead:</span> {getLeadName(p)}
+                              </div>
+                            )}
+                            {p.abstract && (
+                              <p className="mt-2 text-sm text-gray-600 dark:text-gray-400 line-clamp-3">
+                                {p.abstract}
+                              </p>
+                            )}
+                            <div className="mt-2 flex flex-wrap gap-1">
+                              {Array.isArray(p.domain) && p.domain.map((domain, idx) => (
+                                <span
+                                  key={idx}
+                                  className="px-2 py-1 bg-purple-100 dark:bg-purple-900 text-purple-800 dark:text-purple-200 rounded text-xs"
+                                >
+                                  {domain}
+                                </span>
+                              ))}
+                            </div>
                           </div>
-                        </Link>
+                        )}
                       </li>
                     );
                   })}
