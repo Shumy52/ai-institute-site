@@ -1,3 +1,6 @@
+# REPO MOVED AT https://github.com/airi-utcn/ai-institute-site
+# THIS ONE IS DEPRECATED, ALL DEVELOPMENT IS DONE THERE FROM NOW ON. 
+
 
 # AI Institute Website
 
